@@ -15,8 +15,9 @@ const up = (s) => (s || '').toUpperCase().trim();
  * @param {{mostRecentDate:string}} meta
  * @param {{id:string,health_zone:?string}[]} tips
  * @param {(name:string)=>string} [canon]  normalise a zone name to the canonical Nom
+ * @param {{show:Function,clear:Function}} [nodeInfo]  floating node-info card
  */
-export function startCoordinator(tree, map, ts, meta, tips = [], canon = (v) => v) {
+export function startCoordinator(tree, map, ts, meta, tips = [], canon = (v) => v, nodeInfo = null) {
   const cz = (v) => { const r = real(v); return r ? canon(r) : null; };   // canonical zone, or null
 
   // zone (upper-cased canonical) → tip accessions/names in that zone, for highlighting
@@ -81,6 +82,7 @@ export function startCoordinator(tree, map, ts, meta, tips = [], canon = (v) => 
   tree.onSelect(({ target, selected, mrca }) => {
     const tipNames = selected.map((n) => n.name);
     map.highlight(tipNames);                       // markers always reflect the tip set
+    nodeInfo?.show({ target, selected });          // floating node-info card (any selection)
     if (zoneSelecting) return;                      // zone click drives chart/outline itself
     if (!programmatic) activeKey = null;            // a direct tree click is not a map-toggle target
 

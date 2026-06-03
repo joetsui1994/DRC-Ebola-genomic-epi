@@ -128,6 +128,22 @@ body {
 .dist-tip .tip-row i { width: 9px; height: 9px; border-radius: 2px; display: inline-block; flex: none; }
 .dist-tip .tip-row b { margin-left: auto; padding-left: 12px; font-variant-numeric: tabular-nums; }
 
+/* Floating node-info card (pinned top-left of the tree, below the toolbar — `top` set in JS) */
+.node-info {
+  position: absolute; left: 10px; top: 50px; z-index: 5;
+  max-width: 240px;
+  background: rgba(255, 255, 255, 0.96); border: 1px solid var(--border); border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(30, 25, 18, 0.14);
+  padding: 8px 10px; font-size: 11px; color: var(--ink);
+}
+.node-info .ni-head {
+  font-size: 8.5px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted);
+}
+.node-info .ni-title { font-weight: 700; font-size: 12px; margin: 1px 0 5px; color: var(--maroon); word-break: break-word; }
+.node-info .ni-row { display: flex; gap: 8px; line-height: 1.5; }
+.node-info .ni-k { color: var(--muted); flex: none; min-width: 76px; }
+.node-info .ni-v { color: var(--ink); }
+
 /* ── Draggable dividers ───────────────────────────────────── */
 .gutter { flex: 0 0 10px; display: flex; align-items: center; justify-content: center; touch-action: none; }
 .gutter-v { cursor: col-resize; }

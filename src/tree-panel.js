@@ -43,15 +43,19 @@ export async function createTreePanel(containerId) {
       // node/axis colours and background).
       theme: "O'Toole",
       tipLabelShow: 'off',
-      // Time axis calibrated to the tip `date` annotations (ISO strings), shown
-      // as calendar dates rather than raw branch-length/height numbers.
+      // Time axis calibrated to the tip `date` annotations (ISO strings), shown as
+      // calendar dates. Uses PearTree's smart auto axis (matches the embed demo):
+      // 'auto' tick intervals adapt density to the span/zoom, and 'component' labels
+      // show only the distinguishing part of each tick (month name, then day numbers).
+      // ('MMM yyyy' is NOT a valid axisDateFormat — it silently fell back to ISO and,
+      //  with a monthly interval, produced a single tick over the ~6-week span.)
       axisShow: 'time',
       axisDateAnnotation: 'date',
-      axisDateFormat: 'MMM yyyy',
-      axisMajorInterval: 'months',     // one major tick per month
-      axisMajorLabelFormat: 'full',    // label it "Mar 2026" etc. (not a bare "04")
-      axisMinorInterval: 'weeks',      // weekly minor ticks…
-      axisMinorLabelFormat: 'off',     // …unlabelled, just for granularity
+      axisDateFormat: 'dd MMM yyyy',
+      axisMajorInterval: 'auto',
+      axisMinorInterval: 'auto',
+      axisMajorLabelFormat: 'component',
+      axisMinorLabelFormat: 'component',
       // Distinct selection highlight — yellow to match the map's selected marker,
       // with a thicker opaque border and a bigger grow so it stands out from the
       // mauve tip / teal node colours. (These selection keys take as embed
@@ -70,6 +74,11 @@ export async function createTreePanel(containerId) {
       selectedNodeFillOpacity: '0.65',
       selectedNodeGrowthFactor: '1.9',
       selectedNodeMinSize: '6',
+      // Muted-blue tip hover highlight (O'Toole's default is maroon, which clashes
+      // with the yellow selection). Like the selection keys, this must be an init-
+      // setting — applySettings does not push it to the renderer.
+      tipHoverFillColor: '#5b86b3',
+      tipHoverStrokeColor: '#33567a',
       // Alignment-critical geometry (keep regardless of theme).
       paddingLeft: String(TREE_PAD_LEFT),
       paddingRight: String(TREE_PAD_RIGHT),

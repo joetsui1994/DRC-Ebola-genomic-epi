@@ -3,6 +3,7 @@ import { createTreePanel } from './tree-panel.js';
 import { createMapPanel } from './map-panel.js';
 import { createTimeseriesPanel } from './timeseries-panel.js';
 import { startCoordinator } from './coordinator.js';
+import { createNodeInfo } from './node-info.js';
 import { makeSplitter } from './splitter.js';
 
 // Parse the health-zone alias crosswalk (observed_name → canonical_nom) into a
@@ -98,7 +99,10 @@ fetch(`${BASE}data/health-zones.geojson`)
 const ts  = createTimeseriesPanel('timeseries-body', linelist, { minDate: meta.rootDate, maxDate: meta.mostRecentDate });
 const tree = await createTreePanel('tree-body');
 
-startCoordinator(tree, map, ts, meta, tips, canon);
+// Floating node-info card pinned to the tree panel.
+const nodeInfo = createNodeInfo('tree-body', { mostRecentDate: meta.mostRecentDate, canon });
+
+startCoordinator(tree, map, ts, meta, tips, canon, nodeInfo);
 
 // Header "last updated" = latest commit touching public/data, injected at build
 // time by Vite (see vite.config.js). Refreshes automatically on each deploy.
