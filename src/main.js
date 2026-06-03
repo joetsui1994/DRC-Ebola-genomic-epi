@@ -72,13 +72,11 @@ const tree = await createTreePanel('tree-body');
 
 startCoordinator(tree, map, ts, meta, tips);
 
-// Header "last updated" timestamp.
-// TODO: wire to the real data-refresh time (e.g. a field in a data file, an API
-// response header, or a build-time value). For now it uses a placeholder date.
-const LAST_UPDATED = '2026-05-28T00:00:00Z';
+// Header "last updated" = latest commit touching public/data, injected at build
+// time by Vite (see vite.config.js). Refreshes automatically on each deploy.
 const luEl = document.getElementById('last-updated');
 if (luEl) {
-  luEl.textContent = new Date(LAST_UPDATED).toLocaleString('en-GB', {
+  luEl.textContent = new Date(__LAST_UPDATED__).toLocaleString('en-GB', {
     dateStyle: 'medium', timeStyle: 'short',
   });
 }
