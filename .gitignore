@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.DS_Store
+
+# Raw geo/metadata source data — the derived public/data/health-zones.geojson
+# (built via `npm run data:zones`) is committed instead.
+public/data/shapefiles/
+public/data/health_zone_metadata*.csv
+# (public/data/linelist_data.csv IS tracked — the sample-distribution panel reads it at runtime)

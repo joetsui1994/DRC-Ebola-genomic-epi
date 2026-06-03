@@ -1,0 +1,219 @@
+:root {
+  --bg: #f6f5f2;          /* warm off-white page */
+  --card: #ffffff;
+  --border: #e7e3db;
+  --ink: #2a2a27;
+  --muted: #9c968b;       /* uppercase section labels, subtitles */
+  --maroon: #7c1d1d;      /* deaths / primary accent */
+  --red: #b23b2e;         /* selection / emphasis */
+  --terracotta: #9b7d4e;  /* secondary accent (hover, grips) */
+  --salmon: #f1ccc6;      /* area fill */
+  --grip: #d8d3c9;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  display: flex;
+  flex-direction: column;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Header ───────────────────────────────────────────────── */
+#app-header {
+  display: flex; align-items: center; gap: 11px;
+  padding: 11px 16px;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+}
+/* Live indicator: solid red dot with an expanding, fading "ping" ring */
+#app-header .dot {
+  position: relative; flex: none;
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--red);
+}
+#app-header .dot::after {
+  content: ''; position: absolute; inset: 0;
+  border-radius: 50%; background: var(--red);
+  animation: live-ping 1.8s ease-out infinite;
+}
+@keyframes live-ping {
+  0%   { transform: scale(1);   opacity: 0.55; }
+  70%  { opacity: 0; }
+  100% { transform: scale(3.4); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #app-header .dot::after { animation: none; }
+}
+
+#app-header h1 { margin: 0; font-size: 15px; font-weight: 700; letter-spacing: -0.01em; }
+#app-header .sub { font-size: 12px; color: var(--muted); margin-top: 1px; }
+
+/* ── Split layout ─────────────────────────────────────────── */
+#app  { flex: 1 1 0; min-height: 0; display: flex; flex-direction: row; padding: 10px; }
+#left { display: flex; flex-direction: column; flex: 1 1 0; min-width: 220px; }
+#map  { flex: 1 1 0; min-width: 220px; }
+#tree       { flex: 3 1 0; min-height: 140px; }
+#timeseries { flex: 2 1 0; min-height: 110px; }
+
+/* ── Cards ────────────────────────────────────────────────── */
+.panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 1px 2px rgba(30, 25, 18, 0.05);
+}
+.panel > h3 {
+  margin: 0; padding: 9px 12px 8px;
+  font-size: 10.5px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;
+  color: var(--muted); background: transparent;
+  border-bottom: 1px solid var(--border);
+}
+.dist-scope { font-weight: 600; letter-spacing: 0.04em; color: var(--maroon); text-transform: none; }
+.dist-download {
+  float: right; margin-top: -1px;
+  font-size: 9.5px; font-weight: 600; letter-spacing: 0.03em; text-transform: none;
+  color: var(--maroon); background: rgba(124, 29, 29, 0.08);
+  border: 1px solid rgba(124, 29, 29, 0.25); border-radius: 5px;
+  padding: 1px 7px; cursor: pointer;
+}
+.dist-download:hover { background: rgba(124, 29, 29, 0.16); }
+.panel-body { position: absolute; top: 31px; left: 0; right: 0; bottom: 0; }
+
+/* Sample-distribution: zone/area toggle (top-left) + status legend (top-right) */
+.dist-svg { position: absolute; inset: 0; }
+.dist-toggle {
+  position: absolute; top: 4px; left: 8px; z-index: 1;
+  display: flex; border: 1px solid var(--border); border-radius: 5px; overflow: hidden;
+  background: rgba(255, 255, 255, 0.85);
+}
+.dist-toggle button {
+  font-size: 10px; padding: 2px 8px; border: none; background: transparent;
+  color: var(--muted); cursor: pointer;
+}
+.dist-toggle button.active { background: var(--terracotta); color: #fff; }
+.dist-toggle button:disabled { color: #ccd; cursor: default; }
+.dist-legend {
+  position: absolute; top: 4px; right: 8px; z-index: 1;
+  display: flex; flex-wrap: wrap; gap: 8px;
+  font-size: 10px; color: var(--ink);
+  background: rgba(255, 255, 255, 0.82); padding: 2px 6px; border-radius: 5px;
+}
+.dist-legend span { display: flex; align-items: center; gap: 4px; }
+.dist-legend i { width: 9px; height: 9px; border-radius: 2px; display: inline-block; flex: none; }
+
+/* Sample-distribution hover tooltip */
+.dist-tip {
+  position: absolute; z-index: 4; pointer-events: none;
+  background: rgba(255, 255, 255, 0.97); border: 1px solid var(--border); border-radius: 6px;
+  box-shadow: 0 2px 7px rgba(30, 25, 18, 0.14); padding: 5px 8px;
+  font-size: 11px; color: var(--ink); white-space: nowrap;
+}
+.dist-tip .tip-date { font-weight: 600; margin-bottom: 3px; }
+.dist-tip .tip-row { display: flex; align-items: center; gap: 6px; line-height: 1.55; }
+.dist-tip .tip-row i { width: 9px; height: 9px; border-radius: 2px; display: inline-block; flex: none; }
+.dist-tip .tip-row b { margin-left: auto; padding-left: 12px; font-variant-numeric: tabular-nums; }
+
+/* ── Draggable dividers ───────────────────────────────────── */
+.gutter { flex: 0 0 10px; display: flex; align-items: center; justify-content: center; touch-action: none; }
+.gutter-v { cursor: col-resize; }
+.gutter-h { cursor: row-resize; }
+.grip { background: var(--grip); border-radius: 3px; transition: background .12s ease; }
+.grip-v { width: 4px; height: 40px; }
+.grip-h { width: 40px; height: 4px; }
+.gutter:hover .grip,
+.gutter.dragging .grip { background: var(--terracotta); }
+
+/* ── Map legend + Leaflet chrome ──────────────────────────── */
+.map-legend {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--border); border-radius: 7px;
+  padding: 6px 9px; font-size: 11px; color: var(--ink);
+  box-shadow: 0 1px 2px rgba(30, 25, 18, 0.08);
+}
+.map-legend .lg-title { font-size: 9.5px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; }
+.map-legend span { display: flex; align-items: center; gap: 7px; line-height: 1.6; }
+.map-legend i { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid; display: inline-block; flex: none; }
+/* Mobility legend: line swatches (not dots) + a muted note line */
+.mob-legend i { width: 16px; height: 3px; border-radius: 1px; border: none; }
+.mob-legend .lg-note { display: block; margin-top: 2px; font-size: 9.5px; color: var(--muted); }
+
+/* Health-zone search-and-zoom box — sits to the right of the zoom +/- buttons,
+   aligned to the same top margin (override Leaflet's vertical control stacking). */
+.zone-search { position: relative; }
+.leaflet-top.leaflet-left .zone-search {
+  position: absolute; top: 13px; left: 50px;
+  margin: 0; float: none; clear: none;
+}
+.zone-search-input {
+  width: 196px; font-size: 12px; padding: 5px 9px;
+  border: 1px solid var(--border); border-radius: 3px;
+  background: rgba(255, 255, 255, 0.96); color: var(--ink);
+  box-shadow: 0 1px 2px rgba(30, 25, 18, 0.1); outline: none;
+}
+.zone-search-input:focus { border-color: var(--terracotta); }
+.zone-search-list {
+  list-style: none; margin: 3px 0 0; padding: 3px;
+  position: absolute; left: 0; top: 100%; width: 196px;
+  background: #fff; border: 1px solid var(--border); border-radius: 4px;
+  box-shadow: 0 2px 7px rgba(30, 25, 18, 0.14);
+  display: none; z-index: 1000; max-height: 220px; overflow-y: auto;
+}
+.zone-search-list li {
+  padding: 4px 8px; font-size: 12px; color: var(--ink);
+  border-radius: 3px; cursor: pointer;
+}
+.zone-search-list li.active,
+.zone-search-list li:hover { background: rgba(155, 125, 78, 0.16); }
+
+.risk-toggle {
+  background: rgba(255, 255, 255, 0.94); border: 1px solid var(--border); border-radius: 7px;
+  padding: 4px 9px; font-size: 11px; font-weight: 600; color: var(--maroon); cursor: pointer;
+  box-shadow: 0 1px 2px rgba(30, 25, 18, 0.1);
+}
+.risk-toggle.off { color: var(--muted); }
+
+.leaflet-control-zoom a { color: var(--ink) !important; border-color: var(--border) !important; }
+.leaflet-bar { box-shadow: 0 1px 2px rgba(30, 25, 18, 0.1) !important; }
+.leaflet-control-attribution {
+  font-size: 9px !important; color: var(--muted) !important;
+  background: rgba(255, 255, 255, 0.7) !important;
+}
+/* No focus outline ("blue square") around clicked vector markers */
+.leaflet-container .leaflet-interactive:focus,
+.leaflet-container svg:focus,
+.leaflet-container path:focus { outline: none; }
+
+/* ── Retint the embedded PearTree interface (toolbar/buttons/panels) ──
+   Overrides PearTree's --pt-* theme vars to the dashboard palette. Scoped to
+   the tree container (id specificity wins over the bundle's [data-bs-theme]).
+   The tree canvas/background is unaffected (set via embed settings). */
+#tree-body,
+#tree-body [data-bs-theme],
+#tree-body[data-bs-theme] {
+  --pt-bg:            #ffffff;             /* canvas container */
+  --pt-bg-panel:      #f3f1ec;             /* toolbar / panels / popovers */
+  --pt-bg-dark:       #ece9e2;
+  --pt-bg-deepest:    #ece9e2;
+  --pt-border:        rgba(60, 48, 36, 0.12);
+  --pt-border-strong: rgba(60, 48, 36, 0.26);
+  --pt-border-input:  rgba(60, 48, 36, 0.18);
+  --pt-divider:         rgba(60, 48, 36, 0.10);
+  --pt-divider-section: rgba(60, 48, 36, 0.08);
+  --pt-divider-panel:   rgba(60, 48, 36, 0.10);
+  --pt-gold:          #9b7d4e;             /* primary accent → terracotta */
+  --pt-primary:       #9b7d4e;
+  --pt-brand-hover:   #7c1d1d;             /* → maroon */
+  --pt-red:           #b23b2e;
+  --pt-selection-bg:    rgba(155, 125, 78, 0.16);
+  --pt-selection-focus: rgba(155, 125, 78, 0.12);
+  --pt-resize-hover:    rgba(155, 125, 78, 0.30);
+  --pt-btn-default-bg:     rgba(155, 125, 78, 0.14);
+  --pt-btn-default-border: rgba(155, 125, 78, 0.50);
+  --pt-btn-default-text:   #8a6d3f;
+}

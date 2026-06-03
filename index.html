@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ituri Ebola — Genomic Dashboard</title>
+  <!-- PearTree bundle: exposes window.PearTreeEmbed (loads before the module) -->
+  <script src="/peartree.bundle.min.js"></script>
+</head>
+<body>
+  <header id="app-header">
+    <span class="dot" title="Live — regularly updated" aria-hidden="true"></span>
+    <div class="titles">
+      <h1>Genomic Epidemiology of 2026 Ebola Outbreak in the DRC</h1>
+      <div class="sub">Last updated on: <span id="last-updated">—</span></div>
+    </div>
+  </header>
+  <div id="app">
+    <div id="left">
+      <div id="tree" class="panel"><h3>Phylogeny</h3><div id="tree-body" class="panel-body"></div></div>
+      <div id="gutter-h" class="gutter gutter-h" title="Drag to resize"><span class="grip grip-h"></span></div>
+      <div id="timeseries" class="panel"><h3>Sample distribution <span id="dist-scope" class="dist-scope"></span><button id="dist-download" class="dist-download" type="button" title="Download daily counts (CSV)">⤓ CSV</button></h3><div id="timeseries-body" class="panel-body"></div></div>
+    </div>
+    <div id="gutter-v" class="gutter gutter-v" title="Drag to resize"><span class="grip grip-v"></span></div>
+    <div id="map" class="panel"><h3>Outbreak map</h3><div id="map-body" class="panel-body"></div></div>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+[
+  {
+    "id": "PP_006Y8ME",
+    "date": "2026-05-06",
+    "location": "Katwa",
+    "health_zone": "Katwa",
+    "health_area": null,
+    "lat": 0.120578,
+    "lon": 29.323708
+  },
+  {
+    "id": "PP_006Y8R6",
+    "date": "2026-05-16",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.595518,
+    "lon": 30.223456
+  },
+  {
+    "id": "PP_006Y8S4",
+    "date": "2026-05-16",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.595518,
+    "lon": 30.223456
+  },
+  {
+    "id": "PP_00711R7",
+    "date": "2026-05-03",
+    "location": "Hoho",
+    "health_zone": "Bunia",
+    "health_area": "Hoho",
+    "lat": 1.533054,
+    "lon": 30.233978
+  },
+  {
+    "id": "PP_00711S5",
+    "date": "2026-05-03",
+    "location": "Hoho",
+    "health_zone": "Bunia",
+    "health_area": "Hoho",
+    "lat": 1.533054,
+    "lon": 30.233978
+  },
+  {
+    "id": "PP_006XHL9",
+    "date": "2026-05-07",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.595518,
+    "lon": 30.223456
+  },
+  {
+    "id": "PP_006Y8NC",
+    "date": "2026-05-06",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.595518,
+    "lon": 30.223456
+  },
+  {
+    "id": "PP_006Y8PA",
+    "date": "2026-05-06",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.595518,
+    "lon": 30.223456
+  },
+  {
+    "id": "PP_006Y8Q8",
+    "date": "2026-05-06",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.595518,
+    "lon": 30.223456
+  },
+  {
+    "id": "PP_00711T3",
+    "date": "2026-05-03",
+    "location": "Lumumba",
+    "health_zone": "Bunia",
+    "health_area": "Lumumba",
+    "lat": 1.556531,
+    "lon": 30.244843
+  },
+  {
+    "id": "PP_006XCJJ",
+    "date": "2026-05-14",
+    "location": "ex-Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.595518,
+    "lon": 30.223456
+  },
+  {
+    "id": "PP_00711U1",
+    "date": "2026-05-03",
+    "location": "Hoho",
+    "health_zone": "Bunia",
+    "health_area": "Hoho",
+    "lat": 1.533054,
+    "lon": 30.233978
+  },
+  {
+    "id": "PP_00711VZ",
+    "date": "2026-05-03",
+    "location": "Hoho",
+    "health_zone": "Bunia",
+    "health_area": "Hoho",
+    "lat": 1.533054,
+    "lon": 30.233978
+  },
+  {
+    "id": "PP_006XHKB",
+    "date": "2026-05-03",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.595518,
+    "lon": 30.223456
+  },
+  {
+    "id": "PP_006XXY5",
+    "date": "2026-05-20",
+    "location": "ex-Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.595518,
+    "lon": 30.223456
+  }
+]
