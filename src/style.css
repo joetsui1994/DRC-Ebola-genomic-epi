@@ -258,3 +258,10 @@ body {
   --pt-btn-default-border: rgba(155, 125, 78, 0.50);
   --pt-btn-default-text:   #8a6d3f;
 }
+
+/* Hide the "Fit view" pair (Fit all / Fit labels) from the zoom toolbar group, and
+   trim the tip-filter to drop the save / apply-saved-filter buttons — keeping the
+   search field + match-condition dropdowns. */
+#tree-body .btn-group:has(#btn-fit),
+#tree-body .fc-add,
+#tree-body .pt-named-filter-wrap { display: none !important; }
