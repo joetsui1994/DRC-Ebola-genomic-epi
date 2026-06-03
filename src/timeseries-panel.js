@@ -96,6 +96,7 @@ export function createTimeseriesPanel(containerId, rows, domain) {
   let sel = { zones: [], areas: [] };   // original-case names
   let mode = 'zone';
   const scopeEl = document.getElementById('dist-scope');
+  const note = document.getElementById('dist-note');   // "N not shown (…)" in the panel header
   let markerDates = [];
   let transform = null;
   let scale, markerLayer, H;
@@ -143,6 +144,30 @@ export function createTimeseriesPanel(containerId, rows, domain) {
     const set = new Set(names.map(upper));
     const field = mode === 'area' ? 'health_area' : 'health_zone';
     return rows.filter(r => set.has(upper(r[field])));
+  }
+
+  // Samples the chart can't show for the current selection: undated, or dated outside
+  // the tree window. (The map choropleth counts all of them, hence the difference.)
+  const fmtDay = (t) => new Date(t).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+  function updateNote() {
+    if (!note) return;
+    let after = 0, before = 0, undated = 0;
+    for (const r of filteredRows()) {
+      if (!STATUS.includes(r.status)) continue;
+      const t = +new Date(r.date);
+      if (!r.date || isNaN(t)) undated++;
+      else if (t > t1) after++;
+      else if (t < t0) before++;
+    }
+    const total = after + before + undated;
+    if (!total) { note.style.display = 'none'; note.textContent = ''; return; }
+    const parts = [];
+    if (after) parts.push(`${after} after ${fmtDay(t1)}`);
+    if (before) parts.push(`${before} before ${fmtDay(t0)}`);
+    if (undated) parts.push(`${undated} undated`);
+    note.textContent = `· ${total} not shown (${parts.join(', ')})`;
+    note.title = `${total} samples not shown — ${parts.join(', ')}`;
+    note.style.display = '';
   }
 
   function aggregate() {
@@ -247,6 +272,8 @@ export function createTimeseriesPanel(containerId, rows, domain) {
       svg.appendChild(hit);
     }
     svg.addEventListener('mouseleave', hideTip);
+
+    updateNote();
   }
 
   render();

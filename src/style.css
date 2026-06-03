@@ -107,6 +107,13 @@ body {
 .dist-legend span { display: flex; align-items: center; gap: 4px; }
 .dist-legend i { width: 9px; height: 9px; border-radius: 2px; display: inline-block; flex: none; }
 
+/* "N not shown (…)" — header note for undated / out-of-window samples the chart can't plot */
+.dist-note {
+  margin-left: 7px; font-size: 9px; font-weight: 500; letter-spacing: 0.02em;
+  text-transform: none; color: var(--muted);
+}
+#timeseries > h3 { white-space: nowrap; overflow: hidden; }   /* keep the header one line */
+
 /* Sample-distribution hover tooltip */
 .dist-tip {
   position: absolute; z-index: 4; pointer-events: none;
@@ -177,6 +184,21 @@ body {
   box-shadow: 0 1px 2px rgba(30, 25, 18, 0.1);
 }
 .risk-toggle.off { color: var(--muted); }
+
+/* Choropleth metric button group (segmented control, top-right of the map) */
+.choropleth-group {
+  display: flex; flex-wrap: wrap;
+  background: rgba(255, 255, 255, 0.94); border: 1px solid var(--border);
+  border-radius: 7px; overflow: hidden; box-shadow: 0 1px 2px rgba(30, 25, 18, 0.1);
+}
+.choropleth-group button {
+  font-size: 10.5px; font-weight: 600; padding: 3px 8px;
+  border: none; border-left: 1px solid var(--border);
+  background: transparent; color: var(--muted); cursor: pointer;
+}
+.choropleth-group button:first-child { border-left: none; }
+.choropleth-group button.active { background: var(--terracotta); color: #fff; }
+.choropleth-group button:hover:not(.active) { background: rgba(155, 125, 78, 0.12); }
 
 .leaflet-control-zoom a { color: var(--ink) !important; border-color: var(--border) !important; }
 .leaflet-bar { box-shadow: 0 1px 2px rgba(30, 25, 18, 0.1) !important; }

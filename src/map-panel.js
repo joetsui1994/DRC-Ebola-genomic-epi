@@ -10,8 +10,18 @@ import 'leaflet/dist/leaflet.css';
 const BASE_STYLE      = { color: '#33567a', fillColor: '#5b86b3', fillOpacity: 0.85, weight: 1.5 }; // muted blue
 const HIGHLIGHT_STYLE = { color: '#9a7a16', fillColor: '#f2c84b', fillOpacity: 0.95, weight: 2 };   // yellow (selected)
 
-const RISK_RAMP   = ['#f6e3df', '#e8b3a6', '#d08163', '#aa4a32', '#7c1d1d'];
+const RISK_RAMP   = ['#f6e3df', '#e8b3a6', '#d08163', '#aa4a32', '#7c1d1d'];   // risk + total
 const RISK_NODATA = '#e8e6e1';
+// Per-status sequential ramps (light → dark) keyed on the bar-chart status hues,
+// extended into a saturated dark end so all 5 classes stay distinct even for the
+// pale tan/grey statuses.
+const STATUS_RAMP = {
+  Positive:     ['#f7dcd6', '#e3998c', '#cc5a48', '#a83327', '#741a1a'],
+  Negative:     ['#dbe7f0', '#a9c5db', '#6f9bbf', '#3f6f99', '#1f456e'],
+  Invalid:      ['#f4e6d2', '#e6c79b', '#d39e5f', '#a8742f', '#6f4718'],
+  Unclassified: ['#ededeb', '#cbc6bd', '#a39c8f', '#6f685c', '#403b31'],
+};
+const COUNT_NODATA = '#eeece6';   // zones with 0 samples
 const ZONE_STROKE_ON  = { color: '#ffffff', weight: 0.4 };              // boundaries while choropleth shown
 const ZONE_STROKE_OFF = { color: 'rgba(60,48,36,0.28)', weight: 0.6 };  // faint boundaries while risk hidden
 const ZONE_STROKE_SEL = { color: '#7c1d1d', weight: 2.6 };             // selected-zone outline (maroon)
@@ -127,7 +137,8 @@ export function createMapPanel(containerId, tips) {
   // One always-present, always-clickable GeoJSON layer; its style follows state
   // (risk colour on/off, selected outline) so zones stay selectable even when the
   // choropleth colour is toggled off.
-  let zoneLayer = null, riskLegend = null, colorFor = null, riskOn = true;
+  let zoneLayer = null, metric = 'risk', METRICS = null;   // current choropleth metric + definitions
+  let choroLegend = null, choroLegendDiv = null;
   const selectedZones = new Set();   // upper-cased Nom of currently-selected zones
   const nameToLayer = new Map();     // upper-cased Nom → polygon layer (for search-and-zoom)
   const nameToCentroid = new Map();  // upper-cased Nom → L.LatLng (for mobility arrows)
@@ -140,10 +151,23 @@ export function createMapPanel(containerId, tips) {
 
   function styleFor(f) {
     const sel = selectedZones.has(upper(f.properties.Nom));
-    const fill = riskOn
-      ? { fillColor: colorFor(f.properties.relative_risk), fillOpacity: 0.6 }
-      : { fillColor: '#000000', fillOpacity: 0 };
-    const stroke = sel ? ZONE_STROKE_SEL : (riskOn ? ZONE_STROKE_ON : ZONE_STROKE_OFF);
+    let fill;
+    if (metric === 'off' || !METRICS) {
+      fill = { fillColor: '#000000', fillOpacity: 0 };          // hidden: faint boundaries only
+    } else {
+      const cfg = METRICS[metric];
+      const v = cfg.value(f);
+      if (cfg.kind === 'count') {
+        fill = (v > 0)
+          ? { fillColor: cfg.ramp[classIndex(v, cfg.breaks)], fillOpacity: 0.62 }
+          : { fillColor: COUNT_NODATA, fillOpacity: 0.4 };       // 0 samples
+      } else {
+        fill = (typeof v === 'number')
+          ? { fillColor: cfg.ramp[classIndex(v, cfg.breaks)], fillOpacity: 0.6 }
+          : { fillColor: RISK_NODATA, fillOpacity: 0.5 };
+      }
+    }
+    const stroke = sel ? ZONE_STROKE_SEL : (metric === 'off' ? ZONE_STROKE_OFF : ZONE_STROKE_ON);
     return { ...fill, ...stroke };
   }
   function restyle() {
@@ -224,16 +248,34 @@ export function createMapPanel(containerId, tips) {
     onZoneClick(cb) { zoneClickHandler = cb; },
 
     /**
-     * Add the health-zone layer (risk choropleth + clickable selection), rendered
-     * under the markers. Polygons stay clickable whether or not the risk colour is on.
-     * @param {GeoJSON.FeatureCollection} geojson  features w/ { Nom, relative_risk }
+     * Add the health-zone layer: a multi-metric choropleth (relative risk + per-zone
+     * sample counts by status) with clickable selection. A button group switches the
+     * metric; "Off" hides the colour but keeps zones clickable.
+     * @param {GeoJSON.FeatureCollection} geojson  features w/ { Nom, PROVINCE, relative_risk, cx, cy }
+     * @param {Map<string,{Positive:number,Negative:number,Invalid:number,Unclassified:number,total:number}>} zoneCounts  by upper-cased Nom
      */
-    addRiskLayer(geojson) {
-      const vals = geojson.features.map(f => f.properties.relative_risk).filter(v => typeof v === 'number');
-      if (!vals.length) return null;
-      const breaks = quantileBreaks(vals, RISK_RAMP.length);
-      const max = Math.max(...vals);
-      colorFor = (v) => (typeof v === 'number') ? RISK_RAMP[classIndex(v, breaks)] : RISK_NODATA;
+    addZoneLayer(geojson, zoneCounts = new Map()) {
+      const ZERO = { Positive: 0, Negative: 0, Invalid: 0, Unclassified: 0, total: 0 };
+      const countsOf = (f) => zoneCounts.get(upper(f.properties.Nom)) || ZERO;
+      const intFmt = (x) => String(Math.round(x));
+
+      // Metric definitions: label, colour ramp, value accessor, classing kind.
+      METRICS = {
+        risk:         { label: 'Relative risk',       ramp: RISK_RAMP,                kind: 'continuous', fmt: (x) => x.toFixed(2), value: (f) => f.properties.relative_risk },
+        Positive:     { label: 'Positive samples',     ramp: STATUS_RAMP.Positive,     kind: 'count', fmt: intFmt, value: (f) => countsOf(f).Positive },
+        Negative:     { label: 'Negative samples',     ramp: STATUS_RAMP.Negative,     kind: 'count', fmt: intFmt, value: (f) => countsOf(f).Negative },
+        Invalid:      { label: 'Invalid samples',      ramp: STATUS_RAMP.Invalid,      kind: 'count', fmt: intFmt, value: (f) => countsOf(f).Invalid },
+        Unclassified: { label: 'Unclassified samples', ramp: STATUS_RAMP.Unclassified, kind: 'count', fmt: intFmt, value: (f) => countsOf(f).Unclassified },
+        total:        { label: 'Total samples',        ramp: RISK_RAMP,                kind: 'count', fmt: intFmt, value: (f) => countsOf(f).total },
+      };
+      // Class breaks per metric (counts classed over the non-zero zones only).
+      for (const cfg of Object.values(METRICS)) {
+        const vals = geojson.features.map(cfg.value)
+          .filter((v) => typeof v === 'number' && (cfg.kind === 'count' ? v > 0 : true));
+        cfg.breaks = vals.length ? quantileBreaks(vals, cfg.ramp.length) : [];
+        cfg.min = vals.length ? Math.min(...vals) : 0;
+        cfg.max = vals.length ? Math.max(...vals) : 0;
+      }
 
       if (!map.getPane('riskPane')) {
         map.createPane('riskPane');
@@ -259,47 +301,53 @@ export function createMapPanel(containerId, tips) {
         },
       }).addTo(map);
 
-      // single shared sticky tooltip (avoids stuck tooltips over dense zones)
+      // single shared sticky tooltip — reflects the current metric
+      const tooltipFor = (f) => {
+        const nom = f.properties.Nom;
+        if (metric === 'risk') { const r = f.properties.relative_risk; return `${nom} (health zone) — ${typeof r === 'number' ? r.toFixed(3) : 'n/a'} (RR)`; }
+        if (metric !== 'off') return `${nom} (health zone) — ${METRICS[metric].value(f) || 0} ${metric.toLowerCase()}`;
+        return `${nom} (health zone)`;
+      };
       zoneLayer.bindTooltip('', { sticky: true });
-      zoneLayer.on('mouseover mousemove', (e) => {
-        const f = e.layer && e.layer.feature;
-        if (!f) return;
-        const r = f.properties.relative_risk;
-        zoneLayer.setTooltipContent(`${f.properties.Nom} (health zone) — ${typeof r === 'number' ? r.toFixed(3) : 'n/a'} (RR)`);
-      });
+      zoneLayer.on('mouseover mousemove', (e) => { const f = e.layer && e.layer.feature; if (f) zoneLayer.setTooltipContent(tooltipFor(f)); });
       map.on('mouseout', () => zoneLayer.closeTooltip());
 
-      const lo = [0, ...breaks], hi = [...breaks, max];
-      riskLegend = L.control({ position: 'bottomright' });
-      riskLegend.onAdd = () => {
-        const div = L.DomUtil.create('div', 'map-legend risk-legend');
-        let html = '<div class="lg-title">Relative risk</div>';
-        for (let i = 0; i < RISK_RAMP.length; i++) {
-          html += `<span><i style="background:${RISK_RAMP[i]};border-color:rgba(0,0,0,0.12)"></i>${lo[i].toFixed(2)}–${hi[i].toFixed(2)}</span>`;
+      // legend — rebuilt for the active metric (hidden when Off)
+      const renderLegend = () => {
+        if (!choroLegendDiv) return;
+        if (metric === 'off') { choroLegendDiv.style.display = 'none'; return; }
+        choroLegendDiv.style.display = '';
+        const cfg = METRICS[metric];
+        const lo = [cfg.min, ...cfg.breaks], hi = [...cfg.breaks, cfg.max];
+        let html = `<div class="lg-title">${cfg.label}</div>`;
+        if (cfg.kind === 'count') html += `<span><i style="background:${COUNT_NODATA};border-color:rgba(0,0,0,0.12)"></i>0 (none)</span>`;
+        for (let i = 0; i < cfg.ramp.length; i++) html += `<span><i style="background:${cfg.ramp[i]};border-color:rgba(0,0,0,0.12)"></i>${cfg.fmt(lo[i])}–${cfg.fmt(hi[i])}</span>`;
+        choroLegendDiv.innerHTML = html;
+      };
+      choroLegend = L.control({ position: 'bottomright' });
+      choroLegend.onAdd = () => { choroLegendDiv = L.DomUtil.create('div', 'map-legend choropleth-legend'); renderLegend(); return choroLegendDiv; };
+      choroLegend.addTo(map);
+
+      // metric button group (replaces the on/off toggle): Off + risk + per-status + total
+      const ORDER = ['off', 'risk', 'Positive', 'Negative', 'Invalid', 'Unclassified', 'total'];
+      const SHORT = { off: 'Off', risk: 'Risk', Positive: 'Pos', Negative: 'Neg', Invalid: 'Inv', Unclassified: 'Unc', total: 'Total' };
+      const FULL  = { off: 'Hide colour (zones stay clickable)', risk: 'Relative risk', Positive: 'Positive samples', Negative: 'Negative samples', Invalid: 'Invalid samples', Unclassified: 'Unclassified samples', total: 'Total samples' };
+      const groupCtl = L.control({ position: 'topright' });
+      groupCtl.onAdd = () => {
+        const div = L.DomUtil.create('div', 'choropleth-group');
+        L.DomEvent.disableClickPropagation(div);
+        for (const key of ORDER) {
+          const b = L.DomUtil.create('button', key === metric ? 'active' : '', div);
+          b.type = 'button'; b.textContent = SHORT[key]; b.title = FULL[key]; b.dataset.metric = key;
+          b.onclick = () => {
+            metric = key;
+            [...div.children].forEach((c) => c.classList.toggle('active', c.dataset.metric === key));
+            restyle(); renderLegend();
+          };
         }
-        div.innerHTML = html;
         return div;
       };
-      riskLegend.addTo(map);
-
-      // toggle the risk colour (zones stay clickable; only the fill + legend change)
-      const toggleCtl = L.control({ position: 'topright' });
-      toggleCtl.onAdd = () => {
-        const btn = L.DomUtil.create('button', 'risk-toggle');
-        btn.type = 'button';
-        btn.title = 'Toggle relative-risk colour';
-        btn.textContent = 'Relative risk: on';
-        L.DomEvent.disableClickPropagation(btn);
-        btn.onclick = () => {
-          riskOn = !riskOn;
-          restyle();
-          if (riskOn) riskLegend.addTo(map); else riskLegend.remove();
-          btn.textContent = `Relative risk: ${riskOn ? 'on' : 'off'}`;
-          btn.classList.toggle('off', !riskOn);
-        };
-        return btn;
-      };
-      toggleCtl.addTo(map);
+      groupCtl.addTo(map);
 
       // search-and-zoom: type a health-zone name → pick a match → zoom + select it.
       // Duplicate Noms (Bili, Lubunga) are disambiguated with their province so each

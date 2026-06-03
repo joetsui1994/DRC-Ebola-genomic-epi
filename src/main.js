@@ -70,6 +70,16 @@ const [tips, meta, linelistText, aliasText] = await Promise.all([
 const canon = makeCanon(aliasText);
 const linelist = parseLinelist(linelistText, canon);
 
+// Per-zone sample counts by status (canonical Nom, upper-cased) for the choropleth.
+const ZONE_STATUS = ['Positive', 'Negative', 'Invalid', 'Unclassified'];
+const zoneCounts = new Map();
+for (const r of linelist) {
+  const z = (r.health_zone || '').toUpperCase().trim();
+  if (!z || !ZONE_STATUS.includes(r.status)) continue;
+  if (!zoneCounts.has(z)) zoneCounts.set(z, { Positive: 0, Negative: 0, Invalid: 0, Unclassified: 0, total: 0 });
+  const o = zoneCounts.get(z); o[r.status]++; o.total++;
+}
+
 // Markers are built from the tips themselves (grouped by health_area → zone).
 const map = createMapPanel('map-body', tips);
 
@@ -79,7 +89,7 @@ const map = createMapPanel('map-body', tips);
 fetch(`${BASE}data/health-zones.geojson`)
   .then(r => r.json())
   .then(zones => {
-    map.addRiskLayer(zones);
+    map.addZoneLayer(zones, zoneCounts);
     return fetch(`${BASE}data/flowminder__inflow__static.matrix.csv`)
       .then(r => r.text())
       .then(text => map.addMobilityLayer(parseMobilityMatrix(text, canon)));
