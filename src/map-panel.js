@@ -184,8 +184,9 @@ export function createMapPanel(containerId, tips) {
   }
 
   // Zoom to a zone's polygon and select it (always selects, never toggles off).
-  function selectZoneByName(name) {
-    const layer = nameToLayer.get(upper(name));
+  // `province` disambiguates duplicate Noms (Bili, Lubunga) to the right polygon.
+  function selectZoneByName(name, province) {
+    const layer = (province && nameToLayer.get(`${upper(name)}|${upper(province)}`)) || nameToLayer.get(upper(name));
     if (!layer) return;
     map.fitBounds(layer.getBounds(), { maxZoom: 9, padding: [24, 24] });
     if (zoneClickHandler) zoneClickHandler(name, { toggle: false });
@@ -237,10 +238,12 @@ export function createMapPanel(containerId, tips) {
         style: styleFor,
         onEachFeature: (f, layer) => {
           const key = upper(f.properties.Nom);
+          const pkey = `${key}|${upper(f.properties.PROVINCE)}`;
           const c = layer.getBounds().getCenter();                  // bbox centre → arrow endpoint
-          nameToLayer.set(key, layer);
-          nameToCentroid.set(key, c);                               // by Nom (last wins for duplicates)
-          nameToCentroid.set(`${key}|${upper(f.properties.PROVINCE)}`, c);  // province-qualified
+          nameToLayer.set(key, layer);                              // by Nom (last wins for duplicates)
+          nameToLayer.set(pkey, layer);                             // province-qualified
+          nameToCentroid.set(key, c);
+          nameToCentroid.set(pkey, c);
           layer.options.bubblingMouseEvents = false;   // don't trigger the empty-map deselect
           layer.on('click', () => zoneClickHandler && zoneClickHandler(f.properties.Nom));
         },
@@ -288,10 +291,19 @@ export function createMapPanel(containerId, tips) {
       };
       toggleCtl.addTo(map);
 
-      // search-and-zoom: type a health-zone name → pick a match → zoom + select it
-      const zoneNames = geojson.features
-        .map(f => f.properties.Nom).filter(Boolean)
-        .sort((a, b) => a.localeCompare(b));
+      // search-and-zoom: type a health-zone name → pick a match → zoom + select it.
+      // Duplicate Noms (Bili, Lubunga) are disambiguated with their province so each
+      // entry is distinct and selects its own polygon.
+      const nomCounts = {};
+      for (const f of geojson.features) { const n = f.properties.Nom; if (n) nomCounts[n] = (nomCounts[n] || 0) + 1; }
+      const zoneEntries = geojson.features
+        .filter(f => f.properties.Nom)
+        .map(f => ({
+          nom: f.properties.Nom,
+          province: f.properties.PROVINCE,
+          label: nomCounts[f.properties.Nom] > 1 ? `${f.properties.Nom} (${f.properties.PROVINCE})` : f.properties.Nom,
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label));
       const searchCtl = L.control({ position: 'topleft' });
       searchCtl.onAdd = () => {
         const wrap = L.DomUtil.create('div', 'zone-search');
@@ -307,7 +319,7 @@ export function createMapPanel(containerId, tips) {
         let activeIdx = -1;
 
         const close = () => { list.replaceChildren(); list.style.display = 'none'; results = []; activeIdx = -1; };
-        const pick = (name) => { close(); input.value = ''; input.blur(); selectZoneByName(name); };
+        const pick = (e) => { close(); input.value = ''; input.blur(); selectZoneByName(e.nom, e.province); };
         const setActive = (i) => {
           activeIdx = i;
           [...list.children].forEach((li, k) => li.classList.toggle('active', k === i));
@@ -318,18 +330,18 @@ export function createMapPanel(containerId, tips) {
           const q = input.value.trim().toLowerCase();
           if (!q) { close(); return; }
           const starts = [], contains = [];
-          for (const n of zoneNames) {
-            const l = n.toLowerCase();
-            if (l.startsWith(q)) starts.push(n);
-            else if (l.includes(q)) contains.push(n);
+          for (const e of zoneEntries) {
+            const l = e.nom.toLowerCase();
+            if (l.startsWith(q)) starts.push(e);
+            else if (l.includes(q)) contains.push(e);
           }
           results = [...starts, ...contains].slice(0, 8);
           activeIdx = -1;
-          list.replaceChildren(...results.map((n, i) => {
+          list.replaceChildren(...results.map((e, i) => {
             const li = document.createElement('li');
-            li.textContent = n;
+            li.textContent = e.label;
             li.onmouseenter = () => setActive(i);   // keep mouse + keyboard in sync
-            li.onclick = () => pick(n);
+            li.onclick = () => pick(e);
             return li;
           }));
           list.style.display = results.length ? 'block' : 'none';
