@@ -42,10 +42,14 @@ function parseMobilityMatrix(text) {
   return { outByZone, inByZone };
 }
 
+// Prefix runtime asset URLs with the Vite base so they resolve under the Pages
+// subpath (BASE_URL is '/' in dev, '/DRC-Ebola-genomic-epi/' in the build).
+const BASE = import.meta.env.BASE_URL;
+
 const [tips, meta, linelist] = await Promise.all([
-  fetch('/data/ituri-tips.json').then(r => r.json()),
-  fetch('/data/ituri-meta.json').then(r => r.json()),
-  fetch('/data/linelist_data.csv').then(r => r.text()).then(parseLinelist),
+  fetch(`${BASE}data/ituri-tips.json`).then(r => r.json()),
+  fetch(`${BASE}data/ituri-meta.json`).then(r => r.json()),
+  fetch(`${BASE}data/linelist_data.csv`).then(r => r.text()).then(parseLinelist),
 ]);
 
 // Markers are built from the tips themselves (grouped by health_area → zone).
@@ -54,11 +58,11 @@ const map = createMapPanel('map-body', tips);
 // Health-zone risk choropleth + mobility arrows (standalone layers, under the
 // markers). Mobility loads after the risk layer because it reuses the zone
 // centroids built there.
-fetch('/data/health-zones.geojson')
+fetch(`${BASE}data/health-zones.geojson`)
   .then(r => r.json())
   .then(zones => {
     map.addRiskLayer(zones);
-    return fetch('/data/flowminder__inflow__static.matrix.csv')
+    return fetch(`${BASE}data/flowminder__inflow__static.matrix.csv`)
       .then(r => r.text())
       .then(text => map.addMobilityLayer(parseMobilityMatrix(text)));
   })
