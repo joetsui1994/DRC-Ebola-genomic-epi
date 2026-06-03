@@ -65,17 +65,21 @@ export function createTimeseriesPanel(containerId, rows, domain) {
   const btnArea = document.createElement('button'); btnArea.textContent = 'Area';
   toggle.append(btnZone, btnArea);
 
-  // status legend (top-right)
+  // status legend — sits to the right of the zone/area toggle (top-left)
   const legend = document.createElement('div');
   legend.className = 'dist-legend';
   legend.innerHTML = STATUS.map(s => `<span><i style="background:${STATUS_COLOR[s]}"></i>${s}</span>`).join('');
+
+  const controls = document.createElement('div');   // top-left row: toggle + legend
+  controls.className = 'dist-controls';
+  controls.append(toggle, legend);
 
   const holder = document.createElement('div');
   holder.className = 'dist-svg';
   const tip = document.createElement('div');
   tip.className = 'dist-tip';
   tip.style.display = 'none';
-  host.append(toggle, legend, holder, tip);   // tip on host (holder is wiped each render)
+  host.append(controls, holder, tip);   // tip on host (holder is wiped each render)
 
   function showTip(ev, dateStr, counts) {
     const d = new Date(dateStr);

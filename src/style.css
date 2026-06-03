@@ -85,10 +85,13 @@ body {
 .dist-download:hover { background: rgba(124, 29, 29, 0.16); }
 .panel-body { position: absolute; top: 31px; left: 0; right: 0; bottom: 0; }
 
-/* Sample-distribution: zone/area toggle (top-left) + status legend (top-right) */
+/* Sample-distribution: zone/area toggle + status legend, together top-left */
 .dist-svg { position: absolute; inset: 0; }
-.dist-toggle {
+.dist-controls {
   position: absolute; top: 4px; left: 8px; z-index: 1;
+  display: flex; align-items: center; gap: 10px;
+}
+.dist-toggle {
   display: flex; border: 1px solid var(--border); border-radius: 5px; overflow: hidden;
   background: rgba(255, 255, 255, 0.85);
 }
@@ -99,7 +102,6 @@ body {
 .dist-toggle button.active { background: var(--terracotta); color: #fff; }
 .dist-toggle button:disabled { color: #ccd; cursor: default; }
 .dist-legend {
-  position: absolute; top: 4px; right: 8px; z-index: 1;
   display: flex; flex-wrap: wrap; gap: 8px;
   font-size: 10px; color: var(--ink);
   background: rgba(255, 255, 255, 0.82); padding: 2px 6px; border-radius: 5px;
