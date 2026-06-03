@@ -173,7 +173,7 @@ body {
    aligned to the same top margin (override Leaflet's vertical control stacking). */
 .zone-search { position: relative; }
 .leaflet-top.leaflet-left .zone-search {
-  position: absolute; top: 13px; left: 50px;
+  position: absolute; top: 10px; left: 50px;   /* aligns with the zoom group's top */
   margin: 0; float: none; clear: none;
 }
 .zone-search-input {
@@ -219,8 +219,27 @@ body {
 .choropleth-group button.active { background: var(--terracotta); color: #fff; }
 .choropleth-group button:hover:not(.active) { background: rgba(155, 125, 78, 0.12); }
 
-.leaflet-control-zoom a { color: var(--ink) !important; border-color: var(--border) !important; }
-.leaflet-bar { box-shadow: 0 1px 2px rgba(30, 25, 18, 0.1) !important; }
+/* Top-right map controls share one row: the choropleth metric group on the right,
+   the mobility toggle to its left (row-reverse keeps the metric group at the edge;
+   Leaflet's per-control margin provides the gap). */
+.leaflet-top.leaflet-right { display: flex; flex-direction: row-reverse; align-items: flex-start; }
+
+/* Zoom +/- group — match the dashboard's other map controls: light 1px border,
+   7px radius, subtle shadow, 26px buttons, aligned to the same 10px top margin. */
+.leaflet-control-zoom { margin: 10px 0 0 10px !important; }
+.leaflet-bar {
+  border: 1px solid var(--border) !important;
+  border-radius: 7px !important;
+  box-shadow: 0 1px 2px rgba(30, 25, 18, 0.1) !important;
+}
+.leaflet-bar a {
+  width: 26px; height: 26px; line-height: 26px;
+  color: var(--maroon); background: rgba(255, 255, 255, 0.94);   /* maroon glyph, like the other controls */
+  border-bottom: 1px solid var(--border);
+}
+.leaflet-bar a:first-child { border-top-left-radius: 6px; border-top-right-radius: 6px; }
+.leaflet-bar a:last-child  { border-bottom: none; border-bottom-left-radius: 6px; border-bottom-right-radius: 6px; }
+.leaflet-bar a:hover { background: rgba(155, 125, 78, 0.12); color: var(--maroon); }
 .leaflet-control-attribution {
   font-size: 9px !important; color: var(--muted) !important;
   background: rgba(255, 255, 255, 0.7) !important;
