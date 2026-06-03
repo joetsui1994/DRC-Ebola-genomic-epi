@@ -162,6 +162,13 @@ export function createMapPanel(containerId, tips) {
     const size = Math.max(0.02, Math.hypot(toC.lng - fromC.lng, toC.lat - fromC.lat) * 0.07);
     mobilityGroup.addLayer(L.polyline(arrowHead(pts[pts.length - 2], pts[pts.length - 1], size), { ...opts, opacity: Math.min(1, op + 0.2) }));
   }
+  // Resolve a flow-partner name to a centroid, handling "Name (Province)" suffixes
+  // that disambiguate duplicate zone names in the geojson (e.g. "Bili (Bas-Uele)").
+  function centroidFor(name) {
+    const m = /^(.+?)\s*\(([^)]+)\)\s*$/.exec(name || '');
+    if (m) return nameToCentroid.get(`${upper(m[1])}|${upper(m[2])}`) || nameToCentroid.get(upper(m[1]));
+    return nameToCentroid.get(upper(name));
+  }
   // Redraw arrows for the currently-selected zone(s): outflows (red) + inflows (blue).
   function drawMobility() {
     if (mobilityGroup) mobilityGroup.clearLayers();
@@ -171,8 +178,8 @@ export function createMapPanel(containerId, tips) {
       const hubC = nameToCentroid.get(hubKey);
       if (!hubC) continue;
       const top = (arr) => (arr || []).slice().sort((a, b) => b.value - a.value).slice(0, MOB_TOPN);
-      for (const f of top(mobility.outByZone.get(hubKey))) drawFlow(hubC, nameToCentroid.get(upper(f.other)), f.value, 'out');
-      for (const f of top(mobility.inByZone.get(hubKey)))  drawFlow(nameToCentroid.get(upper(f.other)), hubC, f.value, 'in');
+      for (const f of top(mobility.outByZone.get(hubKey))) drawFlow(hubC, centroidFor(f.other), f.value, 'out');
+      for (const f of top(mobility.inByZone.get(hubKey)))  drawFlow(centroidFor(f.other), hubC, f.value, 'in');
     }
   }
 
@@ -230,8 +237,10 @@ export function createMapPanel(containerId, tips) {
         style: styleFor,
         onEachFeature: (f, layer) => {
           const key = upper(f.properties.Nom);
+          const c = layer.getBounds().getCenter();                  // bbox centre → arrow endpoint
           nameToLayer.set(key, layer);
-          nameToCentroid.set(key, layer.getBounds().getCenter());   // bbox centre → arrow endpoint
+          nameToCentroid.set(key, c);                               // by Nom (last wins for duplicates)
+          nameToCentroid.set(`${key}|${upper(f.properties.PROVINCE)}`, c);  // province-qualified
           layer.options.bubblingMouseEvents = false;   // don't trigger the empty-map deselect
           layer.on('click', () => zoneClickHandler && zoneClickHandler(f.properties.Nom));
         },
