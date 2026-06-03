@@ -159,8 +159,14 @@ export function createMapPanel(containerId, tips) {
     const w = mobWeight(value), op = mobOpacity(value);
     const opts = { pane: 'mobilityPane', color, weight: w, lineJoin: 'round', lineCap: 'round', interactive: false };
     mobilityGroup.addLayer(L.polyline(pts, { ...opts, opacity: op }));
-    const size = Math.max(0.02, Math.hypot(toC.lng - fromC.lng, toC.lat - fromC.lat) * 0.07);
-    mobilityGroup.addLayer(L.polyline(arrowHead(pts[pts.length - 2], pts[pts.length - 1], size), { ...opts, opacity: Math.min(1, op + 0.2) }));
+    // Arrowhead on OUTflows only (red): inflows read from colour + convergence on the
+    // hub, and inflow heads would just pile up messily at the centre. Size tracks flow
+    // weight (not distance, which gave huge heads), capped so short flows don't overshoot.
+    if (dir === 'out') {
+      const d = Math.hypot(toC.lng - fromC.lng, toC.lat - fromC.lat);
+      const size = Math.min(0.015 + (w / 6) * 0.025, d * 0.4);
+      mobilityGroup.addLayer(L.polyline(arrowHead(pts[pts.length - 2], pts[pts.length - 1], size), { ...opts, opacity: Math.min(1, op + 0.2) }));
+    }
   }
   // Resolve a flow-partner name to a centroid, handling "Name (Province)" suffixes
   // that disambiguate duplicate zone names in the geojson (e.g. "Bili (Bas-Uele)").
