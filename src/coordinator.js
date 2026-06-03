@@ -14,13 +14,16 @@ const up = (s) => (s || '').toUpperCase().trim();
  * @param {object} ts     from createTimeseriesPanel
  * @param {{mostRecentDate:string}} meta
  * @param {{id:string,health_zone:?string}[]} tips
+ * @param {(name:string)=>string} [canon]  normalise a zone name to the canonical Nom
  */
-export function startCoordinator(tree, map, ts, meta, tips = []) {
-  // zone (upper-cased) → tip accessions/names in that zone, for highlighting on
-  // a polygon click (case-insensitive so the polygon `Nom` matches the annotation).
+export function startCoordinator(tree, map, ts, meta, tips = [], canon = (v) => v) {
+  const cz = (v) => { const r = real(v); return r ? canon(r) : null; };   // canonical zone, or null
+
+  // zone (upper-cased canonical) → tip accessions/names in that zone, for highlighting
+  // on a polygon click (so the polygon `Nom` matches the normalised annotation).
   const zoneToTipNames = new Map();
   for (const t of tips) {
-    const z = real(t.health_zone);
+    const z = cz(t.health_zone);
     if (!z) continue;
     const k = up(z);
     if (!zoneToTipNames.has(k)) zoneToTipNames.set(k, []);
@@ -84,7 +87,7 @@ export function startCoordinator(tree, map, ts, meta, tips = []) {
     const node = target || mrca || null;
     const d = nodeToDate(node, meta.mostRecentDate);
     ts.setMarkers(d ? [d] : []);
-    const zones = new Set(selected.map((n) => real(n.annotations?.health_zone)).filter(Boolean));
+    const zones = new Set(selected.map((n) => cz(n.annotations?.health_zone)).filter(Boolean));
     const areas = new Set(selected.map((n) => real(n.annotations?.health_area)).filter(Boolean));
     map.highlightZones([...zones]);
     ts.setSelection({ zones: [...zones], areas: [...areas] });
