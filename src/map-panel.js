@@ -239,7 +239,11 @@ export function createMapPanel(containerId, tips) {
         onEachFeature: (f, layer) => {
           const key = upper(f.properties.Nom);
           const pkey = `${key}|${upper(f.properties.PROVINCE)}`;
-          const c = layer.getBounds().getCenter();                  // bbox centre → arrow endpoint
+          // Inner point (pole of inaccessibility, precomputed in data:zones) — always
+          // inside the polygon, unlike a bbox/area centroid. Fall back if absent.
+          const c = (f.properties.cx != null && f.properties.cy != null)
+            ? L.latLng(f.properties.cy, f.properties.cx)
+            : layer.getBounds().getCenter();
           nameToLayer.set(key, layer);                              // by Nom (last wins for duplicates)
           nameToLayer.set(pkey, layer);                             // province-qualified
           nameToCentroid.set(key, c);
