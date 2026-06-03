@@ -85,10 +85,11 @@ body {
 .dist-download:hover { background: rgba(124, 29, 29, 0.16); }
 .panel-body { position: absolute; top: 31px; left: 0; right: 0; bottom: 0; }
 
-/* Sample-distribution: zone/area toggle + status legend, together top-left */
+/* Sample-distribution: zone/area toggle + status legend, a row offset from the
+   left edge so it clears the y-axis tick labels */
 .dist-svg { position: absolute; inset: 0; }
 .dist-controls {
-  position: absolute; top: 4px; left: 8px; z-index: 1;
+  position: absolute; top: 4px; left: 42px; z-index: 1;
   display: flex; align-items: center; gap: 10px;
 }
 .dist-toggle {

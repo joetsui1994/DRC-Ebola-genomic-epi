@@ -58,14 +58,14 @@ export function createTimeseriesPanel(containerId, rows, domain) {
   const host = document.getElementById(containerId);
   host.replaceChildren();
 
-  // zone⇄area toggle (top-left)
+  // zone⇄area toggle + status legend — a row near the top, offset from the left
+  // edge so it clears the y-axis tick labels
   const toggle = document.createElement('div');
   toggle.className = 'dist-toggle';
   const btnZone = document.createElement('button'); btnZone.textContent = 'Zone';
   const btnArea = document.createElement('button'); btnArea.textContent = 'Area';
   toggle.append(btnZone, btnArea);
 
-  // status legend — sits to the right of the zone/area toggle (top-left)
   const legend = document.createElement('div');
   legend.className = 'dist-legend';
   legend.innerHTML = STATUS.map(s => `<span><i style="background:${STATUS_COLOR[s]}"></i>${s}</span>`).join('');
