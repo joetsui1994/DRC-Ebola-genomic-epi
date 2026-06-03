@@ -265,3 +265,17 @@ body {
 #tree-body .btn-group:has(#btn-fit),
 #tree-body .fc-add,
 #tree-body .pt-named-filter-wrap { display: none !important; }
+
+/* Export dialogs (e.g. the graphic/"photograph" export): the modal background is
+   our light --pt-bg-panel, but the text used Bootstrap's --bs-body-color (light,
+   from the dark bs-theme) → near-invisible. Force readable dark text. */
+#tree-body .pt-modal {
+  color: var(--ink);
+  --bs-body-color: #2a2a27;
+  --bs-secondary-color: rgba(42, 42, 39, 0.62);
+}
+
+/* The PearTree export modal is z-index:800, below Leaflet's map control containers
+   (.leaflet-top/.leaflet-bottom are z-index:1000), so the map's +/- buttons and
+   search box poke through the dialog. Lift the overlay above them. */
+#tree-body .pt-modal-overlay { z-index: 2000; }
