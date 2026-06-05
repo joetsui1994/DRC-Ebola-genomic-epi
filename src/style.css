@@ -117,6 +117,18 @@ body {
 }
 #timeseries > h3 { white-space: nowrap; overflow: hidden; }   /* keep the header one line */
 
+/* Ct filter (positives): label + small number input, in the header (gap to the CSV button) */
+.dist-ct {
+  float: right; display: inline-flex; align-items: center; gap: 4px;
+  margin: -1px 10px 0 8px; text-transform: none; font-weight: 500;
+}
+.dist-ct label { font-size: 9px; color: var(--muted); }
+.dist-ct input {
+  width: 40px; font-size: 10px; padding: 1px 4px;
+  border: 1px solid var(--border); border-radius: 4px; color: var(--ink);
+}
+.dist-ct input:focus { outline: none; border-color: var(--terracotta); }
+
 /* Sample-distribution hover tooltip */
 .dist-tip {
   position: absolute; z-index: 4; pointer-events: none;

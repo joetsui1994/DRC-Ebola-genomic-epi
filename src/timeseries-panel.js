@@ -53,10 +53,26 @@ function timeTicks(pxWidth, t0, t1) {
  * @param {string} containerId
  * @param {{date:string,status:string,health_zone:string,health_area:string}[]} rows
  * @param {{minDate:string,maxDate:string}} domain  tree time domain (root → most-recent)
+ * @param {{onCtChange?:(t:?number)=>void}} [opts]  notified when the Ct filter changes
  */
-export function createTimeseriesPanel(containerId, rows, domain) {
+export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = () => {} } = {}) {
   const host = document.getElementById(containerId);
   host.replaceChildren();
+
+  // Ct filter (positives only): a number input + proportion readout in the header.
+  const ctWrap = document.createElement('span');
+  ctWrap.className = 'dist-ct';
+  ctWrap.innerHTML = '<label>Ct&lt;</label><input type="number" min="1" max="99" step="1" placeholder="off">';
+  const ctInput = ctWrap.querySelector('input');
+  const distHeader = document.querySelector('#timeseries > h3');
+  if (distHeader) distHeader.appendChild(ctWrap);
+  let ctThreshold = null;   // null = off
+  ctInput.addEventListener('input', () => {
+    const v = parseInt(ctInput.value, 10);
+    ctThreshold = (Number.isFinite(v) && v > 0) ? v : null;
+    onCtChange(ctThreshold);   // keep the map's Positive metric in sync
+    render();
+  });
 
   // zone⇄area toggle + status legend — a row near the top, offset from the left
   // edge so it clears the y-axis tick labels
@@ -174,12 +190,21 @@ export function createTimeseriesPanel(containerId, rows, domain) {
     note.style.display = '';
   }
 
+  // A Positive row passes the Ct filter only if it has a numeric Ct below the threshold
+  // (so no-Ct positives drop out while the filter is on). Non-positives always pass.
+  function ctPass(r) {
+    if (ctThreshold == null || r.status !== 'Positive') return true;
+    const v = parseFloat(r.ct);
+    return Number.isFinite(v) && v < ctThreshold;
+  }
+
   function aggregate() {
     const byDay = new Map();
     for (const r of filteredRows()) {
       const t = +new Date(r.date);
       if (isNaN(t) || t < t0 || t > t1) continue;            // clip to the aligned axis
       if (!STATUS.includes(r.status)) continue;
+      if (!ctPass(r)) continue;                              // Ct filter (positives only)
       let d = byDay.get(r.date);
       if (!d) { d = { Positive: 0, Negative: 0, Invalid: 0, Unclassified: 0 }; byDay.set(r.date, d); }
       d[r.status]++;

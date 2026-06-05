@@ -81,6 +81,18 @@ for (const r of linelist) {
   const o = zoneCounts.get(z); o[r.status]++; o.total++;
 }
 
+// Per-zone Positive Ct values, for the map's Ct-filtered Positive metric.
+const zonePosCt = new Map();
+for (const r of linelist) {
+  if (r.status !== 'Positive') continue;
+  const v = parseFloat(r.ct);
+  if (!Number.isFinite(v)) continue;
+  const z = (r.health_zone || '').toUpperCase().trim();
+  if (!z) continue;
+  if (!zonePosCt.has(z)) zonePosCt.set(z, []);
+  zonePosCt.get(z).push(v);
+}
+
 // Markers are built from the tips themselves (grouped by health_area → zone).
 const map = createMapPanel('map-body', tips);
 
@@ -90,13 +102,13 @@ const map = createMapPanel('map-body', tips);
 fetch(`${BASE}data/health-zones.geojson`)
   .then(r => r.json())
   .then(zones => {
-    map.addZoneLayer(zones, zoneCounts);
+    map.addZoneLayer(zones, zoneCounts, zonePosCt);
     return fetch(`${BASE}data/flowminder__inflow__static.matrix.csv`)
       .then(r => r.text())
       .then(text => map.addMobilityLayer(parseMobilityMatrix(text, canon)));
   })
   .catch(err => console.warn('risk/mobility layer not loaded:', err));
-const ts  = createTimeseriesPanel('timeseries-body', linelist, { minDate: meta.rootDate, maxDate: meta.mostRecentDate });
+const ts  = createTimeseriesPanel('timeseries-body', linelist, { minDate: meta.rootDate, maxDate: meta.mostRecentDate }, { onCtChange: (t) => map.setCtThreshold(t) });
 const tree = await createTreePanel('tree-body');
 
 // Floating node-info card pinned to the tree panel.

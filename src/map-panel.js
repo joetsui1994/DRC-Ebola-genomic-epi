@@ -139,6 +139,9 @@ export function createMapPanel(containerId, tips) {
   // choropleth colour is toggled off.
   let zoneLayer = null, metric = 'risk', METRICS = null;   // current choropleth metric + definitions
   let choroLegend = null, choroLegendDiv = null;
+  let ctThreshold = null;            // Ct filter for the Positive metric (null = off)
+  let zonePosCt = new Map();         // upper Nom → positive-sample Ct values (for live re-counting)
+  let applyCtThreshold = null;       // recompute Positive metric + redraw (set in addZoneLayer)
   const selectedZones = new Set();   // upper-cased Nom of currently-selected zones
   const nameToLayer = new Map();     // upper-cased Nom → polygon layer (for search-and-zoom)
   const nameToCentroid = new Map();  // upper-cased Nom → L.LatLng (for mobility arrows)
@@ -247,6 +250,12 @@ export function createMapPanel(containerId, tips) {
     /** cb(zoneName) when a health-zone polygon is clicked. */
     onZoneClick(cb) { zoneClickHandler = cb; },
 
+    /** Set the Ct filter applied to the Positive metric (null/0 = off). */
+    setCtThreshold(t) {
+      ctThreshold = (typeof t === 'number' && t > 0) ? t : null;
+      applyCtThreshold?.();
+    },
+
     /**
      * Add the health-zone layer: a multi-metric choropleth (relative risk + per-zone
      * sample counts by status) with clickable selection. A button group switches the
@@ -254,28 +263,32 @@ export function createMapPanel(containerId, tips) {
      * @param {GeoJSON.FeatureCollection} geojson  features w/ { Nom, PROVINCE, relative_risk, cx, cy }
      * @param {Map<string,{Positive:number,Negative:number,Invalid:number,Unclassified:number,total:number}>} zoneCounts  by upper-cased Nom
      */
-    addZoneLayer(geojson, zoneCounts = new Map()) {
+    addZoneLayer(geojson, zoneCounts = new Map(), posCt = new Map()) {
       const ZERO = { Positive: 0, Negative: 0, Invalid: 0, Unclassified: 0, total: 0 };
       const countsOf = (f) => zoneCounts.get(upper(f.properties.Nom)) || ZERO;
       const intFmt = (x) => String(Math.round(x));
+      zonePosCt = posCt;
+      // Positives in a zone with Ct below the active threshold.
+      const posBelow = (f) => { const a = zonePosCt.get(upper(f.properties.Nom)); if (!a) return 0; let n = 0; for (const v of a) if (v < ctThreshold) n++; return n; };
 
       // Metric definitions: label, colour ramp, value accessor, classing kind.
       METRICS = {
         risk:         { label: 'Relative risk',       ramp: RISK_RAMP,                kind: 'continuous', fmt: (x) => x.toFixed(2), value: (f) => f.properties.relative_risk },
-        Positive:     { label: 'Positive samples',     ramp: STATUS_RAMP.Positive,     kind: 'count', fmt: intFmt, value: (f) => countsOf(f).Positive },
+        Positive:     { label: 'Positive samples',     ramp: STATUS_RAMP.Positive,     kind: 'count', fmt: intFmt, value: (f) => (ctThreshold == null ? countsOf(f).Positive : posBelow(f)) },
         Negative:     { label: 'Negative samples',     ramp: STATUS_RAMP.Negative,     kind: 'count', fmt: intFmt, value: (f) => countsOf(f).Negative },
         Invalid:      { label: 'Invalid samples',      ramp: STATUS_RAMP.Invalid,      kind: 'count', fmt: intFmt, value: (f) => countsOf(f).Invalid },
         Unclassified: { label: 'Unclassified samples', ramp: STATUS_RAMP.Unclassified, kind: 'count', fmt: intFmt, value: (f) => countsOf(f).Unclassified },
         total:        { label: 'Total samples',        ramp: RISK_RAMP,                kind: 'count', fmt: intFmt, value: (f) => countsOf(f).total },
       };
-      // Class breaks per metric (counts classed over the non-zero zones only).
-      for (const cfg of Object.values(METRICS)) {
+      // Class breaks for a metric (counts classed over the non-zero zones only).
+      const recomputeBreaks = (cfg) => {
         const vals = geojson.features.map(cfg.value)
           .filter((v) => typeof v === 'number' && (cfg.kind === 'count' ? v > 0 : true));
         cfg.breaks = vals.length ? quantileBreaks(vals, cfg.ramp.length) : [];
         cfg.min = vals.length ? Math.min(...vals) : 0;
         cfg.max = vals.length ? Math.max(...vals) : 0;
-      }
+      };
+      for (const cfg of Object.values(METRICS)) recomputeBreaks(cfg);
 
       if (!map.getPane('riskPane')) {
         map.createPane('riskPane');
@@ -319,10 +332,16 @@ export function createMapPanel(containerId, tips) {
         choroLegendDiv.style.display = '';
         const cfg = METRICS[metric];
         const lo = [cfg.min, ...cfg.breaks], hi = [...cfg.breaks, cfg.max];
-        let html = `<div class="lg-title">${cfg.label}</div>`;
+        const title = (metric === 'Positive' && ctThreshold != null) ? `Positive · Ct < ${ctThreshold}` : cfg.label;
+        let html = `<div class="lg-title">${title}</div>`;
         if (cfg.kind === 'count') html += `<span><i style="background:${COUNT_NODATA};border-color:rgba(0,0,0,0.12)"></i>0 (none)</span>`;
         for (let i = 0; i < cfg.ramp.length; i++) html += `<span><i style="background:${cfg.ramp[i]};border-color:rgba(0,0,0,0.12)"></i>${cfg.fmt(lo[i])}–${cfg.fmt(hi[i])}</span>`;
         choroLegendDiv.innerHTML = html;
+      };
+      // Ct threshold change → recompute the Positive metric, redraw if it's active.
+      applyCtThreshold = () => {
+        recomputeBreaks(METRICS.Positive);
+        if (metric === 'Positive') { restyle(); renderLegend(); }
       };
       choroLegend = L.control({ position: 'bottomright' });
       choroLegend.onAdd = () => { choroLegendDiv = L.DomUtil.create('div', 'map-legend choropleth-legend'); renderLegend(); return choroLegendDiv; };
