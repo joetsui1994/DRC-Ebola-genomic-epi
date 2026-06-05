@@ -17,6 +17,7 @@ const STATUS_COLOR = {
   Invalid:      '#d8a86f',
   Unclassified: '#d3cfc8',
 };
+const SEQ_COLOR = '#7c1d1d';   // sequence-availability track (genomic samples) — maroon
 
 const el = (name, attrs) => {
   const n = document.createElementNS(SVNS, name);
@@ -55,7 +56,7 @@ function timeTicks(pxWidth, t0, t1) {
  * @param {{minDate:string,maxDate:string}} domain  tree time domain (root → most-recent)
  * @param {{onCtChange?:(t:?number)=>void}} [opts]  notified when the Ct filter changes
  */
-export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = () => {} } = {}) {
+export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = () => {}, tips = [] } = {}) {
   const host = document.getElementById(containerId);
   host.replaceChildren();
 
@@ -84,7 +85,8 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
 
   const legend = document.createElement('div');
   legend.className = 'dist-legend';
-  legend.innerHTML = STATUS.map(s => `<span><i style="background:${STATUS_COLOR[s]}"></i>${s}</span>`).join('');
+  legend.innerHTML = STATUS.map(s => `<span><i style="background:${STATUS_COLOR[s]}"></i>${s}</span>`).join('')
+    + `<span><i class="seq-dot" style="background:${SEQ_COLOR}"></i>Sequences</span>`;
 
   const controls = document.createElement('div');   // top-left row: toggle + legend
   controls.className = 'dist-controls';
@@ -101,6 +103,8 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
     const d = new Date(dateStr);
     let html = `<div class="tip-date">${d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</div>`;
     for (const st of STATUS) html += `<div class="tip-row"><i style="background:${STATUS_COLOR[st]}"></i>${st}<b>${counts[st]}</b></div>`;
+    const seqN = seqMap.get(dateStr) || 0;
+    if (seqN) html += `<div class="tip-row"><i class="seq-dot" style="background:${SEQ_COLOR}"></i>Sequences<b>${seqN}</b></div>`;
     tip.innerHTML = html;
     tip.style.display = 'block';
     const rect = host.getBoundingClientRect();
@@ -120,6 +124,7 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
   let markerDates = [];
   let transform = null;
   let scale, markerLayer, H;
+  let seqMap = new Map();   // date → #sequences (current selection), for the track + tooltip
 
   const t0 = +new Date(domain.minDate);
   const t1 = +new Date(domain.maxDate);
@@ -212,6 +217,24 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
     return byDay;
   }
 
+  // Sequences (tree tips) filtered by the same selection as the bars.
+  function filteredTips() {
+    const names = mode === 'area' ? sel.areas : sel.zones;
+    if (!names.length) return tips;
+    const set = new Set(names.map(upper));
+    const field = mode === 'area' ? 'health_area' : 'health_zone';
+    return tips.filter(t => set.has(upper(t[field])));
+  }
+  function seqByDate() {
+    const m = new Map();
+    for (const t of filteredTips()) {
+      const ts = +new Date(t.date);
+      if (isNaN(ts) || ts < t0 || ts > t1) continue;     // clip to the aligned axis
+      m.set(t.date, (m.get(t.date) || 0) + 1);
+    }
+    return m;
+  }
+
   function buildScale(W) {
     if (transform && transform.maxX > 0) {
       const x1 = transform.offsetX + transform.maxX * transform.scaleX;
@@ -228,7 +251,7 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
       const x = scale.dateToX(d);
       markerLayer.appendChild(el('line', {
         x1: x, y1: PAD.top, x2: x, y2: H - PAD.bottom,
-        stroke: '#3a3a38', 'stroke-width': 1.5, 'stroke-dasharray': '4 3', 'stroke-opacity': 0.85,
+        stroke: SEQ_COLOR, 'stroke-width': 1, 'stroke-dasharray': '4 3', 'stroke-opacity': 0.5,
       }));
     }
   }
@@ -247,12 +270,16 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
     const xMax = scale.dateToX(domain.maxDate);
 
     const byDay = aggregate();
+    seqMap = seqByDate();
     let yMax = 1;
     for (const d of byDay.values()) {
       const tot = d.Positive + d.Negative + d.Invalid + d.Unclassified;
       if (tot > yMax) yMax = tot;
     }
-    const plotH = H - PAD.top - PAD.bottom;
+    // Reserve a band below the legend for the sequence-availability track.
+    const trackY = PAD.top + 24;
+    const plotTop = trackY + 8;
+    const plotH = baseY - plotTop;
     const yToPx = (v) => baseY - (v / yMax) * plotH;
     const barW = Math.max(1, Math.abs(scale.dateToX(new Date(t0 + DAY_MS)) - xMin) - 1);
 
@@ -286,16 +313,33 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
       }
     }
 
+    // Sequence-availability track: a dashed maroon line + circles sized by #sequences/day.
+    // Hidden entirely when the current selection has no sequences.
+    if (seqMap.size) {
+      svg.appendChild(el('line', {
+        x1: xMin, y1: trackY, x2: xMax, y2: trackY,
+        stroke: SEQ_COLOR, 'stroke-width': 1, 'stroke-dasharray': '4 3', 'stroke-opacity': 0.5,
+      }));
+      for (const [dateStr, n] of seqMap) {
+        const cx = scale.dateToX(dateStr);
+        if (cx < PAD.left - 1 || cx > W - 1) continue;
+        const r = Math.min(6, 2 + 1.6 * Math.sqrt(n));
+        svg.appendChild(el('circle', { cx, cy: trackY, r, fill: SEQ_COLOR, 'fill-opacity': 0.45 }));
+      }
+    }
+
     markerLayer = el('g', {});
     svg.appendChild(markerLayer);
     drawMarkers();
 
-    // transparent per-day hit-areas (full plot height) drive the hover tooltip
+    // transparent per-day hit-areas (full height: track + bars) drive the hover tooltip;
+    // include sequence-only dates so their circles are hoverable too.
     const dayPx = Math.abs(scale.dateToX(new Date(t0 + DAY_MS)) - xMin);
-    for (const [dateStr, counts] of byDay) {
+    for (const dateStr of new Set([...byDay.keys(), ...seqMap.keys()])) {
+      const counts = byDay.get(dateStr) || { Positive: 0, Negative: 0, Invalid: 0, Unclassified: 0 };
       const hit = el('rect', {
         x: scale.dateToX(dateStr) - dayPx / 2, y: PAD.top,
-        width: Math.max(2, dayPx), height: plotH, fill: 'transparent',
+        width: Math.max(2, dayPx), height: baseY - PAD.top, fill: 'transparent',
       });
       hit.addEventListener('mousemove', (ev) => showTip(ev, dateStr, counts));
       svg.appendChild(hit);

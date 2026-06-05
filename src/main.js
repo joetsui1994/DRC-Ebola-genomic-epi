@@ -93,6 +93,15 @@ for (const r of linelist) {
   zonePosCt.get(z).push(v);
 }
 
+// Sequence (tree-tip) dates for the sample-distribution availability track — zone
+// canonicalised so they filter with the same selection as the bars.
+const realv = (v) => (v && v !== 'null') ? v : '';
+const seqTips = tips.filter(t => t.date).map(t => ({
+  date: t.date,
+  health_zone: realv(t.health_zone) ? canon(t.health_zone) : '',
+  health_area: realv(t.health_area),
+}));
+
 // Markers are built from the tips themselves (grouped by health_area → zone).
 const map = createMapPanel('map-body', tips);
 
@@ -108,7 +117,7 @@ fetch(`${BASE}data/health-zones.geojson`)
       .then(text => map.addMobilityLayer(parseMobilityMatrix(text, canon)));
   })
   .catch(err => console.warn('risk/mobility layer not loaded:', err));
-const ts  = createTimeseriesPanel('timeseries-body', linelist, { minDate: meta.rootDate, maxDate: meta.mostRecentDate }, { onCtChange: (t) => map.setCtThreshold(t) });
+const ts  = createTimeseriesPanel('timeseries-body', linelist, { minDate: meta.rootDate, maxDate: meta.mostRecentDate }, { onCtChange: (t) => map.setCtThreshold(t), tips: seqTips });
 const tree = await createTreePanel('tree-body');
 
 // Floating node-info card pinned to the tree panel.

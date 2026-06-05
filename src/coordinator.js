@@ -72,23 +72,27 @@ export function startCoordinator(tree, map, ts, meta, tips = [], canon = (v) => 
     if (names.length) tree.selectByNames(names);  // highlight this zone's tips + markers
     programmatic = false;
     zoneSelecting = false;
-    // the zone itself is authoritative for the chart, outline and date marker
-    ts.setMarkers([]);
+    // (date markers are set by onSelect from the selected tips, during selectByNames)
     ts.setSelection({ zones: [zoneName], areas: [] });
     map.highlightZones([zoneName]);
   });
 
-  // tree selection → map + choropleth + bar chart + date marker
-  tree.onSelect(({ target, selected, mrca }) => {
+  // tree selection → map + choropleth + bar chart + sequence date markers
+  tree.onSelect(({ target, selected }) => {
     const tipNames = selected.map((n) => n.name);
     map.highlight(tipNames);                       // markers always reflect the tip set
     nodeInfo?.show({ target, selected });          // floating node-info card (any selection)
+    // A dashed vertical line at each relevant sequence's date (deduped) — works for any
+    // selection source (map location or tree click).
+    const seen = new Set(), seqDates = [];
+    for (const n of selected) {
+      const d = nodeToDate(n, meta.mostRecentDate);
+      if (d && !seen.has(+d)) { seen.add(+d); seqDates.push(d); }
+    }
+    ts.setMarkers(seqDates);
     if (zoneSelecting) return;                      // zone click drives chart/outline itself
     if (!programmatic) activeKey = null;            // a direct tree click is not a map-toggle target
 
-    const node = target || mrca || null;
-    const d = nodeToDate(node, meta.mostRecentDate);
-    ts.setMarkers(d ? [d] : []);
     const zones = new Set(selected.map((n) => cz(n.annotations?.health_zone)).filter(Boolean));
     const areas = new Set(selected.map((n) => real(n.annotations?.health_area)).filter(Boolean));
     map.highlightZones([...zones]);

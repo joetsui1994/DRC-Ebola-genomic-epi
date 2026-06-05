@@ -109,6 +109,7 @@ body {
 }
 .dist-legend span { display: flex; align-items: center; gap: 4px; }
 .dist-legend i { width: 9px; height: 9px; border-radius: 2px; display: inline-block; flex: none; }
+.seq-dot { border-radius: 50% !important; opacity: 0.45; }   /* sequence swatch = circle, matching the track circles' opacity */
 
 /* "N not shown (…)" — header note for undated / out-of-window samples the chart can't plot */
 .dist-note {
