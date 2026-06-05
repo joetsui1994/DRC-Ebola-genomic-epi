@@ -63,7 +63,9 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
       binWidthDays: params.binWidthDays, origin, tNow, seed: 1,
     });
     lastCellSummary = cellSummary; lastSelection = selection;
-    if (inUpload) diagEl.textContent = `${diagnostics.kept} eligible, ${diagnostics.dropped} dropped · ${selection.length} selected`;
+    diagEl.textContent = inUpload
+      ? `${diagnostics.kept} eligible, ${diagnostics.dropped} dropped · ${selection.length} selected`
+      : `${diagnostics.kept} eligible candidates · ${selection.length} to sequence`;
     onChange({ active: activeEl.checked, cellSummary, selection, origin, binWidthDays: params.binWidthDays, mode: inUpload ? 'upload' : 'public' });
     renderDownloads(inUpload);
   }

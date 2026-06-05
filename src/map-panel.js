@@ -353,6 +353,7 @@ export function createMapPanel(containerId, tips) {
       const tooltipFor = (f) => {
         const nom = f.properties.Nom;
         if (metric === 'risk') { const r = f.properties.relative_risk; return `${nom} (health zone) — ${typeof r === 'number' ? r.toFixed(3) : 'n/a'} (RR)`; }
+        if (metric === 'toSequence') return `${nom} (health zone) — ${METRICS.toSequence.value(f) || 0} to sequence`;
         if (metric !== 'off') return `${nom} (health zone) — ${METRICS[metric].value(f) || 0} ${metric.toLowerCase()}`;
         return `${nom} (health zone)`;
       };
