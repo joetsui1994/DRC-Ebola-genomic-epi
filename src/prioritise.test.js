@@ -99,6 +99,13 @@ describe('prioritise', () => {
     expect(selection.length).toBe(2);
   });
 
+  it('degenerate delta=0 (Infinity weights) does not crash and covers cells', () => {
+    const cells = [cell('A', 4, 10), cell('B', 2, 10), cell('C', 1, 10)];
+    const { selection } = prioritise({ ...base, cells, n: 3, delta: 0 });
+    expect(selection.length).toBe(3);
+    expect(selectedByLoc(selection)).toEqual({ A: 1, B: 1, C: 1 });
+  });
+
   it('determinism: same seed + ids → identical selection', () => {
     const mk = () => [{ location: 'A', timeBin: 0, risk: 4, available: 3, h: 0, ids: ['a1', 'a2', 'a3'] },
                       { location: 'B', timeBin: 0, risk: 1, available: 3, h: 0, ids: ['b1', 'b2', 'b3'] }];

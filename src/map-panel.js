@@ -282,9 +282,13 @@ export function createMapPanel(containerId, tips) {
 
     /** Turn the "To sequence" metric on/off (rebuilds the metric button group). */
     setPrioritisation(active) {
+      // Switch to the "To sequence" metric only on the false→true transition, so a knob
+      // change (which re-fires this with active=true) won't snap back if the user has since
+      // picked another metric.
+      const becoming = !!active && !prioActive;
       prioActive = !!active;
       if (!active && metric === 'toSequence') metric = 'risk';
-      if (active) metric = 'toSequence';
+      if (becoming) metric = 'toSequence';
       rebuildGroup?.();
       if (prioKnobsCtl) { if (prioActive) prioKnobsCtl.addTo(map); else prioKnobsCtl.remove(); }
       restyle(); renderLegendSafe();
@@ -300,7 +304,7 @@ export function createMapPanel(containerId, tips) {
         L.DomEvent.disableClickPropagation(d); L.DomEvent.disableScrollPropagation(d);
         const P = prio.getParams();
         d.innerHTML =
-          row('δ', 'delta', P.delta, 0, 1, 0.05) + row('λ (d)', 'lam', P.lam, 1, 60, 1) +
+          row('δ', 'delta', P.delta, 0.05, 1, 0.05) + row('λ (d)', 'lam', P.lam, 1, 60, 1) +
           row('N', 'n', P.n, 1, 200, 1) + row('Ct<', 'ctThreshold', P.ctThreshold, 1, 45, 1) +
           row('bin (d)', 'binWidthDays', P.binWidthDays, 1, 30, 1);
         d.querySelectorAll('input').forEach((inp) => inp.addEventListener('input', () => {

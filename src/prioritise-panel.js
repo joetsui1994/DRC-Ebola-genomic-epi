@@ -99,7 +99,12 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
     reader.onload = () => { uploadRows = parseUpload(String(reader.result)).rows; compute(); };
     reader.readAsText(f);
   });
-  activeEl.addEventListener('change', () => { onChange({ active: activeEl.checked }); if (activeEl.checked) compute(); });
+  // On activate, let compute() be the single authoritative onChange (it fires with the full
+  // payload, so the map/chart get data in one pass — no all-zeros flicker). On deactivate,
+  // there's no data to compute; just signal inactive so the map/chart clear.
+  activeEl.addEventListener('change', () => {
+    if (activeEl.checked) compute(); else onChange({ active: false });
+  });
 
   return {
     /** Update knobs (from the on-map panel) and recompute. */

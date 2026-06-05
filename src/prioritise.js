@@ -59,7 +59,11 @@ export function prioritise({ cells, n, delta = 0.5, lam = 14, binWidthDays = 7, 
     }
     if (!elig.length) break;
     const wmax = elig.reduce((m, e) => (e.w > m ? e.w : m), -Infinity);
-    const ties = elig.filter((e) => e.w >= wmax - 1e-9 * wmax).map((e) => e.i);
+    // Guard the degenerate case (e.g. delta=0 with h=0 ⇒ w=Infinity): the relative
+    // tolerance `wmax - 1e-9*wmax` becomes NaN, so match on exact equality instead.
+    const ties = isFinite(wmax)
+      ? elig.filter((e) => e.w >= wmax - 1e-9 * wmax).map((e) => e.i)
+      : elig.filter((e) => e.w === wmax).map((e) => e.i);
     const idx = ties.length > 1 ? ties[Math.floor(rng() * ties.length)] : ties[0];
     const c = C[idx];
     selection.push({

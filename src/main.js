@@ -120,11 +120,11 @@ fetch(`${BASE}data/health-zones.geojson`)
       risk, canon, tips: seqTips,
       onChange: ({ active, cellSummary, origin, binWidthDays }) => {
         map.setPrioritisation(active);
-        if (cellSummary) {
+        if (active && cellSummary) {
           const byZone = new Map();
           for (const c of cellSummary) byZone.set(c.location, (byZone.get(c.location) || 0) + c.selected);
           map.setToSequence(byZone);
-          ts.setAllocation(active ? cellSummary : null, active ? { binWidthDays, origin } : null);
+          ts.setAllocation(cellSummary, { binWidthDays, origin });
         }
         if (!active) { map.setToSequence(new Map()); ts.setAllocation(null); }
       },
