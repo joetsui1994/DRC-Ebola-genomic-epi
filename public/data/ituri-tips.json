@@ -29,20 +29,20 @@
   {
     "id": "PP_00711R7",
     "date": "2026-05-03",
-    "location": "Hoho",
-    "health_zone": "Bunia",
-    "health_area": "Hoho",
-    "lat": 1.533054,
-    "lon": 30.233978
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822
   },
   {
     "id": "PP_00711S5",
     "date": "2026-05-03",
-    "location": "Hoho",
-    "health_zone": "Bunia",
-    "health_area": "Hoho",
-    "lat": 1.533054,
-    "lon": 30.233978
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822
   },
   {
     "id": "PP_006XHL9",
@@ -83,11 +83,11 @@
   {
     "id": "PP_00711T3",
     "date": "2026-05-03",
-    "location": "Lumumba",
-    "health_zone": "Bunia",
-    "health_area": "Lumumba",
-    "lat": 1.556531,
-    "lon": 30.244843
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822
   },
   {
     "id": "PP_006XCJJ",
@@ -101,20 +101,20 @@
   {
     "id": "PP_00711U1",
     "date": "2026-05-03",
-    "location": "Hoho",
-    "health_zone": "Bunia",
-    "health_area": "Hoho",
-    "lat": 1.533054,
-    "lon": 30.233978
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822
   },
   {
     "id": "PP_00711VZ",
     "date": "2026-05-03",
-    "location": "Hoho",
-    "health_zone": "Bunia",
-    "health_area": "Hoho",
-    "lat": 1.533054,
-    "lon": 30.233978
+    "location": "Nyakunde",
+    "health_zone": "Nyakunde",
+    "health_area": null,
+    "lat": 1.48015,
+    "lon": 29.94463
   },
   {
     "id": "PP_006XHKB",
