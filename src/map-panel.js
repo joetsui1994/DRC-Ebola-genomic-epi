@@ -12,6 +12,7 @@ const HIGHLIGHT_STYLE = { color: '#9a7a16', fillColor: '#f2c84b', fillOpacity: 0
 
 const RISK_RAMP   = ['#f6e3df', '#e8b3a6', '#d08163', '#aa4a32', '#7c1d1d'];   // risk + total
 const RISK_NODATA = '#e8e6e1';
+const TOSEQ_RAMP = ['#e7eef0', '#bcd4c9', '#86b8a0', '#4f8f78', '#205c4c'];   // "to sequence" (teal-green)
 // Per-status sequential ramps (light → dark) keyed on the bar-chart status hues,
 // extended into a saturated dark end so all 5 classes stay distinct even for the
 // pale tan/grey statuses.
@@ -142,6 +143,12 @@ export function createMapPanel(containerId, tips) {
   let ctThreshold = null;            // Ct filter for the Positive metric (null = off)
   let zonePosCt = new Map();         // upper Nom → positive-sample Ct values (for live re-counting)
   let applyCtThreshold = null;       // recompute Positive metric + redraw (set in addZoneLayer)
+  let toSeqByZone = new Map();       // upper Nom -> to-sequence count (prioritisation)
+  let prioActive = false;
+  let applyToSeq = null;             // recompute "To sequence" metric + redraw (set in addZoneLayer)
+  let rebuildGroup = null;           // rebuild the metric button group (set in addZoneLayer)
+  let renderLegendRef = null;        // reference to addZoneLayer's renderLegend
+  const renderLegendSafe = () => renderLegendRef?.();
   const selectedZones = new Set();   // upper-cased Nom of currently-selected zones
   const nameToLayer = new Map();     // upper-cased Nom → polygon layer (for search-and-zoom)
   const nameToCentroid = new Map();  // upper-cased Nom → L.LatLng (for mobility arrows)
@@ -272,6 +279,17 @@ export function createMapPanel(containerId, tips) {
       applyCtThreshold?.();
     },
 
+    /** Turn the "To sequence" metric on/off (rebuilds the metric button group). */
+    setPrioritisation(active) {
+      prioActive = !!active;
+      if (!active && metric === 'toSequence') metric = 'risk';
+      if (active) metric = 'toSequence';
+      rebuildGroup?.();
+      restyle(); renderLegendSafe();
+    },
+    /** Update per-zone to-sequence counts (upper Nom -> count) and redraw if active. */
+    setToSequence(byZone) { toSeqByZone = byZone || new Map(); applyToSeq?.(); },
+
     /**
      * Add the health-zone layer: a multi-metric choropleth (relative risk + per-zone
      * sample counts by status) with clickable selection. A button group switches the
@@ -295,6 +313,7 @@ export function createMapPanel(containerId, tips) {
         Invalid:      { label: 'Invalid samples',      ramp: STATUS_RAMP.Invalid,      kind: 'count', fmt: intFmt, value: (f) => countsOf(f).Invalid },
         Unclassified: { label: 'Unclassified samples', ramp: STATUS_RAMP.Unclassified, kind: 'count', fmt: intFmt, value: (f) => countsOf(f).Unclassified },
         total:        { label: 'Total samples',        ramp: RISK_RAMP,                kind: 'count', fmt: intFmt, value: (f) => countsOf(f).total },
+        toSequence:   { label: 'To sequence', ramp: TOSEQ_RAMP, kind: 'count', fmt: intFmt, value: (f) => toSeqByZone.get(upper(f.properties.Nom)) || 0 },
       };
       // Class breaks for a metric (counts classed over the non-zero zones only).
       const recomputeBreaks = (cfg) => {
@@ -354,6 +373,8 @@ export function createMapPanel(containerId, tips) {
         for (let i = 0; i < cfg.ramp.length; i++) html += `<span><i style="background:${cfg.ramp[i]};border-color:rgba(0,0,0,0.12)"></i>${cfg.fmt(lo[i])}–${cfg.fmt(hi[i])}</span>`;
         choroLegendDiv.innerHTML = html;
       };
+      renderLegendRef = renderLegend;
+      applyToSeq = () => { recomputeBreaks(METRICS.toSequence); if (metric === 'toSequence') { restyle(); renderLegend(); } };
       // Ct threshold change → recompute the Positive metric, redraw if it's active.
       applyCtThreshold = () => {
         recomputeBreaks(METRICS.Positive);
@@ -363,26 +384,24 @@ export function createMapPanel(containerId, tips) {
       choroLegend.onAdd = () => { choroLegendDiv = L.DomUtil.create('div', 'map-legend choropleth-legend'); renderLegend(); return choroLegendDiv; };
       choroLegend.addTo(map);
 
-      // metric button group (replaces the on/off toggle): Off + risk + per-status + total
-      const ORDER = ['off', 'risk', 'Positive', 'Negative', 'Invalid', 'Unclassified', 'total'];
-      const SHORT = { off: 'Off', risk: 'Risk', Positive: 'Pos', Negative: 'Neg', Invalid: 'Inv', Unclassified: 'Unc', total: 'Total' };
-      const FULL  = { off: 'Hide colour (zones stay clickable)', risk: 'Relative risk', Positive: 'Positive samples', Negative: 'Negative samples', Invalid: 'Invalid samples', Unclassified: 'Unclassified samples', total: 'Total samples' };
-      const groupCtl = L.control({ position: 'topright' });
-      groupCtl.onAdd = () => {
-        const div = L.DomUtil.create('div', 'choropleth-group');
-        L.DomEvent.disableClickPropagation(div);
+      // metric button group (replaces the on/off toggle): Off + risk + per-status + total (+ toSequence when prio active)
+      const SHORT = { off: 'Off', risk: 'Risk', Positive: 'Pos', Negative: 'Neg', Invalid: 'Inv', Unclassified: 'Unc', total: 'Total', toSequence: 'Seq→' };
+      const FULL  = { off: 'Hide colour (zones stay clickable)', risk: 'Relative risk', Positive: 'Positive samples', Negative: 'Negative samples', Invalid: 'Invalid samples', Unclassified: 'Unclassified samples', total: 'Total samples', toSequence: 'To sequence (prioritisation)' };
+      let groupDiv = null;
+      const buildGroup = () => {
+        if (!groupDiv) return;
+        const ORDER = ['off', 'risk', 'Positive', 'Negative', 'Invalid', 'Unclassified', 'total'].concat(prioActive ? ['toSequence'] : []);
+        groupDiv.replaceChildren();
         for (const key of ORDER) {
-          const b = L.DomUtil.create('button', key === metric ? 'active' : '', div);
+          const b = L.DomUtil.create('button', key === metric ? 'active' : '', groupDiv);
           b.type = 'button'; b.textContent = SHORT[key]; b.title = FULL[key]; b.dataset.metric = key;
-          b.onclick = () => {
-            metric = key;
-            [...div.children].forEach((c) => c.classList.toggle('active', c.dataset.metric === key));
-            restyle(); renderLegend();
-          };
+          b.onclick = () => { metric = key; [...groupDiv.children].forEach((c) => c.classList.toggle('active', c.dataset.metric === key)); restyle(); renderLegend(); };
         }
-        return div;
       };
+      const groupCtl = L.control({ position: 'topright' });
+      groupCtl.onAdd = () => { groupDiv = L.DomUtil.create('div', 'choropleth-group'); L.DomEvent.disableClickPropagation(groupDiv); buildGroup(); return groupDiv; };
       groupCtl.addTo(map);
+      rebuildGroup = buildGroup;
 
       // search-and-zoom: type a health-zone name → pick a match → zoom + select it.
       // Duplicate Noms (Bili, Lubunga) are disambiguated with their province so each

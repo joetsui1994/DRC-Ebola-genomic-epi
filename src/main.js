@@ -5,6 +5,7 @@ import { createTimeseriesPanel } from './timeseries-panel.js';
 import { startCoordinator } from './coordinator.js';
 import { createNodeInfo } from './node-info.js';
 import { makeSplitter } from './splitter.js';
+import { createPrioritisationPanel } from './prioritise-panel.js';
 
 // Parse the health-zone alias crosswalk (observed_name → canonical_nom) into a
 // normaliser. Health-zone names in the line-list / mobility / tree are mapped onto
@@ -70,6 +71,8 @@ const [tips, meta, linelistText, aliasText] = await Promise.all([
 
 const canon = makeCanon(aliasText);
 const linelist = parseLinelist(linelistText, canon);
+// Expose the raw line-list rows (public-mode candidates) to the prioritisation engine.
+window.__PRIO_LINELIST__ = linelist;
 
 // Per-zone sample counts by status (canonical Nom, upper-cased) for the choropleth.
 const ZONE_STATUS = ['Positive', 'Negative', 'Invalid', 'Unclassified'];
@@ -112,6 +115,21 @@ fetch(`${BASE}data/health-zones.geojson`)
   .then(r => r.json())
   .then(zones => {
     map.addZoneLayer(zones, zoneCounts, zonePosCt);
+    const risk = new Map(zones.features.map((f) => [(f.properties.Nom || '').toUpperCase().trim(), f.properties.relative_risk]));
+    const prio = createPrioritisationPanel(map.prioBody(), {
+      risk, canon, tips: seqTips,
+      onChange: ({ active, cellSummary }) => {
+        map.setPrioritisation(active);
+        if (cellSummary) {
+          const byZone = new Map();
+          for (const c of cellSummary) byZone.set(c.location, (byZone.get(c.location) || 0) + c.selected);
+          map.setToSequence(byZone);
+          ts.setAllocation?.(active ? cellSummary : null);   // setAllocation arrives in a later task — optional-chained
+        }
+        if (!active) { map.setToSequence(new Map()); ts.setAllocation?.(null); }
+      },
+    });
+    map.attachPrioKnobs?.(prio);   // attachPrioKnobs arrives in a later task — optional-chained
     return fetch(`${BASE}data/flowminder__inflow__static.matrix.csv`)
       .then(r => r.text())
       .then(text => map.addMobilityLayer(parseMobilityMatrix(text, canon)));
