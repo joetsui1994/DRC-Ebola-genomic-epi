@@ -98,6 +98,14 @@ export async function createTreePanel(containerId) {
   // its own container so it refits on resize).
   tree.onTreeLoad(() => { tree.fitToWindow(); tree.applySettings(SHAPE_SIZES); });
 
+  // Disable PearTree's double-click "drill into subtree" gesture (there's no embed
+  // option for it): swallow dblclick on the tree canvas in the capture phase, before
+  // PearTree's own handler runs. Scoped to #tree-canvas so the data-table's
+  // double-click-to-edit is unaffected.
+  document.getElementById(containerId)?.addEventListener('dblclick', (e) => {
+    if (e.target && e.target.id === 'tree-canvas') { e.stopPropagation(); e.preventDefault(); }
+  }, true);
+
   return {
     /**
      * Select tips by their accession (== leaf name). PearTree's setSelection
