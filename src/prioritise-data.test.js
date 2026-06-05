@@ -1,0 +1,61 @@
+// src/prioritise-data.test.js
+import { describe, it, expect } from 'vitest';
+import { buildCells, parseUpload } from './prioritise-data.js';
+
+const risk = new Map([['BUNIA', 0.9], ['KATWA', 0.5]]);   // upper Nom -> relative_risk
+const canon = (z) => (z || '').trim();                    // identity for the test
+
+describe('buildCells', () => {
+  it('keeps eligible positives (ct < threshold, valid zone/date) and bins them', () => {
+    const rows = [
+      { health_zone: 'Bunia', status: 'Positive', ct: '24', date: '2026-04-05' }, // bin 0
+      { health_zone: 'Bunia', status: 'Positive', ct: '30', date: '2026-04-12' }, // bin 1
+      { health_zone: 'Bunia', status: 'Negative', ct: '20', date: '2026-04-05' }, // dropped: not positive
+      { health_zone: 'Bunia', status: 'Positive', ct: '33', date: '2026-04-05' }, // dropped: ct >= 31
+      { health_zone: 'Nowhere', status: 'Positive', ct: '20', date: '2026-04-05' }, // dropped: zone not in risk
+      { health_zone: 'Katwa', status: 'Positive', ct: '', date: '2026-04-05' },    // dropped: no ct
+    ];
+    const { cells, diagnostics } = buildCells({ candidateRows: rows, risk, canon, ctThreshold: 31, binWidthDays: 7 });
+    const bunia0 = cells.find((c) => c.location === 'BUNIA' && c.timeBin === 0);
+    expect(bunia0.available).toBe(1);
+    expect(bunia0.risk).toBe(0.9);
+    expect(cells.find((c) => c.location === 'BUNIA' && c.timeBin === 1).available).toBe(1);
+    expect(diagnostics.kept).toBe(2);
+    expect(diagnostics.dropped).toBe(4);
+  });
+
+  it('subtractHistory=true sets available = eligible - sequenced, h = sequenced', () => {
+    const candidateRows = [
+      { health_zone: 'Bunia', status: 'Positive', ct: '24', date: '2026-04-05' },
+      { health_zone: 'Bunia', status: 'Positive', ct: '25', date: '2026-04-05' },
+      { health_zone: 'Bunia', status: 'Positive', ct: '26', date: '2026-04-05' },
+    ];
+    const sequencedRows = [{ health_zone: 'Bunia', date: '2026-04-05' }]; // 1 tip in bin 0
+    const { cells } = buildCells({ candidateRows, sequencedRows, risk, canon, ctThreshold: 31, binWidthDays: 7, subtractHistory: true });
+    const c = cells.find((x) => x.location === 'BUNIA' && x.timeBin === 0);
+    expect(c.available).toBe(2);  // 3 eligible - 1 sequenced
+    expect(c.h).toBe(1);
+  });
+
+  it('withIds attaches a sample-id pool per cell', () => {
+    const candidateRows = [
+      { sample_id: 'X1', health_zone: 'Bunia', status: 'Positive', ct: '24', date: '2026-04-05' },
+      { sample_id: 'X2', health_zone: 'Bunia', status: 'Positive', ct: '25', date: '2026-04-05' },
+    ];
+    const { cells } = buildCells({ candidateRows, risk, canon, ctThreshold: 31, binWidthDays: 7, withIds: true });
+    expect(cells[0].ids.sort()).toEqual(['X1', 'X2']);
+    expect(cells[0].available).toBe(2);
+  });
+});
+
+describe('parseUpload', () => {
+  it('parses header + rows, flags sequenced, tolerates DD/MM/YYYY', () => {
+    const csv = 'sample_id,health_zone,status,ct,date,sequenced\n'
+      + 'A1,Bunia,Positive,24,2026-04-05,\n'
+      + 'A2,Katwa,Positive,22,06/04/2026,1\n';
+    const { rows } = parseUpload(csv);
+    expect(rows.length).toBe(2);
+    expect(rows[0]).toMatchObject({ sample_id: 'A1', health_zone: 'Bunia', status: 'Positive', ct: '24', date: '2026-04-05', sequenced: false });
+    expect(rows[1]).toMatchObject({ sample_id: 'A2', date: '2026-04-06', sequenced: true });
+  });
+});
