@@ -20,14 +20,14 @@ function makeCanon(text) {
 }
 
 // Parse the line-list CSV into the rows the distribution panel needs.
-// Columns: 0 province, 1 health_zone, 2 health_area, 3 status,
-//          4 symptom_onset_date, 5 fallback_date, 6 fallback_date_source.
+// Columns: 0 province, 1 health_zone, 2 health_area, 3 status, 4 date, 5 ct
+// (ct = RadiOne Ct from the raw ct_used; present only on Positive rows where available).
 function parseLinelist(text, canon) {
   const lines = text.trim().split(/\r?\n/);
   const out = [];
   for (let i = 1; i < lines.length; i++) {
     const c = lines[i].split(',');
-    out.push({ health_zone: canon(c[1]), health_area: c[2], status: c[3], date: c[5] });
+    out.push({ health_zone: canon(c[1]), health_area: c[2], status: c[3], date: c[4], ct: c[5] });
   }
   return out;
 }

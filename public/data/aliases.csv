@@ -7,3 +7,10 @@ Makiso Kisangani,Makiso-Kisangani,flowminder,Space-separated variant of canonica
 Nia Nia,Nia-Nia,flowminder,Space-separated variant of canonical hyphenated form
 Rwmapara,Rwampara,epi,Transposition typo observed in WHO Sitrep 01 (2026-05-18)
 Manguripa,Manguredjipa,insp_sitrep,Truncated spelling in INSP SitRep contact/case tables
+DRODO,Drodro,linelist,Spelling variant in BD_LABO line-list
+MUNGBAWALU,Mongbwalu,linelist,Spelling variant of Mongbwalu in BD_LABO line-list
+NBAMBU,Bambu,linelist,Spelling variant of Bambu in BD_LABO line-list
+BUNA,Bunia,linelist,Mapped to Bunia (per data owner)
+MABANGA,Mambasa,linelist,Mapped to Mambasa (per data owner)
+KAOBALA,Kambala,linelist,Mapped to Kambala (per data owner)
+ITENDEY,Kilo,linelist,Mapped to Kilo (per data owner)
