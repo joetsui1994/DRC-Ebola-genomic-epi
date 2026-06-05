@@ -147,6 +147,7 @@ export function createMapPanel(containerId, tips) {
   let prioActive = false;
   let applyToSeq = null;             // recompute "To sequence" metric + redraw (set in addZoneLayer)
   let rebuildGroup = null;           // rebuild the metric button group (set in addZoneLayer)
+  let prioKnobsCtl = null;          // on-map δ/λ/N/Ct/bin knobs control (prioritisation)
   let renderLegendRef = null;        // reference to addZoneLayer's renderLegend
   const renderLegendSafe = () => renderLegendRef?.();
   const selectedZones = new Set();   // upper-cased Nom of currently-selected zones
@@ -285,10 +286,38 @@ export function createMapPanel(containerId, tips) {
       if (!active && metric === 'toSequence') metric = 'risk';
       if (active) metric = 'toSequence';
       rebuildGroup?.();
+      if (prioKnobsCtl) { if (prioActive) prioKnobsCtl.addTo(map); else prioKnobsCtl.remove(); }
       restyle(); renderLegendSafe();
     },
     /** Update per-zone to-sequence counts (upper Nom -> count) and redraw if active. */
     setToSequence(byZone) { toSeqByZone = byZone || new Map(); applyToSeq?.(); },
+
+    /** Add an on-map knobs panel (shown only while prioritisation is active). */
+    attachPrioKnobs(prio) {
+      const ctl = L.control({ position: 'bottomleft' });
+      ctl.onAdd = () => {
+        const d = L.DomUtil.create('div', 'prio-knobs');
+        L.DomEvent.disableClickPropagation(d); L.DomEvent.disableScrollPropagation(d);
+        const P = prio.getParams();
+        d.innerHTML =
+          row('δ', 'delta', P.delta, 0, 1, 0.05) + row('λ (d)', 'lam', P.lam, 1, 60, 1) +
+          row('N', 'n', P.n, 1, 200, 1) + row('Ct<', 'ctThreshold', P.ctThreshold, 1, 45, 1) +
+          row('bin (d)', 'binWidthDays', P.binWidthDays, 1, 30, 1);
+        d.querySelectorAll('input').forEach((inp) => inp.addEventListener('input', () => {
+          const k = inp.dataset.k; const v = parseFloat(inp.value);
+          d.querySelector(`[data-v="${k}"]`).textContent = inp.value;
+          prio.setParams({ [k]: v });
+        }));
+        return d;
+      };
+      function row(label, k, val, min, max, step) {
+        return `<div class="pk-row"><span class="pk-l">${label}</span>`
+          + `<input type="range" data-k="${k}" min="${min}" max="${max}" step="${step}" value="${val}">`
+          + `<span class="pk-v" data-v="${k}">${val}</span></div>`;
+      }
+      prioKnobsCtl = ctl;
+      if (prio.isActive()) ctl.addTo(map);
+    },
 
     /**
      * Add the health-zone layer: a multi-metric choropleth (relative risk + per-zone
