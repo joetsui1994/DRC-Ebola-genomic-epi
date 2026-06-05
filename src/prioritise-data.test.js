@@ -1,6 +1,7 @@
 // src/prioritise-data.test.js
 import { describe, it, expect } from 'vitest';
 import { buildCells, parseUpload } from './prioritise-data.js';
+import { prioritise } from './prioritise.js';
 
 const risk = new Map([['BUNIA', 0.9], ['KATWA', 0.5]]);   // upper Nom -> relative_risk
 const canon = (z) => (z || '').trim();                    // identity for the test
@@ -57,5 +58,19 @@ describe('parseUpload', () => {
     expect(rows.length).toBe(2);
     expect(rows[0]).toMatchObject({ sample_id: 'A1', health_zone: 'Bunia', status: 'Positive', ct: '24', date: '2026-04-05', sequenced: false });
     expect(rows[1]).toMatchObject({ sample_id: 'A2', date: '2026-04-06', sequenced: true });
+  });
+});
+
+describe('upload end-to-end', () => {
+  it('upload path: parse → buildCells(withIds) → prioritise yields IDs', () => {
+    const csv = 'sample_id,health_zone,status,ct,date\n'
+      + 'A1,Bunia,Positive,22,2026-04-05\nA2,Bunia,Positive,23,2026-04-05\nB1,Katwa,Positive,24,2026-04-05\n';
+    const { rows } = parseUpload(csv);
+    const { cells, origin, tNow } = buildCells({
+      candidateRows: rows, risk, canon, ctThreshold: 31, binWidthDays: 7, withIds: true,
+    });
+    const { selection } = prioritise({ cells, n: 2, delta: 0.5, lam: Infinity, binWidthDays: 7, origin, tNow, seed: 1 });
+    expect(selection.length).toBe(2);
+    expect(selection.every((s) => /^(A1|A2|B1)$/.test(s.sampleId))).toBe(true);
   });
 });
