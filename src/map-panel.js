@@ -225,6 +225,22 @@ export function createMapPanel(containerId, tips) {
     if (zoneClickHandler) zoneClickHandler(name, { toggle: false });
   }
 
+  // Map / Prioritisation tab switch. Returning to the map re-sizes Leaflet.
+  const mapBody = document.getElementById('map-body');
+  const prioBody = document.getElementById('prio-body');
+  const tabMap = document.getElementById('tab-map');
+  const tabPrio = document.getElementById('tab-prio');
+  function showTab(which) {
+    const onMap = which === 'map';
+    mapBody.style.display = onMap ? '' : 'none';
+    prioBody.style.display = onMap ? 'none' : '';
+    tabMap?.classList.toggle('active', onMap);
+    tabPrio?.classList.toggle('active', !onMap);
+    if (onMap) requestAnimationFrame(() => map.invalidateSize());
+  }
+  tabMap?.addEventListener('click', () => showTab('map'));
+  tabPrio?.addEventListener('click', () => showTab('prio'));
+
   return {
     /** cb(tipIds[]) when a marker is clicked. */
     onMarkerClick(cb) { clickHandler = cb; },
@@ -438,6 +454,9 @@ export function createMapPanel(containerId, tips) {
 
     /** Programmatically zoom to + select a zone by name (search-and-zoom). */
     selectZoneByName,
+
+    /** The Prioritisation tab body element (the panel renders into it). */
+    prioBody: () => document.getElementById('prio-body'),
 
     /**
      * Add the mobility-arrows layer. When toggled on, draws the selected zone's
