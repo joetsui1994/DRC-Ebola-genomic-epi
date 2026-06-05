@@ -118,18 +118,18 @@ fetch(`${BASE}data/health-zones.geojson`)
     const risk = new Map(zones.features.map((f) => [(f.properties.Nom || '').toUpperCase().trim(), f.properties.relative_risk]));
     const prio = createPrioritisationPanel(map.prioBody(), {
       risk, canon, tips: seqTips,
-      onChange: ({ active, cellSummary }) => {
+      onChange: ({ active, cellSummary, origin, binWidthDays }) => {
         map.setPrioritisation(active);
         if (cellSummary) {
           const byZone = new Map();
           for (const c of cellSummary) byZone.set(c.location, (byZone.get(c.location) || 0) + c.selected);
           map.setToSequence(byZone);
-          ts.setAllocation?.(active ? cellSummary : null);   // setAllocation arrives in a later task — optional-chained
+          ts.setAllocation(active ? cellSummary : null, active ? { binWidthDays, origin } : null);
         }
-        if (!active) { map.setToSequence(new Map()); ts.setAllocation?.(null); }
+        if (!active) { map.setToSequence(new Map()); ts.setAllocation(null); }
       },
     });
-    map.attachPrioKnobs?.(prio);   // attachPrioKnobs arrives in a later task — optional-chained
+    map.attachPrioKnobs?.(prio);   // on-map knobs panel
     return fetch(`${BASE}data/flowminder__inflow__static.matrix.csv`)
       .then(r => r.text())
       .then(text => map.addMobilityLayer(parseMobilityMatrix(text, canon)));

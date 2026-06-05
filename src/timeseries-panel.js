@@ -125,6 +125,8 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
   let transform = null;
   let scale, markerLayer, H;
   let seqMap = new Map();   // date → #sequences (current selection), for the track + tooltip
+  let allocation = null;   // cellSummary[] | null  (to-sequence per zone×bin)
+  let allocOpts = null;    // { binWidthDays, origin } | null
 
   const t0 = +new Date(domain.minDate);
   const t1 = +new Date(domain.maxDate);
@@ -235,6 +237,23 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
     return m;
   }
 
+  // To-sequence counts per date for the current selection (sum cellSummary.selected over
+  // cells; in zone mode, restrict to the selected zones; map each bin to its midpoint date).
+  function allocByDate(binWidthDays, origin) {
+    if (!allocation) return new Map();
+    const names = mode === 'area' ? sel.areas : sel.zones;
+    const set = names.length ? new Set(names.map(upper)) : null;
+    const m = new Map();
+    for (const c of allocation) {
+      if (!c.selected) continue;
+      if (set && mode === 'zone' && !set.has(upper(c.location))) continue;   // zone-filtered
+      const mid = +new Date(origin) + (c.timeBin + 0.5) * binWidthDays * 86400000;
+      const day = new Date(mid).toISOString().slice(0, 10);
+      m.set(day, (m.get(day) || 0) + c.selected);
+    }
+    return m;
+  }
+
   function buildScale(W) {
     if (transform && transform.maxX > 0) {
       const x1 = transform.offsetX + transform.maxX * transform.scaleX;
@@ -328,6 +347,18 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
       }
     }
 
+    // To-sequence allocation overlay (a second row of circles, teal-green), selection-aware.
+    const alloc = allocByDate(allocOpts?.binWidthDays || 7, allocOpts?.origin || domain.minDate);
+    if (alloc.size) {
+      const ay = trackY + 9;
+      for (const [dateStr, k] of alloc) {
+        const cx = scale.dateToX(dateStr);
+        if (cx < PAD.left - 1 || cx > W - 1) continue;
+        const r = Math.min(6, 2 + 1.6 * Math.sqrt(k));
+        svg.appendChild(el('circle', { cx, cy: ay, r, fill: '#205c4c', 'fill-opacity': 0.55 }));
+      }
+    }
+
     markerLayer = el('g', {});
     svg.appendChild(markerLayer);
     drawMarkers();
@@ -356,6 +387,8 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
   return {
     setMarkers(dates) { markerDates = (dates || []).filter(Boolean); drawMarkers(); },
     setTransform(t) { transform = (t && t.maxX > 0) ? t : null; render(); },
+    /** Set/clear the to-sequence allocation overlay (cellSummary[] + {binWidthDays, origin}, or null). */
+    setAllocation(cs, opts) { allocation = cs; allocOpts = opts || null; render(); },
     /** Filter to a selection's health zones/areas. `{ zones:[], areas:[] }` ([] = all). */
     setSelection({ zones, areas } = {}) {
       sel = { zones: [...new Set(zones || [])], areas: [...new Set(areas || [])] };
