@@ -43,6 +43,11 @@ export async function createTreePanel(containerId) {
       // node/axis colours and background).
       theme: "O'Toole",
       tipLabelShow: 'off',
+      // Colour tips by health zone (categorical palette auto-built from the annotation).
+      // This is annotation-dependent, so it must be an init-setting (applySettings can't
+      // apply it). The built-in legend is left off by default (it reserves canvas width,
+      // shifting the tree + histogram); a header button toggles it on demand — see below.
+      tipColourBy: 'health_zone',
       // Time axis calibrated to the tip `date` annotations (ISO strings), shown as
       // calendar dates. Uses PearTree's smart auto axis (matches the embed demo):
       // 'auto' tick intervals adapt density to the span/zoom, and 'component' labels
@@ -105,6 +110,23 @@ export async function createTreePanel(containerId) {
   document.getElementById(containerId)?.addEventListener('dblclick', (e) => {
     if (e.target && e.target.id === 'tree-canvas') { e.stopPropagation(); e.preventDefault(); }
   }, true);
+
+  // Legend toggle. PearTree's embed API can't flip the built-in legend at runtime
+  // (applySettings doesn't cover legendAnnotation, and there's no panel toggle for it), so
+  // we drive its internal legend dropdown (#legend-annotation) directly and dispatch the
+  // change it listens for. Tips stay coloured by health_zone regardless; this only shows/
+  // hides the legend, which reserves canvas width (shifting the tree + histogram).
+  let legendOn = false;
+  const legendBtn = document.getElementById('legend-toggle');
+  function setLegend(on) {
+    const sel = document.getElementById('legend-annotation');
+    if (!sel) return;
+    sel.value = on ? 'health_zone' : '';
+    sel.dispatchEvent(new Event('change', { bubbles: true }));
+    legendOn = on;
+    legendBtn?.classList.toggle('active', on);
+  }
+  legendBtn?.addEventListener('click', () => setLegend(!legendOn));
 
   return {
     /**

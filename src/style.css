@@ -83,6 +83,15 @@ body {
   padding: 1px 7px; cursor: pointer;
 }
 .dist-download:hover { background: rgba(124, 29, 29, 0.16); }
+.legend-toggle {
+  float: right; margin-top: -1px;
+  font-size: 9.5px; font-weight: 600; letter-spacing: 0.03em; text-transform: none;
+  color: var(--maroon); background: rgba(124, 29, 29, 0.08);
+  border: 1px solid rgba(124, 29, 29, 0.25); border-radius: 5px;
+  padding: 1px 8px; cursor: pointer;
+}
+.legend-toggle:hover { background: rgba(124, 29, 29, 0.16); }
+.legend-toggle.active { background: var(--maroon); color: #fff; }
 .panel-body { position: absolute; top: 31px; left: 0; right: 0; bottom: 0; }
 
 /* Sample-distribution: zone/area toggle + status legend, a row offset from the
