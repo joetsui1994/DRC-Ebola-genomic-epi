@@ -231,6 +231,10 @@ body {
 .choropleth-group button:first-child { border-left: none; }
 .choropleth-group button.active { background: var(--terracotta); color: #fff; }
 .choropleth-group button:hover:not(.active) { background: rgba(155, 125, 78, 0.12); }
+/* The "To sequence" (Seq+) metric button takes the muted map green. */
+.choropleth-group button[data-metric="toSequence"] { color: #587e72; }
+.choropleth-group button[data-metric="toSequence"].active { background: #587e72; color: #fff; }
+.choropleth-group button[data-metric="toSequence"]:hover:not(.active) { background: rgba(88, 126, 114, 0.14); }
 
 /* Top-right map controls share one row: the choropleth metric group on the right,
    the mobility toggle to its left (row-reverse keeps the metric group at the edge;
@@ -312,22 +316,79 @@ body {
    search box poke through the dialog. Lift the overlay above them. */
 #tree-body .pt-modal-overlay { z-index: 2000; }
 
-/* Map panel tabs (Map / Prioritisation) */
-.map-tabs { float: right; display: inline-flex; gap: 0; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
-.map-tab { font-size: 9.5px; font-weight: 600; letter-spacing: 0.03em; text-transform: none; padding: 1px 8px; border: none; background: transparent; color: var(--muted); cursor: pointer; }
-.map-tab.active { background: var(--terracotta); color: #fff; }
+/* Map panel header doubles as a tab switcher (Outbreak map / Sequencing
+   prioritisation), left-aligned in the panel's title bar. Active = maroon at
+   full strength; inactive labels sit back at low opacity with a gentle hover. */
+.panel > h3.map-head { padding: 0 6px; display: flex; align-items: stretch; gap: 2px; }
+.map-tab {
+  font-size: 10.5px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;
+  color: var(--muted); background: transparent; border: none; cursor: pointer;
+  padding: 9px 10px 7px; opacity: 0.4;
+  transition: opacity 0.15s ease;
+}
+.map-tab:hover { opacity: 0.65; }
+.map-tab.active { color: var(--maroon); opacity: 1; }
+#tab-prio.active { color: #587e72; }                 /* prioritisation tab → muted map green when active */
 #prio-body { font-size: 12px; color: var(--ink); line-height: 1.5; }
-#prio-body h4 { margin: 12px 0 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); }
-#prio-body code { background: rgba(124,29,29,0.07); padding: 0 3px; border-radius: 3px; }
+#prio-body h4 { margin: 26px 0 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; color: #587e72;
+  padding-top: 14px; border-top: 1px solid rgba(88,126,114,0.18); }
+#prio-body > .prio-lead + h4 { margin-top: 10px; padding-top: 0; border-top: none; }   /* first section: no rule above */
+#prio-body code { background: rgba(88,126,114,0.12); color: #46695d; padding: 0 3px; border-radius: 3px; }
+#prio-body input { accent-color: #587e72; }          /* upload + activate controls */
+#prio-body .prio-lead { font-weight: 700; font-size: 13px; color: var(--ink); margin: 2px 0 8px; letter-spacing: 0.01em; }
+#prio-body p { margin: 6px 0; }
+#prio-body ul { margin: 4px 0; padding-left: 18px; }
+#prio-body li { margin: 2px 0; }
+#prio-body table { border-collapse: collapse; width: 100%; margin: 6px 0; font-size: 11px; }
+#prio-body th, #prio-body td { border: 1px solid var(--border); padding: 3px 6px; text-align: left; vertical-align: top; }
+#prio-body th { background: rgba(88,126,114,0.12); color: #46695d; font-weight: 600; white-space: nowrap; }
+#prio-body .prio-tablewrap { overflow-x: auto; }
+#prio-body .prio-formula { text-align: center; font-size: 13px; color: #46695d; margin: 16px 0; font-variant-numeric: tabular-nums; line-height: 1.3; }
+#prio-body .frac { display: inline-flex; flex-direction: column; vertical-align: middle; text-align: center; margin: 0 3px; }
+#prio-body .frac-n { padding: 0 8px 1px; border-bottom: 1px solid currentColor; }
+#prio-body .frac-d { padding: 1px 8px 0; }
+#prio-body .big-paren { font-size: 2.1em; font-weight: 300; vertical-align: middle; margin: 0 1px; line-height: 0; }
+#prio-body pre { background: rgba(88,126,114,0.08); border: 1px solid rgba(88,126,114,0.25); border-radius: 5px;
+  padding: 8px 10px; margin: 6px 0; font-size: 10.5px; line-height: 1.45; color: var(--ink); overflow-x: auto; white-space: pre; }
 
-.prio-up, .prio-act { display: block; margin: 8px 0; font-size: 12px; }
+/* Weighting scatter (methodology page) + its shared knob strip. */
+.ps-cap { font-size: 11px; color: var(--muted); margin: 4px 0 2px; line-height: 1.45; }
+#prio-scatter { position: relative; margin: 4px 0; }
+.ps-svg { position: relative; width: 100%; }
+.ps-svg svg { display: block; }
+.ps-tip { position: absolute; pointer-events: none; z-index: 5; background: rgba(255,255,255,0.97);
+  border: 1px solid var(--border); border-radius: 6px; padding: 5px 7px; font-size: 10.5px; color: var(--ink);
+  white-space: nowrap; box-shadow: 0 1px 3px rgba(30,25,18,0.14); }
+.ps-tip .ps-tip-h { font-weight: 700; color: #205c4c; margin-bottom: 1px; }
+.ps-knobs { display: grid; grid-template-columns: repeat(auto-fit, minmax(165px, 1fr)); gap: 2px 18px; font-size: 10px;
+  margin: 2px 0 4px; padding: 7px 11px; border: 1px solid rgba(88,126,114,0.3); border-radius: 7px; background: rgba(88,126,114,0.05); }
+.ps-knobs .pk-row { gap: 8px; }
+.ps-knobs .pk-l { width: 38px; }                                        /* fixed → every slider starts at the same offset */
+.ps-knobs .pk-row input[type=range] { flex: 1; width: auto; min-width: 0; }  /* slider fills the rest of the cell */
+.ps-knobs .pk-v { width: 30px; }
+
+.prio-up { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 10px 0; font-size: 11.5px; color: var(--muted); }
+.prio-up-note { color: var(--muted); }
+.prio-soon { display: inline-block; font-size: 8.5px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
+  color: #fff; background: #587e72; border-radius: 4px; padding: 2px 6px; }
+.prio-up input[type=file] { font-size: 11px; color: var(--muted); max-width: 180px; }
+.prio-up input[type=file]::file-selector-button {
+  font: inherit; font-weight: 600; color: #46695d; background: rgba(88,126,114,0.1);
+  border: 1px solid rgba(88,126,114,0.3); border-radius: 5px; padding: 3px 10px; margin-right: 8px; cursor: pointer;
+}
+.prio-up input[type=file]:disabled { opacity: 0.5; cursor: not-allowed; }
+.prio-up input[type=file]:disabled::file-selector-button {
+  cursor: not-allowed; color: var(--muted); background: rgba(0,0,0,0.04); border-color: var(--border);
+}
 .prio-diag { font-size: 11px; color: var(--muted); margin: 4px 0; }
-.prio-dl-btn { margin: 6px 8px 0 0; font-size: 10px; font-weight: 600; color: var(--maroon);
-  background: rgba(124,29,29,0.08); border: 1px solid rgba(124,29,29,0.25); border-radius: 5px; padding: 2px 8px; cursor: pointer; }
+.prio-dl { margin: 4px 0 2px; }
+.prio-dl-btn { margin: 6px 8px 0 0; font-size: 10px; font-weight: 600; color: #587e72;
+  background: rgba(88,126,114,0.1); border: 1px solid rgba(88,126,114,0.3); border-radius: 5px; padding: 2px 8px; cursor: pointer; }
 
-.prio-knobs { background: rgba(255,255,255,0.94); border: 1px solid var(--border); border-radius: 7px;
+/* Knobs themed to a muted version of the "To sequence" map green. */
+.prio-knobs { background: rgba(255,255,255,0.95); border: 1px solid rgba(88,126,114,0.3); border-radius: 7px;
   box-shadow: 0 1px 2px rgba(30,25,18,0.1); padding: 5px 8px; font-size: 10px; color: var(--ink); }
 .pk-row { display: flex; align-items: center; gap: 6px; line-height: 1.7; }
 .pk-l { width: 38px; color: var(--muted); flex: none; }
-.pk-row input[type=range] { width: 96px; }
-.pk-v { width: 26px; text-align: right; font-variant-numeric: tabular-nums; }
+.pk-row input[type=range] { width: 68px; accent-color: #587e72; }
+.pk-v { width: 26px; text-align: right; font-variant-numeric: tabular-nums; color: #587e72; font-weight: 600; }

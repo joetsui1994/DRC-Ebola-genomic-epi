@@ -18,6 +18,7 @@ const STATUS_COLOR = {
   Unclassified: '#d3cfc8',
 };
 const SEQ_COLOR = '#7c1d1d';   // sequence-availability track (genomic samples) — maroon
+const ALLOC_COLOR = '#205c4c'; // to-sequence allocation track (prioritisation) — teal-green
 
 const el = (name, attrs) => {
   const n = document.createElementNS(SVNS, name);
@@ -105,6 +106,8 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
     for (const st of STATUS) html += `<div class="tip-row"><i style="background:${STATUS_COLOR[st]}"></i>${st}<b>${counts[st]}</b></div>`;
     const seqN = seqMap.get(dateStr) || 0;
     if (seqN) html += `<div class="tip-row"><i class="seq-dot" style="background:${SEQ_COLOR}"></i>Sequences<b>${seqN}</b></div>`;
+    const toSeqN = allocMap.get(dateStr) || 0;
+    if (toSeqN) html += `<div class="tip-row"><i class="seq-dot" style="background:${ALLOC_COLOR}"></i>To sequence<b>${toSeqN}</b></div>`;
     tip.innerHTML = html;
     tip.style.display = 'block';
     const rect = host.getBoundingClientRect();
@@ -125,6 +128,7 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
   let transform = null;
   let scale, markerLayer, H;
   let seqMap = new Map();   // date → #sequences (current selection), for the track + tooltip
+  let allocMap = new Map(); // date → #to-sequence (prioritisation), for the track + tooltip
   let allocation = null;   // cellSummary[] | null  (to-sequence per zone×bin)
   let allocOpts = null;    // { binWidthDays, origin } | null
 
@@ -295,9 +299,14 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
       const tot = d.Positive + d.Negative + d.Invalid + d.Unclassified;
       if (tot > yMax) yMax = tot;
     }
-    // Reserve a band below the legend for the sequence-availability track.
-    const trackY = PAD.top + 24;
-    const plotTop = trackY + 8;
+    // Reserve a band below the legend for the sequence-availability track and, when
+    // prioritisation is active, the to-sequence allocation track beneath it (lowered with a
+    // gap). The bars start below whichever tracks are shown so neither line crosses them.
+    const alloc = allocByDate(allocOpts?.binWidthDays || 7, allocOpts?.origin || domain.minDate);
+    allocMap = alloc;                                     // expose to the hover tooltip
+    const trackY = PAD.top + 24;                          // sequence-availability track
+    const allocY = seqMap.size ? trackY + 14 : trackY;   // to-sequence track (below, with a gap)
+    const plotTop = (alloc.size ? allocY : trackY) + 8;
     const plotH = baseY - plotTop;
     const yToPx = (v) => baseY - (v / yMax) * plotH;
     const barW = Math.max(1, Math.abs(scale.dateToX(new Date(t0 + DAY_MS)) - xMin) - 1);
@@ -347,15 +356,18 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
       }
     }
 
-    // To-sequence allocation overlay (a second row of circles, teal-green), selection-aware.
-    const alloc = allocByDate(allocOpts?.binWidthDays || 7, allocOpts?.origin || domain.minDate);
+    // To-sequence allocation track: a dashed teal-green line + circles sized by #to-sequence
+    // per bin (selection-aware). Mirrors the sequence track, sat below it with a gap.
     if (alloc.size) {
-      const ay = trackY + 9;
+      svg.appendChild(el('line', {
+        x1: xMin, y1: allocY, x2: xMax, y2: allocY,
+        stroke: ALLOC_COLOR, 'stroke-width': 1, 'stroke-dasharray': '4 3', 'stroke-opacity': 0.5,
+      }));
       for (const [dateStr, k] of alloc) {
         const cx = scale.dateToX(dateStr);
         if (cx < PAD.left - 1 || cx > W - 1) continue;
         const r = Math.min(6, 2 + 1.6 * Math.sqrt(k));
-        svg.appendChild(el('circle', { cx, cy: ay, r, fill: '#205c4c', 'fill-opacity': 0.55 }));
+        svg.appendChild(el('circle', { cx, cy: allocY, r, fill: ALLOC_COLOR, 'fill-opacity': 0.55 }));
       }
     }
 
@@ -364,9 +376,9 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
     drawMarkers();
 
     // transparent per-day hit-areas (full height: track + bars) drive the hover tooltip;
-    // include sequence-only dates so their circles are hoverable too.
+    // include sequence- and to-sequence-only dates so their circles are hoverable too.
     const dayPx = Math.abs(scale.dateToX(new Date(t0 + DAY_MS)) - xMin);
-    for (const dateStr of new Set([...byDay.keys(), ...seqMap.keys()])) {
+    for (const dateStr of new Set([...byDay.keys(), ...seqMap.keys(), ...allocMap.keys()])) {
       const counts = byDay.get(dateStr) || { Positive: 0, Negative: 0, Invalid: 0, Unclassified: 0 };
       const hit = el('rect', {
         x: scale.dateToX(dateStr) - dayPx / 2, y: PAD.top,

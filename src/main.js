@@ -119,7 +119,6 @@ fetch(`${BASE}data/health-zones.geojson`)
     const prio = createPrioritisationPanel(map.prioBody(), {
       risk, canon, tips: seqTips,
       onChange: ({ active, cellSummary, origin, binWidthDays }) => {
-        map.setPrioritisation(active);
         if (active && cellSummary) {
           const byZone = new Map();
           for (const c of cellSummary) byZone.set(c.location, (byZone.get(c.location) || 0) + c.selected);

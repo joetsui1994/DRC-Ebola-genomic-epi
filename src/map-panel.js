@@ -1,5 +1,6 @@
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { buildKnobs } from './prio-knobs.js';
 
 // Leaflet map. Markers are built from the tips themselves: tips are grouped by
 // health_area when present, else by health_zone, and placed at the tips' lat/lon
@@ -144,12 +145,16 @@ export function createMapPanel(containerId, tips) {
   let zonePosCt = new Map();         // upper Nom → positive-sample Ct values (for live re-counting)
   let applyCtThreshold = null;       // recompute Positive metric + redraw (set in addZoneLayer)
   let toSeqByZone = new Map();       // upper Nom -> to-sequence count (prioritisation)
-  let prioActive = false;
   let applyToSeq = null;             // recompute "To sequence" metric + redraw (set in addZoneLayer)
-  let rebuildGroup = null;           // rebuild the metric button group (set in addZoneLayer)
-  let prioKnobsCtl = null;          // on-map δ/λ/N/Ct/bin knobs control (prioritisation)
-  let renderLegendRef = null;        // reference to addZoneLayer's renderLegend
-  const renderLegendSafe = () => renderLegendRef?.();
+  let prioKnobsCtl = null;           // on-map δ/λ/N/Ct/bin knobs control (prioritisation)
+  let mapKnobsRefresh = null;        // re-sync the on-map knob sliders to the shared params
+  let prioRef = null;                // the prioritisation panel (set in attachPrioKnobs)
+  // Prioritisation is "on" exactly when the chosen choropleth metric is "To sequence":
+  // selecting it shows the knobs + asks the panel to compute; leaving it hides + clears.
+  function setPrio(on) {
+    if (prioKnobsCtl) { if (on) prioKnobsCtl.addTo(map); else prioKnobsCtl.remove(); }
+    prioRef?.setActive(on);
+  }
   const selectedZones = new Set();   // upper-cased Nom of currently-selected zones
   const nameToLayer = new Map();     // upper-cased Nom → polygon layer (for search-and-zoom)
   const nameToCentroid = new Map();  // upper-cased Nom → L.LatLng (for mobility arrows)
@@ -244,7 +249,10 @@ export function createMapPanel(containerId, tips) {
     prioBody.style.display = onMap ? 'none' : '';
     tabMap?.classList.toggle('active', onMap);
     tabPrio?.classList.toggle('active', !onMap);
-    if (onMap) requestAnimationFrame(() => map.invalidateSize());
+    // Each knob strip is rebuilt/refreshed when its tab is shown, so the two never disagree
+    // (they're never on screen together, so on-show sync is enough).
+    if (onMap) { requestAnimationFrame(() => map.invalidateSize()); mapKnobsRefresh?.(); }
+    else prioRef?.refreshKnobs?.();
   }
   tabMap?.addEventListener('click', () => showTab('map'));
   tabPrio?.addEventListener('click', () => showTab('prio'));
@@ -280,47 +288,22 @@ export function createMapPanel(containerId, tips) {
       applyCtThreshold?.();
     },
 
-    /** Turn the "To sequence" metric on/off (rebuilds the metric button group). */
-    setPrioritisation(active) {
-      // Switch to the "To sequence" metric only on the false→true transition, so a knob
-      // change (which re-fires this with active=true) won't snap back if the user has since
-      // picked another metric.
-      const becoming = !!active && !prioActive;
-      prioActive = !!active;
-      if (!active && metric === 'toSequence') metric = 'risk';
-      if (becoming) metric = 'toSequence';
-      rebuildGroup?.();
-      if (prioKnobsCtl) { if (prioActive) prioKnobsCtl.addTo(map); else prioKnobsCtl.remove(); }
-      restyle(); renderLegendSafe();
-    },
-    /** Update per-zone to-sequence counts (upper Nom -> count) and redraw if active. */
+    /** Update per-zone to-sequence counts (upper Nom -> count) and redraw if shown. */
     setToSequence(byZone) { toSeqByZone = byZone || new Map(); applyToSeq?.(); },
 
-    /** Add an on-map knobs panel (shown only while prioritisation is active). */
+    /** Register the prioritisation panel and build the on-map knobs (shown only while the
+     *  "To sequence" metric is selected). */
     attachPrioKnobs(prio) {
+      prioRef = prio;
       const ctl = L.control({ position: 'bottomleft' });
       ctl.onAdd = () => {
         const d = L.DomUtil.create('div', 'prio-knobs');
         L.DomEvent.disableClickPropagation(d); L.DomEvent.disableScrollPropagation(d);
-        const P = prio.getParams();
-        d.innerHTML =
-          row('δ', 'delta', P.delta, 0.05, 1, 0.05) + row('λ (d)', 'lam', P.lam, 1, 60, 1) +
-          row('N', 'n', P.n, 1, 200, 1) + row('Ct<', 'ctThreshold', P.ctThreshold, 1, 45, 1) +
-          row('bin (d)', 'binWidthDays', P.binWidthDays, 1, 30, 1);
-        d.querySelectorAll('input').forEach((inp) => inp.addEventListener('input', () => {
-          const k = inp.dataset.k; const v = parseFloat(inp.value);
-          d.querySelector(`[data-v="${k}"]`).textContent = inp.value;
-          prio.setParams({ [k]: v });
-        }));
+        mapKnobsRefresh = buildKnobs(d, { getParams: () => prio.getParams(), onChange: (p) => prio.setParams(p) }).refresh;
         return d;
       };
-      function row(label, k, val, min, max, step) {
-        return `<div class="pk-row"><span class="pk-l">${label}</span>`
-          + `<input type="range" data-k="${k}" min="${min}" max="${max}" step="${step}" value="${val}">`
-          + `<span class="pk-v" data-v="${k}">${val}</span></div>`;
-      }
       prioKnobsCtl = ctl;
-      if (prio.isActive()) ctl.addTo(map);
+      if (metric === 'toSequence') ctl.addTo(map);
     },
 
     /**
@@ -407,7 +390,6 @@ export function createMapPanel(containerId, tips) {
         for (let i = 0; i < cfg.ramp.length; i++) html += `<span><i style="background:${cfg.ramp[i]};border-color:rgba(0,0,0,0.12)"></i>${cfg.fmt(lo[i])}–${cfg.fmt(hi[i])}</span>`;
         choroLegendDiv.innerHTML = html;
       };
-      renderLegendRef = renderLegend;
       applyToSeq = () => { recomputeBreaks(METRICS.toSequence); if (metric === 'toSequence') { restyle(); renderLegend(); } };
       // Ct threshold change → recompute the Positive metric, redraw if it's active.
       applyCtThreshold = () => {
@@ -419,23 +401,30 @@ export function createMapPanel(containerId, tips) {
       choroLegend.addTo(map);
 
       // metric button group (replaces the on/off toggle): Off + risk + per-status + total (+ toSequence when prio active)
-      const SHORT = { off: 'Off', risk: 'Risk', Positive: 'Pos', Negative: 'Neg', Invalid: 'Inv', Unclassified: 'Unc', total: 'Total', toSequence: 'Seq→' };
+      const SHORT = { off: 'Off', risk: 'Risk', Positive: 'Pos', Negative: 'Neg', Invalid: 'Inv', Unclassified: 'Unc', total: 'Total', toSequence: 'Seq+' };
       const FULL  = { off: 'Hide colour (zones stay clickable)', risk: 'Relative risk', Positive: 'Positive samples', Negative: 'Negative samples', Invalid: 'Invalid samples', Unclassified: 'Unclassified samples', total: 'Total samples', toSequence: 'To sequence (prioritisation)' };
       let groupDiv = null;
       const buildGroup = () => {
         if (!groupDiv) return;
-        const ORDER = ['off', 'risk', 'Positive', 'Negative', 'Invalid', 'Unclassified', 'total'].concat(prioActive ? ['toSequence'] : []);
+        const ORDER = ['off', 'risk', 'Positive', 'Negative', 'Invalid', 'Unclassified', 'total', 'toSequence'];
         groupDiv.replaceChildren();
         for (const key of ORDER) {
           const b = L.DomUtil.create('button', key === metric ? 'active' : '', groupDiv);
           b.type = 'button'; b.textContent = SHORT[key]; b.title = FULL[key]; b.dataset.metric = key;
-          b.onclick = () => { metric = key; [...groupDiv.children].forEach((c) => c.classList.toggle('active', c.dataset.metric === key)); restyle(); renderLegend(); };
+          b.onclick = () => {
+            const wasToSeq = metric === 'toSequence';
+            metric = key;
+            [...groupDiv.children].forEach((c) => c.classList.toggle('active', c.dataset.metric === key));
+            restyle(); renderLegend();
+            // Selecting "To sequence" activates prioritisation (knobs + compute); leaving it deactivates.
+            if (key === 'toSequence' && !wasToSeq) setPrio(true);
+            else if (key !== 'toSequence' && wasToSeq) setPrio(false);
+          };
         }
       };
       const groupCtl = L.control({ position: 'topright' });
       groupCtl.onAdd = () => { groupDiv = L.DomUtil.create('div', 'choropleth-group'); L.DomEvent.disableClickPropagation(groupDiv); buildGroup(); return groupDiv; };
       groupCtl.addTo(map);
-      rebuildGroup = buildGroup;
 
       // search-and-zoom: type a health-zone name → pick a match → zoom + select it.
       // Duplicate Noms (Bili, Lubunga) are disambiguated with their province so each
