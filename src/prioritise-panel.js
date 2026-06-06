@@ -228,8 +228,16 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
       ...r.cellSummary.map((c) => [c.location, c.timeBin, c.risk, c.decay, c.available, c.selected, c.hFinal].join(','))].join('\n'));
   });
 
+  // The N budget can be dialled up to the full eligible-candidate pool. Eligibility maxes
+  // out at a permissive Ct and is independent of bin/δ/λ, so this is a cheap one-shot count.
+  function eligibleCeiling() {
+    const inUpload = !!uploadRows;
+    const candidateRows = inUpload ? uploadRows.filter((r) => !r.sequenced) : window.__PRIO_LINELIST__ || [];
+    return Math.max(1, buildCells({ candidateRows, sequencedRows: [], risk, canon, ctThreshold: 1e9, binWidthDays: 1, subtractHistory: false }).diagnostics.kept);
+  }
+
   // Page knob strip beside the scatter — shares params with the on-map knobs.
-  const pageKnobs = buildKnobs(container.querySelector('#prio-scatter-knobs'), { getParams: () => ({ ...params }), onChange: applyParams });
+  const pageKnobs = buildKnobs(container.querySelector('#prio-scatter-knobs'), { getParams: () => ({ ...params }), onChange: applyParams, getMaxN: eligibleCeiling });
   refreshScatter();   // initial render (the ResizeObserver paints it once the tab is first shown)
 
   return {
@@ -239,6 +247,8 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
     setActive,
     /** Re-sync the page knob sliders to the shared params (called when the tab is shown). */
     refreshKnobs: () => pageKnobs.refresh(),
+    /** Eligible-candidate ceiling — the on-map knobs use it as the N slider max. */
+    getMaxN: () => eligibleCeiling(),
     isActive: () => active,
     getParams: () => ({ ...params }),
   };

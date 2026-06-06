@@ -23,12 +23,13 @@ function row(label, k, val, min, max, step, disp) {
  * @param {HTMLElement} root
  * @param {{ getParams: () => object, onChange: (partial: object) => void, throttleMs?: number }} opts
  */
-export function buildKnobs(root, { getParams, onChange, throttleMs = 150 }) {
+export function buildKnobs(root, { getParams, onChange, getMaxN, throttleMs = 150 }) {
   const P = getParams();
+  const nMax = Math.max(1, Math.round((getMaxN && getMaxN()) || 200));   // N can reach the full eligible pool
   root.innerHTML =
     row('δ', 'delta', P.delta, 0.05, 1, 0.05) +
     row('λ (d)', 'lam', lamToSlider(P.lam), 0, LAM_STOPS, 1, lamLabel(P.lam)) +
-    row('N', 'n', P.n, 1, 200, 1) + row('Ct<', 'ctThreshold', P.ctThreshold, 1, 45, 1) +
+    row('N', 'n', P.n, 1, nMax, 1) + row('Ct<', 'ctThreshold', P.ctThreshold, 1, 45, 1) +
     row('bin (d)', 'binWidthDays', P.binWidthDays, 1, 30, 1);
 
   let pending = null, timer = null, lastRun = 0;

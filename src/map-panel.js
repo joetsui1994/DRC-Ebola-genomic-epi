@@ -299,7 +299,7 @@ export function createMapPanel(containerId, tips) {
       ctl.onAdd = () => {
         const d = L.DomUtil.create('div', 'prio-knobs');
         L.DomEvent.disableClickPropagation(d); L.DomEvent.disableScrollPropagation(d);
-        mapKnobsRefresh = buildKnobs(d, { getParams: () => prio.getParams(), onChange: (p) => prio.setParams(p) }).refresh;
+        mapKnobsRefresh = buildKnobs(d, { getParams: () => prio.getParams(), onChange: (p) => prio.setParams(p), getMaxN: () => prio.getMaxN?.() ?? 200 }).refresh;
         return d;
       };
       prioKnobsCtl = ctl;
