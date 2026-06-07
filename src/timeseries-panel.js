@@ -212,6 +212,9 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
   if (beyondEl) beyondEl.onclick = () => {
     showBeyond = !showBeyond;
     beyondEl.classList.toggle('active', showBeyond);
+    beyondEl.textContent = showBeyond ? '←' : '→';   // → extend right · ← collapse back
+    beyondEl.title = showBeyond ? 'Hide samples beyond the tree’s latest date'
+                                : 'Show samples dated after the tree’s latest tip';
     applyExtent();
   };
 

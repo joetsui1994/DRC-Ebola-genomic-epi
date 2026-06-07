@@ -152,6 +152,8 @@ export async function createTreePanel(containerId) {
     /**
      * Compress the tree CANVAS to fraction f∈[WIDTH_FLOOR,1] of its width by insetting
      * PearTree's #canvas-container (a sibling of the toolbar, so the toolbar is untouched).
+     * Uses padding-right (not margin) so the freed strip stays INSIDE #canvas-container and
+     * shows its theme canvas background — not the embed-wrap (toolbar) surface behind it.
      * PearTree's own ResizeObserver refits the tree and re-emits the view transform, which
      * the time-series panel locks onto. f≈1 restores full width.
      */
@@ -159,7 +161,7 @@ export async function createTreePanel(containerId) {
       const cc = document.getElementById('canvas-container');
       if (!cc) return;                                          // tree not embedded yet → no-op
       const frac = Math.max(WIDTH_FLOOR, Math.min(1, f || 1));
-      cc.style.marginRight = frac >= 1 ? '' : `${((1 - frac) * 100).toFixed(3)}%`;
+      cc.style.paddingRight = frac >= 1 ? '' : `${((1 - frac) * 100).toFixed(3)}%`;
     },
   };
 }

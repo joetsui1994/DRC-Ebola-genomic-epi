@@ -84,6 +84,7 @@ body {
 }
 .dist-download:hover { background: rgba(124, 29, 29, 0.16); }
 .dist-download.active { background: var(--maroon); color: #fff; }
+#dist-beyond { margin-left: 10px; font-weight: 700; }   /* match the Ct↔CSV gap; arrow glyph */
 .legend-toggle {
   float: right; margin-top: -1px;
   font-size: 9.5px; font-weight: 600; letter-spacing: 0.03em; text-transform: none;
