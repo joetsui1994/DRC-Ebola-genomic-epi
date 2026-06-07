@@ -7,6 +7,10 @@ const TREE_URL = `${import.meta.env.BASE_URL}data/Ituri_2026-05-28_HKY_EGC_rate1
 export const TREE_PAD_LEFT = 20;
 export const TREE_PAD_RIGHT = 20;
 
+// Hard floor on how far the tree canvas may compress (defensive; the chart's
+// extentFraction already clamps to 0.4). 1 = full width.
+const WIDTH_FLOOR = 0.3;
+
 /**
  * @param {string} containerId  id of the element to embed into
  * @returns {Promise<{selectByLocation, clear, onSelect}>}
@@ -145,5 +149,17 @@ export async function createTreePanel(containerId) {
     onViewChange(cb) { return tree.onViewChange(cb); },
     /** Snapshot the current view transform, or null. */
     getViewTransform() { return tree.getViewTransform(); },
+    /**
+     * Compress the tree CANVAS to fraction f∈[WIDTH_FLOOR,1] of its width by insetting
+     * PearTree's #canvas-container (a sibling of the toolbar, so the toolbar is untouched).
+     * PearTree's own ResizeObserver refits the tree and re-emits the view transform, which
+     * the time-series panel locks onto. f≈1 restores full width.
+     */
+    setWidthFraction(f) {
+      const cc = document.getElementById('canvas-container');
+      if (!cc) return;                                          // tree not embedded yet → no-op
+      const frac = Math.max(WIDTH_FLOOR, Math.min(1, f || 1));
+      cc.style.marginRight = frac >= 1 ? '' : `${((1 - frac) * 100).toFixed(3)}%`;
+    },
   };
 }
