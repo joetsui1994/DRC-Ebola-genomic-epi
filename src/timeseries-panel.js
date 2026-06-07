@@ -232,21 +232,27 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
   function updateNote() {
     if (!note) return;
     let after = 0, before = 0, undated = 0;
+    const undByStatus = { Positive: 0, Negative: 0, Invalid: 0, Unclassified: 0 };
     for (const r of filteredRows()) {
       if (!STATUS.includes(r.status)) continue;
       const t = +new Date(r.date);
-      if (!r.date || isNaN(t)) undated++;
+      if (!r.date || isNaN(t)) { undated++; undByStatus[r.status]++; }
       else if (t > effMaxMs) after++;
       else if (t < t0) before++;
     }
     const total = after + before + undated;
     if (!total) { note.style.display = 'none'; note.textContent = ''; return; }
-    const parts = [];
-    if (after) parts.push(`${after} after ${fmtDay(effMaxMs)}`);
-    if (before) parts.push(`${before} before ${fmtDay(t0)}`);
-    if (undated) parts.push(`${undated} undated`);
-    note.textContent = `· ${total} not shown (${parts.join(', ')})`;
-    note.title = `${total} samples not shown — ${parts.join(', ')}`;
+    const parts = [], plain = [];
+    if (after)  { parts.push(`${after} after ${fmtDay(effMaxMs)}`); plain.push(`${after} after ${fmtDay(effMaxMs)}`); }
+    if (before) { parts.push(`${before} before ${fmtDay(t0)}`);     plain.push(`${before} before ${fmtDay(t0)}`); }
+    if (undated) {
+      // Status breakdown of the undated samples (P/N/I/U), each integer in its bar colour.
+      const bd = STATUS.map((s) => `<b style="color:${STATUS_COLOR[s]}">${undByStatus[s]}</b>`).join('/');
+      parts.push(`${undated} undated (${bd})`);
+      plain.push(`${undated} undated (${STATUS.map((s) => `${s[0]}:${undByStatus[s]}`).join(' ')})`);
+    }
+    note.innerHTML = `· ${total} not shown (${parts.join(', ')})`;
+    note.title = `${total} samples not shown — ${plain.join(', ')}`;
     note.style.display = '';
   }
 
