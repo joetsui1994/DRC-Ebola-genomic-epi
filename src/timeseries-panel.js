@@ -444,6 +444,14 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
   ro.observe(host);
 
   return {
+    /** Set the Ct filter programmatically (from the map's Ct input). Mirrors the input
+     *  display + re-renders; does NOT call onCtChange (the caller already applied it to the
+     *  map), so the two inputs sync without an event loop. */
+    setCtThreshold(t) {
+      ctThreshold = (typeof t === 'number' && t > 0) ? t : null;
+      ctInput.value = ctThreshold == null ? '' : String(ctThreshold);
+      applyExtent();
+    },
     setMarkers(dates) { markerDates = (dates || []).filter(Boolean); drawMarkers(); },
     setTransform(t) { transform = (t && t.maxX > 0) ? t : null; render(); },
     /** Set/clear the to-sequence allocation overlay (cellSummary[] + {binWidthDays, origin}, or null). */

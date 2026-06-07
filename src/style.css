@@ -140,6 +140,9 @@ body {
   border: 1px solid var(--border); border-radius: 4px; color: var(--ink);
 }
 .dist-ct input:focus { outline: none; border-color: var(--terracotta); }
+/* Map-header Ct filter: same input as the distribution panel, but a flex item pushed
+   to the right of the tab strip (not floated). Shown only on Map tab + Positive metric. */
+.map-ct { float: none; margin: 0 2px 0 auto; align-self: center; }
 
 /* Sample-distribution hover tooltip */
 .dist-tip {

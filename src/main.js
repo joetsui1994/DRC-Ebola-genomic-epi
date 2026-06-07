@@ -106,7 +106,9 @@ const seqTips = tips.filter(t => t.date).map(t => ({
 }));
 
 // Markers are built from the tips themselves (grouped by health_area → zone).
-const map = createMapPanel('map-body', tips);
+// The map's Ct input mirrors into the distribution panel (late-bound: ts is created below).
+let tsPanel = null;
+const map = createMapPanel('map-body', tips, { onCtChange: (t) => tsPanel?.setCtThreshold(t) });
 
 // Health-zone risk choropleth + mobility arrows (standalone layers, under the
 // markers). Mobility loads after the risk layer because it reuses the zone
@@ -136,6 +138,7 @@ fetch(`${BASE}data/health-zones.geojson`)
   .catch(err => console.warn('risk/mobility layer not loaded:', err));
 let treePanel = null;
 const ts  = createTimeseriesPanel('timeseries-body', linelist, { minDate: meta.rootDate, maxDate: meta.mostRecentDate }, { onCtChange: (t) => map.setCtThreshold(t), tips: seqTips, onExtentChange: (f) => treePanel?.setWidthFraction(f) });
+tsPanel = ts;   // late-bind for the map → distribution Ct sync
 const tree = await createTreePanel('tree-body');
 treePanel = tree;
 

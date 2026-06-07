@@ -90,7 +90,7 @@ function arrowHead(pPrev, pEnd, size) {
  * @param {string} containerId
  * @param {{id:string,health_zone:?string,health_area:?string,lat:?number,lon:?number}[]} tips
  */
-export function createMapPanel(containerId, tips) {
+export function createMapPanel(containerId, tips, { onCtChange = () => {} } = {}) {
   const map = L.map(containerId, { zoomControl: true });
   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
     attribution: '© OpenStreetMap contributors © CARTO',
@@ -246,6 +246,23 @@ export function createMapPanel(containerId, tips) {
     if (zoneClickHandler) zoneClickHandler(name, { toggle: false });
   }
 
+  // Map-header Ct filter (mirrors the distribution panel's). Shown only on the Map tab while
+  // the Positive metric is selected. Two-way synced with the distribution input via
+  // onCtChange ⇄ setCtThreshold — each sets the other's value programmatically (which does
+  // NOT fire an 'input' event), so there is no sync loop.
+  const mapCtWrap = document.getElementById('map-ct');
+  const mapCtInput = mapCtWrap?.querySelector('input');
+  let onMapTab = true;
+  function updateCtVisibility() {
+    if (mapCtWrap) mapCtWrap.style.display = (onMapTab && metric === 'Positive') ? '' : 'none';
+  }
+  mapCtInput?.addEventListener('input', () => {
+    const v = parseInt(mapCtInput.value, 10);
+    ctThreshold = (Number.isFinite(v) && v > 0) ? v : null;
+    applyCtThreshold?.();       // recolour the Positive choropleth
+    onCtChange(ctThreshold);    // mirror into the distribution panel's Ct input
+  });
+
   // Map / Prioritisation tab switch. Returning to the map re-sizes Leaflet.
   const mapBody = document.getElementById('map-body');
   const prioBody = document.getElementById('prio-body');
@@ -261,6 +278,7 @@ export function createMapPanel(containerId, tips) {
     // (they're never on screen together, so on-show sync is enough).
     if (onMap) { requestAnimationFrame(() => map.invalidateSize()); mapKnobsRefresh?.(); }
     else prioRef?.refreshKnobs?.();
+    onMapTab = onMap; updateCtVisibility();   // hide the Ct input off the Map tab
   }
   tabMap?.addEventListener('click', () => showTab('map'));
   tabPrio?.addEventListener('click', () => showTab('prio'));
@@ -290,9 +308,11 @@ export function createMapPanel(containerId, tips) {
     /** cb(zoneName) when a health-zone polygon is clicked. */
     onZoneClick(cb) { zoneClickHandler = cb; },
 
-    /** Set the Ct filter applied to the Positive metric (null/0 = off). */
+    /** Set the Ct filter applied to the Positive metric (null/0 = off). Also mirrors the
+     *  value into the map-header Ct input (the distribution panel drives this). */
     setCtThreshold(t) {
       ctThreshold = (typeof t === 'number' && t > 0) ? t : null;
+      if (mapCtInput) mapCtInput.value = ctThreshold == null ? '' : String(ctThreshold);
       applyCtThreshold?.();
     },
 
@@ -428,6 +448,7 @@ export function createMapPanel(containerId, tips) {
             metric = key;
             [...groupDiv.children].forEach((c) => c.classList.toggle('active', c.dataset.metric === key));
             restyle(); renderLegend();
+            updateCtVisibility();   // the Ct input rides with the Positive metric
             // Selecting "To sequence" activates prioritisation (knobs + compute); leaving it deactivates.
             if (key === 'toSequence' && !wasToSeq) setPrio(true);
             else if (key !== 'toSequence' && wasToSeq) setPrio(false);
