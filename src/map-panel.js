@@ -37,6 +37,14 @@ function quantileBreaks(values, classes) {
   for (let i = 1; i < classes; i++) breaks.push(s[Math.floor((i / classes) * s.length)]);
   return breaks;
 }
+// Evenly-spaced breaks over the VALUE range [min, max] — gives the high end its own
+// classes regardless of how the data is distributed (vs quantiles, which collapse a
+// sparse high tail into one class on right-skewed data like relative risk).
+function equalIntervalBreaks(min, max, classes) {
+  const breaks = [];
+  for (let i = 1; i < classes; i++) breaks.push(min + (i / classes) * (max - min));
+  return breaks;
+}
 function classIndex(v, breaks) {
   let i = 0;
   while (i < breaks.length && v >= breaks[i]) i++;
@@ -335,9 +343,13 @@ export function createMapPanel(containerId, tips) {
       const recomputeBreaks = (cfg) => {
         const vals = geojson.features.map(cfg.value)
           .filter((v) => typeof v === 'number' && (cfg.kind === 'count' ? v > 0 : true));
-        cfg.breaks = vals.length ? quantileBreaks(vals, cfg.ramp.length) : [];
         cfg.min = vals.length ? Math.min(...vals) : 0;
         cfg.max = vals.length ? Math.max(...vals) : 0;
+        // Continuous metrics (relative risk) class over the value range so a skewed high
+        // tail isn't collapsed into one colour; counts stay quantile-classed.
+        cfg.breaks = !vals.length ? []
+          : cfg.kind === 'continuous' ? equalIntervalBreaks(cfg.min, cfg.max, cfg.ramp.length)
+          : quantileBreaks(vals, cfg.ramp.length);
       };
       for (const cfg of Object.values(METRICS)) recomputeBreaks(cfg);
 
