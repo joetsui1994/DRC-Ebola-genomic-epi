@@ -168,10 +168,10 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
   // updates even when f doesn't change (e.g. toggling off); the tree refit (if any) re-renders
   // again via setTransform once PearTree reports its new transform.
   function applyExtent() {
-    const r = extentFraction(filteredRows(), t0, t1, showBeyond, ctThreshold);
-    effMaxMs = r.effMax;
+    const ext = extentFraction(filteredRows(), t0, t1, showBeyond, ctThreshold);
+    effMaxMs = ext.effMax;
     if (extentRaf) cancelAnimationFrame(extentRaf);
-    extentRaf = requestAnimationFrame(() => { extentRaf = 0; onExtentChange(r.f); });
+    extentRaf = requestAnimationFrame(() => { extentRaf = 0; onExtentChange(ext.f); });
     render();
   }
 
@@ -273,7 +273,7 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
     const m = new Map();
     for (const t of filteredTips()) {
       const ts = +new Date(t.date);
-      if (isNaN(ts) || ts < t0 || ts > t1) continue;     // clip to the aligned axis
+      if (isNaN(ts) || ts < t0 || ts > t1) continue;     // tree tips never post-date t1 (not effMaxMs)
       m.set(t.date, (m.get(t.date) || 0) + 1);
     }
     return m;
