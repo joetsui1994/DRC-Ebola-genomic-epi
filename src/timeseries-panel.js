@@ -81,7 +81,7 @@ function timeTicks(pxWidth, t0, t1) {
  * @param {{minDate:string,maxDate:string}} domain  tree time domain (root → most-recent)
  * @param {{onCtChange?:(t:?number)=>void}} [opts]  notified when the Ct filter changes
  */
-export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = () => {}, tips = [] } = {}) {
+export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = () => {}, tips = [], onExtentChange = () => {} } = {}) {
   const host = document.getElementById(containerId);
   host.replaceChildren();
 
@@ -97,7 +97,7 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
     const v = parseInt(ctInput.value, 10);
     ctThreshold = (Number.isFinite(v) && v > 0) ? v : null;
     onCtChange(ctThreshold);   // keep the map's Positive metric in sync
-    render();
+    applyExtent();
   });
 
   // zone⇄area toggle + status legend — a row near the top, offset from the left
@@ -159,6 +159,22 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
   const t0 = +new Date(domain.minDate);
   const t1 = +new Date(domain.maxDate);
 
+  let showBeyond = false;            // toggle: extend the axis past the tree's latest date
+  let effMaxMs = t1;                 // current effective right-edge date (ms); = t1 when off
+  let extentRaf = 0;                 // rAF handle, coalesces tree-resize requests
+
+  // Recompute the effective max + tree fraction from the current selection/Ct, push the
+  // fraction to the tree (coalesced), and re-render. Render runs synchronously so the chart
+  // updates even when f doesn't change (e.g. toggling off); the tree refit (if any) re-renders
+  // again via setTransform once PearTree reports its new transform.
+  function applyExtent() {
+    const r = extentFraction(filteredRows(), t0, t1, showBeyond, ctThreshold);
+    effMaxMs = r.effMax;
+    if (extentRaf) cancelAnimationFrame(extentRaf);
+    extentRaf = requestAnimationFrame(() => { extentRaf = 0; onExtentChange(r.f); });
+    render();
+  }
+
   function updateToggleUI() {
     btnZone.classList.toggle('active', mode === 'zone');
     btnArea.classList.toggle('active', mode === 'area');
@@ -167,8 +183,8 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
     const level = mode === 'area' ? 'health area' : 'health zone';
     if (scopeEl) scopeEl.textContent = names.length ? `· ${names.join(', ')} (${level})` : '';
   }
-  btnZone.onclick = () => { mode = 'zone'; updateToggleUI(); render(); };
-  btnArea.onclick = () => { if (sel.areas.length === 0) return; mode = 'area'; updateToggleUI(); render(); };
+  btnZone.onclick = () => { mode = 'zone'; updateToggleUI(); applyExtent(); };
+  btnArea.onclick = () => { if (sel.areas.length === 0) return; mode = 'area'; updateToggleUI(); applyExtent(); };
   updateToggleUI();
 
   // Download the currently-shown aggregated daily counts as CSV.
@@ -192,6 +208,12 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
   }
   const downloadEl = document.getElementById('dist-download');
   if (downloadEl) downloadEl.onclick = downloadCsv;
+  const beyondEl = document.getElementById('dist-beyond');
+  if (beyondEl) beyondEl.onclick = () => {
+    showBeyond = !showBeyond;
+    beyondEl.classList.toggle('active', showBeyond);
+    applyExtent();
+  };
 
   function filteredRows() {
     const names = mode === 'area' ? sel.areas : sel.zones;
@@ -211,13 +233,13 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
       if (!STATUS.includes(r.status)) continue;
       const t = +new Date(r.date);
       if (!r.date || isNaN(t)) undated++;
-      else if (t > t1) after++;
+      else if (t > effMaxMs) after++;
       else if (t < t0) before++;
     }
     const total = after + before + undated;
     if (!total) { note.style.display = 'none'; note.textContent = ''; return; }
     const parts = [];
-    if (after) parts.push(`${after} after ${fmtDay(t1)}`);
+    if (after) parts.push(`${after} after ${fmtDay(effMaxMs)}`);
     if (before) parts.push(`${before} before ${fmtDay(t0)}`);
     if (undated) parts.push(`${undated} undated`);
     note.textContent = `· ${total} not shown (${parts.join(', ')})`;
@@ -229,7 +251,7 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
     const byDay = new Map();
     for (const r of filteredRows()) {
       const t = +new Date(r.date);
-      if (isNaN(t) || t < t0 || t > t1) continue;            // clip to the aligned axis
+      if (isNaN(t) || t < t0 || t > effMaxMs) continue;      // clip to the (possibly extended) axis
       if (!STATUS.includes(r.status)) continue;
       if (!ctPass(r, ctThreshold)) continue;                 // Ct filter (positives only)
       let d = byDay.get(r.date);
@@ -306,7 +328,7 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
     scale = buildScale(W);
     const baseY = H - PAD.bottom;
     const xMin = scale.dateToX(domain.minDate);
-    const xMax = scale.dateToX(domain.maxDate);
+    const xMax = scale.dateToX(new Date(effMaxMs));   // extends past the tree when showBeyond
 
     const byDay = aggregate();
     seqMap = seqByDate();
@@ -336,7 +358,7 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
     }
 
     svg.appendChild(el('line', { x1: xMin, y1: baseY, x2: xMax, y2: baseY, stroke: '#c9c7c2', 'stroke-width': 1 }));
-    for (const { date, fmt } of timeTicks(Math.abs(xMax - xMin), t0, t1)) {
+    for (const { date, fmt } of timeTicks(Math.abs(xMax - xMin), t0, effMaxMs)) {
       const tx = scale.dateToX(date);
       if (tx < PAD.left - 1 || tx > W - 2) continue;        // keep labels inside the plot
       svg.appendChild(el('line', { x1: tx, y1: baseY, x2: tx, y2: baseY + 3, stroke: '#c9c7c2', 'stroke-width': 1 }));
@@ -422,7 +444,7 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
       sel = { zones: [...new Set(zones || [])], areas: [...new Set(areas || [])] };
       if (mode === 'area' && sel.areas.length === 0) mode = 'zone';   // no areas → fall back to zone
       updateToggleUI();
-      render();
+      applyExtent();
     },
   };
 }
