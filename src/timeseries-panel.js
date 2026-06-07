@@ -11,12 +11,36 @@ const PAD = { left: 34, right: 20, top: 10, bottom: 22 };
 const DAY_MS = 86400000;
 
 const STATUS = ['Positive', 'Negative', 'Invalid', 'Unclassified'];
+const STATUS_SET = new Set(STATUS);
 const STATUS_COLOR = {
   Positive:     '#9e2b2b',
   Negative:     '#6f9bbf',
   Invalid:      '#d8a86f',
   Unclassified: '#d3cfc8',
 };
+/** A row passes the Ct filter when: the filter is off (ct null), or it isn't a positive,
+ *  or it's a positive with a numeric Ct strictly below the threshold. */
+export function ctPass(r, ct) {
+  if (ct == null || r.status !== 'Positive') return true;
+  const v = parseFloat(r.ct);
+  return Number.isFinite(v) && v < ct;
+}
+
+/** Latest *plotted* date for the given rows + the tree-width fraction it implies.
+ *  Uses the same filter as the bars (status-valid AND ctPass), so a Ct-hidden point
+ *  never extends the axis. rows: selection-filtered rows; t0/t1: domain ms; on: showBeyond;
+ *  ct: current Ct threshold or null. Returns { effMax (ms), f∈[F_MIN,1] }. */
+export function extentFraction(rows, t0, t1, on, ct = null, F_MIN = 0.4) {
+  let effMax = t1;
+  if (on) for (const r of rows) {
+    if (!STATUS_SET.has(r.status) || !ctPass(r, ct)) continue;
+    const t = +new Date(r.date);
+    if (!isNaN(t) && t > effMax) effMax = t;
+  }
+  const f = effMax > t0 ? Math.max(F_MIN, Math.min(1, (t1 - t0) / (effMax - t0))) : 1;
+  return { effMax, f };
+}
+
 const SEQ_COLOR = '#7c1d1d';   // sequence-availability track (genomic samples) — maroon
 const ALLOC_COLOR = '#205c4c'; // to-sequence allocation track (prioritisation) — teal-green
 
@@ -201,21 +225,13 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
     note.style.display = '';
   }
 
-  // A Positive row passes the Ct filter only if it has a numeric Ct below the threshold
-  // (so no-Ct positives drop out while the filter is on). Non-positives always pass.
-  function ctPass(r) {
-    if (ctThreshold == null || r.status !== 'Positive') return true;
-    const v = parseFloat(r.ct);
-    return Number.isFinite(v) && v < ctThreshold;
-  }
-
   function aggregate() {
     const byDay = new Map();
     for (const r of filteredRows()) {
       const t = +new Date(r.date);
       if (isNaN(t) || t < t0 || t > t1) continue;            // clip to the aligned axis
       if (!STATUS.includes(r.status)) continue;
-      if (!ctPass(r)) continue;                              // Ct filter (positives only)
+      if (!ctPass(r, ctThreshold)) continue;                 // Ct filter (positives only)
       let d = byDay.get(r.date);
       if (!d) { d = { Positive: 0, Negative: 0, Invalid: 0, Unclassified: 0 }; byDay.set(r.date, d); }
       d[r.status]++;
