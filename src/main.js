@@ -134,8 +134,10 @@ fetch(`${BASE}data/health-zones.geojson`)
       .then(text => map.addMobilityLayer(parseMobilityMatrix(text, canon)));
   })
   .catch(err => console.warn('risk/mobility layer not loaded:', err));
-const ts  = createTimeseriesPanel('timeseries-body', linelist, { minDate: meta.rootDate, maxDate: meta.mostRecentDate }, { onCtChange: (t) => map.setCtThreshold(t), tips: seqTips });
+let treePanel = null;
+const ts  = createTimeseriesPanel('timeseries-body', linelist, { minDate: meta.rootDate, maxDate: meta.mostRecentDate }, { onCtChange: (t) => map.setCtThreshold(t), tips: seqTips, onExtentChange: (f) => treePanel?.setWidthFraction(f) });
 const tree = await createTreePanel('tree-body');
+treePanel = tree;
 
 // Floating node-info card pinned to the tree panel.
 const nodeInfo = createNodeInfo('tree-body', { mostRecentDate: meta.mostRecentDate, canon });
