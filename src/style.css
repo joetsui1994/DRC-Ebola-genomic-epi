@@ -488,7 +488,19 @@ body {
 }
 .pk-v { width: 26px; text-align: right; font-variant-numeric: tabular-nums; color: #587e72; font-weight: 600; }
 .pk-row.pk-disabled { opacity: 0.4; pointer-events: none; }
-.pk-row .pk-mode { flex: 1; min-width: 0; font-size: 11px; }
+/* Mode dropdown themed to match the green knob box (border/radius/colour like the
+   buttons elsewhere on the page), with a custom green caret in place of the native arrow. */
+.pk-row .pk-mode {
+  flex: 1; min-width: 0; font-size: 11px; font-weight: 600; line-height: 1.4;
+  -webkit-appearance: none; -moz-appearance: none; appearance: none;
+  color: #46695d; background-color: #fff;
+  border: 1px solid rgba(88,126,114,0.3); border-radius: 5px;
+  padding: 2px 22px 2px 7px; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none' stroke='%23587e72' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 7px center;
+}
+.pk-row .pk-mode:hover { background-color: #eef3f1; }
+.pk-row .pk-mode:focus-visible { outline: none; border-color: #587e72; box-shadow: 0 0 0 2px rgba(88,126,114,0.18); }
 /* Give the mode dropdown row breathing room from the δ row below it (map knob box). */
 .prio-knobs .pk-row[data-row="mode"] { margin-bottom: 5px; }
 .pk-reroll { border: 1px solid rgba(88,126,114,0.4); background: #fff; border-radius: 5px; cursor: pointer; font-size: 12px; line-height: 1; padding: 2px 5px; }
