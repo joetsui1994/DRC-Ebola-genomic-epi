@@ -120,13 +120,18 @@ describe('resolveFloorBudget', () => {
   it('null cap → full budget', () => {
     expect(resolveFloorBudget(null, 50)).toBe(50);
   });
-  it('fraction in (0,1] → ceil(frac*n), clamped to n', () => {
+  it('fraction in (0,1] → ceil(frac*n)', () => {
     expect(resolveFloorBudget(0.2, 50)).toBe(10);
     expect(resolveFloorBudget(0.25, 50)).toBe(13);   // ceil(12.5)
-    expect(resolveFloorBudget(1, 50)).toBe(50);
+    expect(resolveFloorBudget(1, 50)).toBe(50);      // ceil(1*50)
   });
-  it('integer > 1 → min(int, n)', () => {
+  it('cap > 1 → floor(cap), clamped to n', () => {
     expect(resolveFloorBudget(5, 50)).toBe(5);
-    expect(resolveFloorBudget(80, 50)).toBe(50);
+    expect(resolveFloorBudget(2.7, 50)).toBe(2);     // float > 1 is floored
+    expect(resolveFloorBudget(80, 50)).toBe(50);     // clamped to n
+  });
+  it('non-positive cap → 0 (no floor picks)', () => {
+    expect(resolveFloorBudget(0, 50)).toBe(0);
+    expect(resolveFloorBudget(-1, 50)).toBe(0);
   });
 });

@@ -35,11 +35,11 @@ function shuffle(arr, rng) {
   }
 }
 
-/** Resolve the floor budget: null → n; fraction in (0,1] → ceil(frac·n); int > 1 → min(int, n). */
+/** Resolve the floor budget: null → n; fraction in (0,1] → ceil(frac·n); else floor(cap) (≥0), capped at n. */
 export function resolveFloorBudget(cap, n) {
   if (cap == null) return n;
-  if (cap > 0 && cap <= 1) return Math.min(n, Math.ceil(cap * n));
-  return Math.min(n, Math.floor(cap));
+  if (cap > 0 && cap <= 1) return Math.ceil(cap * n);
+  return Math.max(0, Math.min(n, Math.floor(cap)));
 }
 
 /**
