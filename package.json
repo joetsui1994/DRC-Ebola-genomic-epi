@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "data:linelist": "node scripts/build-linelist.mjs",
-    "data:zones": "mapshaper public/data/shapefiles/DRC_Health_zones.shp -join public/data/health_zone_metadata.28May.csv keys=Pcode_Mins,ref_dhis2 fields=relative_risk -filter-fields Nom,PROVINCE,relative_risk -each \"Nom = Nom === 'Mongbalu' ? 'Mongbwalu' : Nom\" -simplify 8% keep-shapes -clean -each 'cx = Math.round(this.innerX*1e5)/1e5, cy = Math.round(this.innerY*1e5)/1e5' -o public/data/health-zones.geojson format=geojson precision=0.0001"
+    "data:zones": "mapshaper public/data/shapefiles/DRC_Health_zones.shp -join public/data/health_zone_metadata.28May.csv keys=Pcode_Mins,ref_dhis2 fields=relative_risk -filter-fields Nom,PROVINCE,relative_risk -each \"Nom = Nom === 'Mongbalu' ? 'Mongbwalu' : Nom\" -simplify 8% keep-shapes -clean -each 'cx = Math.round(this.innerX*1e5)/1e5, cy = Math.round(this.innerY*1e5)/1e5' -o public/data/health-zones.geojson format=geojson precision=0.0001",
+    "data:risk": "node scripts/update-relative-risk.mjs"
   },
   "devDependencies": {
     "mapshaper": "^0.7.22",
