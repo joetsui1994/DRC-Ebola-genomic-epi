@@ -177,6 +177,7 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
   let win = null;                    // brushed time window { d0, d1 } in ms, or null
   let effMaxMs = t1;                 // current effective right-edge date (ms); = t1 when off
   let extentRaf = 0;                 // rAF handle, coalesces tree-resize requests
+  let lastF = 1;                     // last tree width-fraction applied (for transform prediction)
 
   // Recompute the effective max + tree fraction from the current selection/Ct, push the
   // fraction to the tree (coalesced), and re-render. Render runs synchronously so the chart
@@ -187,6 +188,14 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
     effMaxMs = ext.effMax;
     if (extentRaf) cancelAnimationFrame(extentRaf);
     extentRaf = requestAnimationFrame(() => { extentRaf = 0; onExtentChange(ext.f); });
+    // Predict the tree's about-to-change transform so this synchronous render is already
+    // squashed — otherwise the chart flashes the extended-but-unsquashed view for a frame
+    // until the tree refit reports its new transform. Compressing the tree to fraction f
+    // insets only the right edge, so the root/offsetX stays put and scaleX scales by f.
+    if (transform && transform.maxX > 0 && lastF > 0 && ext.f !== lastF) {
+      transform = { ...transform, scaleX: transform.scaleX * (ext.f / lastF) };
+    }
+    lastF = ext.f;
     render();
   }
 
