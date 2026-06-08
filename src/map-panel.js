@@ -1,6 +1,7 @@
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { buildKnobs } from './prio-knobs.js';
+import { tallyZones } from './zone-tally.js';
 
 // Leaflet map. Markers are built from the tips themselves: tips are grouped by
 // health_area when present, else by health_zone, and placed at the tips' lat/lon
@@ -10,6 +11,7 @@ import { buildKnobs } from './prio-knobs.js';
 
 const BASE_STYLE      = { color: '#33567a', fillColor: '#5b86b3', fillOpacity: 0.85, weight: 1.5 }; // muted blue
 const HIGHLIGHT_STYLE = { color: '#9a7a16', fillColor: '#f2c84b', fillOpacity: 0.95, weight: 2 };   // yellow (selected)
+const HIDDEN_STYLE    = { opacity: 0, fillOpacity: 0 };   // marker filtered out by the time window
 
 const RISK_RAMP   = ['#f6e3df', '#e8b3a6', '#d08163', '#aa4a32', '#7c1d1d'];   // risk + total
 const RISK_NODATA = '#e8e6e1';
@@ -105,8 +107,8 @@ export function createMapPanel(containerId, tips, { onCtChange = () => {} } = {}
     const key = area || realVal(t.health_zone);
     if (!key) continue;
     let g = groups.get(key);
-    if (!g) { g = { key, level: area ? 'area' : 'zone', lat: t.lat, lon: t.lon, tipIds: [] }; groups.set(key, g); }
-    g.tipIds.push(t.id);
+    if (!g) { g = { key, level: area ? 'area' : 'zone', lat: t.lat, lon: t.lon, tipIds: [], dates: [] }; groups.set(key, g); }
+    g.tipIds.push(t.id); g.dates.push(t.date);
   }
 
   const markers = [];                 // { group, marker }
@@ -122,7 +124,7 @@ export function createMapPanel(containerId, tips, { onCtChange = () => {} } = {}
 
   let clickHandler = null;
   let bgHandler = null;
-  for (const { group, marker } of markers) marker.on('click', () => clickHandler && clickHandler(group.tipIds));
+  for (const { group, marker } of markers) marker.on('click', () => { if (!group._winHidden && clickHandler) clickHandler(group.tipIds); });
   map.on('click', () => bgHandler && bgHandler());   // empty-map click → deselect
 
   // Leaflet needs a sized container; Safari resolves the flex/absolute layout
@@ -151,6 +153,9 @@ export function createMapPanel(containerId, tips, { onCtChange = () => {} } = {}
   let choroLegend = null, choroLegendDiv = null;
   let ctThreshold = null;            // Ct filter for the Positive metric (null = off)
   let zonePosCt = new Map();         // upper Nom → positive-sample Ct values (for live re-counting)
+  let zoneCounts = new Map();        // upper Nom → {status counts} (dynamic; windowed by the brush)
+  let linelistRows = [];             // retained for windowed re-tally (set in addZoneLayer)
+  let applyCounts = null;            // recompute breaks + redraw after a re-tally (set in addZoneLayer)
   let applyCtThreshold = null;       // recompute Positive metric + redraw (set in addZoneLayer)
   let toSeqByZone = new Map();       // upper Nom -> to-sequence count (prioritisation)
   let applyToSeq = null;             // recompute "To sequence" metric + redraw (set in addZoneLayer)
@@ -292,10 +297,11 @@ export function createMapPanel(containerId, tips, { onCtChange = () => {} } = {}
     highlight(selectedTipIds) {
       const sel = new Set(selectedTipIds);
       for (const { group, marker } of markers) {
+        if (group._winHidden) { marker.setStyle(HIDDEN_STYLE); continue; }   // window-hidden stays hidden
         marker.setStyle(group.tipIds.some(id => sel.has(id)) ? HIGHLIGHT_STYLE : BASE_STYLE);
       }
     },
-    clearHighlight() { for (const { marker } of markers) marker.setStyle(BASE_STYLE); },
+    clearHighlight() { for (const { group, marker } of markers) marker.setStyle(group._winHidden ? HIDDEN_STYLE : BASE_STYLE); },
 
     /** Outline the zone polygons for the given health-zone names (+ refresh mobility). */
     highlightZones(zoneNames) {
@@ -319,6 +325,30 @@ export function createMapPanel(containerId, tips, { onCtChange = () => {} } = {}
     /** Update per-zone to-sequence counts (upper Nom -> count) and redraw if shown. */
     setToSequence(byZone) { toSeqByZone = byZone || new Map(); applyToSeq?.(); },
 
+    /** Filter the choropleth + markers to a time window (inclusive ms bounds), or null = all.
+     *  Re-tallies the line-list rows, reclasses, and shows/resizes markers by in-window count. */
+    setDateWindow(d0, d1) {
+      const win = (d0 != null && d1 != null) ? { d0: +d0, d1: +d1 } : null;
+      const tally = tallyZones(linelistRows, win);
+      zoneCounts = tally.zoneCounts; zonePosCt = tally.zonePosCt;
+      applyCounts?.();
+      for (const { group, marker } of markers) {
+        let n = group.tipIds.length;
+        if (win) {
+          n = 0;
+          for (const ds of group.dates) { const tt = +new Date(ds); if (!isNaN(tt) && tt >= win.d0 && tt <= win.d1) n++; }
+        }
+        // _winHidden is honoured by highlight()/clearHighlight() and the marker click handler
+        // (Leaflet ignores a runtime `interactive` change, so the flag gates clicks instead).
+        group._winHidden = (n === 0);
+        if (n === 0) marker.setStyle(HIDDEN_STYLE);
+        else {
+          marker.setStyle({ opacity: 1, fillOpacity: BASE_STYLE.fillOpacity });
+          marker.setRadius(6 + 3 * Math.sqrt(n));
+        }
+      }
+    },
+
     /** Register the prioritisation panel and build the on-map knobs (shown only while the
      *  "To sequence" metric is selected). */
     attachPrioKnobs(prio) {
@@ -339,13 +369,13 @@ export function createMapPanel(containerId, tips, { onCtChange = () => {} } = {}
      * sample counts by status) with clickable selection. A button group switches the
      * metric; "Off" hides the colour but keeps zones clickable.
      * @param {GeoJSON.FeatureCollection} geojson  features w/ { Nom, PROVINCE, relative_risk, cx, cy }
-     * @param {Map<string,{Positive:number,Negative:number,Invalid:number,Unclassified:number,total:number}>} zoneCounts  by upper-cased Nom
+     * @param {Map<string,{Positive:number,Negative:number,Invalid:number,Unclassified:number,total:number}>} seedCounts  initial per-zone counts (upper-cased Nom)
      */
-    addZoneLayer(geojson, zoneCounts = new Map(), posCt = new Map()) {
+    addZoneLayer(geojson, seedCounts = new Map(), posCt = new Map(), rows = []) {
       const ZERO = { Positive: 0, Negative: 0, Invalid: 0, Unclassified: 0, total: 0 };
-      const countsOf = (f) => zoneCounts.get(upper(f.properties.Nom)) || ZERO;
+      const countsOf = (f) => zoneCounts.get(upper(f.properties.Nom)) || ZERO;   // reads scope zoneCounts
       const intFmt = (x) => String(Math.round(x));
-      zonePosCt = posCt;
+      zoneCounts = seedCounts; zonePosCt = posCt; linelistRows = rows;
       // Positives in a zone with Ct below the active threshold.
       const posBelow = (f) => { const a = zonePosCt.get(upper(f.properties.Nom)); if (!a) return 0; let n = 0; for (const v of a) if (v < ctThreshold) n++; return n; };
 
@@ -406,7 +436,19 @@ export function createMapPanel(containerId, tips, { onCtChange = () => {} } = {}
         return `${nom} (health zone)`;
       };
       zoneLayer.bindTooltip('', { sticky: true });
-      zoneLayer.on('mouseover mousemove', (e) => { const f = e.layer && e.layer.feature; if (f) zoneLayer.setTooltipContent(tooltipFor(f)); });
+      // Track the DOM event of the latest move that landed on a zone polygon. Leaflet
+      // fires the layer event before the map event for the same physical mouse move, so
+      // a map `mousemove` whose originalEvent differs means the cursor is NOT over a zone.
+      let lastZoneEvt = null;
+      zoneLayer.on('mouseover mousemove', (e) => {
+        lastZoneEvt = e.originalEvent;
+        const f = e.layer && e.layer.feature;
+        if (f) zoneLayer.setTooltipContent(tooltipFor(f));
+      });
+      // Close on any move that isn't over a zone. Unlike layer `mouseout`, mousemove keeps
+      // firing in the gaps between packed polygons, so a dropped/coalesced boundary mouseout
+      // (common with small zones + fast cursor) can't leave the tooltip stuck open.
+      map.on('mousemove', (e) => { if (e.originalEvent !== lastZoneEvt) zoneLayer.closeTooltip(); });
       map.on('mouseout', () => zoneLayer.closeTooltip());
 
       // legend — rebuilt for the active metric (hidden when Off)
@@ -427,6 +469,11 @@ export function createMapPanel(containerId, tips, { onCtChange = () => {} } = {}
       applyCtThreshold = () => {
         recomputeBreaks(METRICS.Positive);
         if (metric === 'Positive') { restyle(); renderLegend(); }
+      };
+      // After a windowed re-tally: reclass every count metric and redraw.
+      applyCounts = () => {
+        for (const cfg of Object.values(METRICS)) recomputeBreaks(cfg);
+        restyle(); renderLegend();
       };
       choroLegend = L.control({ position: 'bottomright' });
       choroLegend.onAdd = () => { choroLegendDiv = L.DomUtil.create('div', 'map-legend choropleth-legend'); renderLegend(); return choroLegendDiv; };

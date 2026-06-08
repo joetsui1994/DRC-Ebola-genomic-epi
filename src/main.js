@@ -6,6 +6,7 @@ import { startCoordinator } from './coordinator.js';
 import { createNodeInfo } from './node-info.js';
 import { makeSplitter } from './splitter.js';
 import { createPrioritisationPanel } from './prioritise-panel.js';
+import { tallyZones } from './zone-tally.js';
 
 // Parse the health-zone alias crosswalk (observed_name → canonical_nom) into a
 // normaliser. Health-zone names in the line-list / mobility / tree are mapped onto
@@ -74,27 +75,9 @@ const linelist = parseLinelist(linelistText, canon);
 // Expose the raw line-list rows (public-mode candidates) to the prioritisation engine.
 window.__PRIO_LINELIST__ = linelist;
 
-// Per-zone sample counts by status (canonical Nom, upper-cased) for the choropleth.
-const ZONE_STATUS = ['Positive', 'Negative', 'Invalid', 'Unclassified'];
-const zoneCounts = new Map();
-for (const r of linelist) {
-  const z = (r.health_zone || '').toUpperCase().trim();
-  if (!z || !ZONE_STATUS.includes(r.status)) continue;
-  if (!zoneCounts.has(z)) zoneCounts.set(z, { Positive: 0, Negative: 0, Invalid: 0, Unclassified: 0, total: 0 });
-  const o = zoneCounts.get(z); o[r.status]++; o.total++;
-}
-
-// Per-zone Positive Ct values, for the map's Ct-filtered Positive metric.
-const zonePosCt = new Map();
-for (const r of linelist) {
-  if (r.status !== 'Positive') continue;
-  const v = parseFloat(r.ct);
-  if (!Number.isFinite(v)) continue;
-  const z = (r.health_zone || '').toUpperCase().trim();
-  if (!z) continue;
-  if (!zonePosCt.has(z)) zonePosCt.set(z, []);
-  zonePosCt.get(z).push(v);
-}
+// Per-zone status counts + positive-Ct lists for the choropleth (full dataset; the brush
+// re-tallies a window via map.setDateWindow).
+const { zoneCounts, zonePosCt } = tallyZones(linelist);
 
 // Sequence (tree-tip) dates for the sample-distribution availability track — zone
 // canonicalised so they filter with the same selection as the bars.
@@ -116,7 +99,7 @@ const map = createMapPanel('map-body', tips, { onCtChange: (t) => tsPanel?.setCt
 fetch(`${BASE}data/health-zones.geojson`)
   .then(r => r.json())
   .then(zones => {
-    map.addZoneLayer(zones, zoneCounts, zonePosCt);
+    map.addZoneLayer(zones, zoneCounts, zonePosCt, linelist);
     const risk = new Map(zones.features.map((f) => [(f.properties.Nom || '').toUpperCase().trim(), f.properties.relative_risk]));
     const prio = createPrioritisationPanel(map.prioBody(), {
       risk, canon, tips: seqTips,
@@ -137,9 +120,13 @@ fetch(`${BASE}data/health-zones.geojson`)
   })
   .catch(err => console.warn('risk/mobility layer not loaded:', err));
 let treePanel = null;
-const ts  = createTimeseriesPanel('timeseries-body', linelist, { minDate: meta.rootDate, maxDate: meta.mostRecentDate }, { onCtChange: (t) => map.setCtThreshold(t), tips: seqTips, onExtentChange: (f) => treePanel?.setWidthFraction(f) });
+const ts  = createTimeseriesPanel('timeseries-body', linelist, { minDate: meta.rootDate, maxDate: meta.mostRecentDate }, {
+  onCtChange: (t) => map.setCtThreshold(t), tips: seqTips,
+  onExtentChange: (f) => treePanel?.setWidthFraction(f),
+  onWindowChange: (d0, d1) => { map.setDateWindow(d0, d1); treePanel?.setTimeBand(d0, d1); },
+});
 tsPanel = ts;   // late-bind for the map → distribution Ct sync
-const tree = await createTreePanel('tree-body');
+const tree = await createTreePanel('tree-body', meta);
 treePanel = tree;
 
 // Floating node-info card pinned to the tree panel.

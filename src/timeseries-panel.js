@@ -41,6 +41,13 @@ export function extentFraction(rows, t0, t1, on, ct = null, F_MIN = 0.4) {
   return { effMax, f };
 }
 
+/** Convert a drag's start/end x (svg px) to an ordered time window, or null if the drag was
+ *  too short to be a brush (a click → clear). `scale` exposes xToDate. */
+export function brushWindow(x0, x1, scale, minPx = 3) {
+  if (Math.abs(x1 - x0) < minPx) return null;
+  return { d0: +scale.xToDate(Math.min(x0, x1)), d1: +scale.xToDate(Math.max(x0, x1)) };
+}
+
 const SEQ_COLOR = '#7c1d1d';   // sequence-availability track (genomic samples) — maroon
 const ALLOC_COLOR = '#205c4c'; // to-sequence allocation track (prioritisation) — teal-green
 
@@ -81,7 +88,7 @@ function timeTicks(pxWidth, t0, t1) {
  * @param {{minDate:string,maxDate:string}} domain  tree time domain (root → most-recent)
  * @param {{onCtChange?:(t:?number)=>void}} [opts]  notified when the Ct filter changes
  */
-export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = () => {}, tips = [], onExtentChange = () => {} } = {}) {
+export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = () => {}, tips = [], onExtentChange = () => {}, onWindowChange = () => {} } = {}) {
   const host = document.getElementById(containerId);
   host.replaceChildren();
 
@@ -122,7 +129,13 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
   const tip = document.createElement('div');
   tip.className = 'dist-tip';
   tip.style.display = 'none';
-  host.append(controls, holder, tip);   // tip on host (holder is wiped each render)
+  // Persistent summary card for the brushed window (bottom-left). Like `tip`, it lives on
+  // host (not holder) so the per-render SVG wipe doesn't remove it; pointer-events:none so it
+  // never blocks brushing/hover on the bars beneath. Hidden until a window is brushed.
+  const summary = document.createElement('div');
+  summary.className = 'dist-window-summary';
+  summary.style.display = 'none';
+  host.append(controls, holder, tip, summary);   // tip/summary on host (holder is wiped each render)
 
   function showTip(ev, dateStr, counts) {
     const d = new Date(dateStr);
@@ -160,6 +173,7 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
   const t1 = +new Date(domain.maxDate);
 
   let showBeyond = false;            // toggle: extend the axis past the tree's latest date
+  let win = null;                    // brushed time window { d0, d1 } in ms, or null
   let effMaxMs = t1;                 // current effective right-edge date (ms); = t1 when off
   let extentRaf = 0;                 // rAF handle, coalesces tree-resize requests
 
@@ -254,6 +268,46 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
     note.innerHTML = `· ${total} not shown (${parts.join(', ')})`;
     note.title = `${total} samples not shown — ${plain.join(', ')}`;
     note.style.display = '';
+  }
+
+  // Summary card for the brushed window — recomputed in render(), so it tracks the window,
+  // the location selection (filteredRows/filteredTips), the Ct filter (ctPass), and the
+  // prioritisation allocation (allocation) automatically. Hidden when no window is set.
+  function updateWindowSummary() {
+    if (!win) { summary.style.display = 'none'; return; }
+    const lo = Math.min(win.d0, win.d1), hi = Math.max(win.d0, win.d1);
+    const inWin = (v) => { const t = +new Date(v); return !isNaN(t) && t >= lo && t <= hi; };
+
+    // Test positivity within the window: positives / (positives + negatives), Ct-filtered.
+    let pos = 0, neg = 0;
+    for (const r of filteredRows()) {
+      if (!inWin(r.date) || !ctPass(r, ctThreshold)) continue;
+      if (r.status === 'Positive') pos++;
+      else if (r.status === 'Negative') neg++;
+    }
+    const tested = pos + neg;
+    const pct = tested ? Math.round((pos / tested) * 100) : null;
+
+    // Sequences (tree tips) available in the window for the current selection.
+    let seq = 0;
+    for (const tp of filteredTips()) if (inWin(tp.date)) seq++;
+
+    // Additional sequences the prioritisation would take in the window (only when Seq+ active).
+    let toSeq = 0;
+    if (allocation) {
+      const m = allocByDate(allocOpts?.binWidthDays || 7, allocOpts?.origin || domain.minDate);
+      for (const [day, n] of m) if (inWin(day)) toSeq += n;
+    }
+
+    const days = Math.max(1, Math.round((hi - lo) / 86400000));
+    const lines = [`<div class="ws-range">${fmtDay(lo)} – ${fmtDay(hi)} · ${days} d</div>`];
+    lines.push(`<div>${pct == null
+      ? '<span class="ws-dim">no tests in range</span>'
+      : `<b>${pct}%</b> positive <span class="ws-dim">(${pos}/${tested})</span>`}</div>`);
+    lines.push(`<div><b>${seq}</b> existing sequence${seq === 1 ? '' : 's'}</div>`);
+    if (allocation) lines.push(`<div class="ws-alloc"><b>${toSeq}</b> to sequence next</div>`);
+    summary.innerHTML = lines.join('');
+    summary.style.display = '';
   }
 
   function aggregate() {
@@ -376,6 +430,13 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
       svg.appendChild(lbl);
     }
 
+    // Brushed time-window band (behind the bars; persists across re-renders, tracks the scale).
+    if (win) {
+      const bx0 = scale.dateToX(new Date(win.d0)), bx1 = scale.dateToX(new Date(win.d1));
+      svg.appendChild(el('rect', { x: Math.min(bx0, bx1), y: PAD.top, width: Math.max(1, Math.abs(bx1 - bx0)),
+        height: baseY - PAD.top, fill: 'rgba(124,29,29,0.10)', stroke: 'rgba(124,29,29,0.45)', 'stroke-width': 1, 'pointer-events': 'none' }));
+    }
+
     for (const [dateStr, counts] of byDay) {
       const x = scale.dateToX(dateStr) - barW / 2;
       let top = baseY;
@@ -437,7 +498,37 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
     svg.addEventListener('mouseleave', hideTip);
 
     updateNote();
+    updateWindowSummary();
   }
+
+  // Horizontal brush: drag on the chart to pick a time window; a click (tiny drag) clears it.
+  // Listeners live on `holder` (persistent) since the svg is rebuilt each render; a live <rect>
+  // is drawn directly during the drag (no re-render), finalised on mouseup.
+  let drag = null;   // { x0, rect } while dragging
+  const relX = (ev) => ev.clientX - holder.getBoundingClientRect().left;
+  holder.addEventListener('mousedown', (ev) => {
+    if (ev.button !== 0 || !scale) return;
+    hideTip();
+    const svgEl = holder.querySelector('svg');
+    const rect = svgEl ? el('rect', { x: relX(ev), y: PAD.top, width: 0, height: H - PAD.bottom - PAD.top,
+      fill: 'rgba(124,29,29,0.10)', stroke: 'rgba(124,29,29,0.45)', 'stroke-width': 1, 'pointer-events': 'none' }) : null;
+    if (rect && svgEl) svgEl.appendChild(rect);
+    drag = { x0: relX(ev), rect };
+    ev.preventDefault();
+  });
+  window.addEventListener('mousemove', (ev) => {
+    if (!drag) return;
+    const x = relX(ev), xl = Math.min(drag.x0, x), w = Math.abs(x - drag.x0);
+    if (drag.rect) { drag.rect.setAttribute('x', xl); drag.rect.setAttribute('width', Math.max(0, w)); }
+  });
+  window.addEventListener('mouseup', (ev) => {
+    if (!drag) return;
+    const next = brushWindow(drag.x0, relX(ev), scale);
+    drag = null;
+    win = next;
+    onWindowChange(next ? next.d0 : null, next ? next.d1 : null);
+    render();   // draw the persistent band (or none) and drop the live rect
+  });
 
   render();
   const ro = new ResizeObserver(() => render());

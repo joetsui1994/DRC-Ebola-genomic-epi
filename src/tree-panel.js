@@ -15,7 +15,7 @@ const WIDTH_FLOOR = 0.3;
  * @param {string} containerId  id of the element to embed into
  * @returns {Promise<{selectByLocation, clear, onSelect}>}
  */
-export async function createTreePanel(containerId) {
+export async function createTreePanel(containerId, meta = null) {
   if (!window.PearTreeEmbed) {
     throw new Error('PearTreeEmbed not found — is public/peartree.bundle.min.js loaded?');
   }
@@ -136,6 +136,37 @@ export async function createTreePanel(containerId) {
   }
   legendBtn?.addEventListener('click', () => setLegend(!legendOn));
 
+  // Shaded time-window band overlaid on the canvas. Positioned with the SAME date→x mapping
+  // the histogram uses (root → offsetX, mostRecent → offsetX + maxX·scaleX), so it lines up
+  // with the histogram's brush band. Repositioned on every view change; clamped to the tree's
+  // date range so a "beyond" brush stops at the tree edge. pointer-events:none keeps the tree
+  // clickable. Attached to #canvas-wrapper so its x-origin matches the transform.
+  const t0 = meta ? +new Date(meta.rootDate) : 0;
+  const t1 = meta ? +new Date(meta.mostRecentDate) : 0;
+  let band = null, bandWin = null;     // { d0, d1 } in ms, or null
+  function ensureBand() {
+    if (band) return band;
+    const wrap = document.getElementById('canvas-wrapper');
+    if (!wrap) return null;
+    band = document.createElement('div'); band.className = 'tree-time-band';
+    wrap.appendChild(band);
+    return band;
+  }
+  function positionBand() {
+    const el = ensureBand();
+    if (!el) return;
+    const vt = tree.getViewTransform?.();
+    if (!bandWin || !vt || !vt.maxX || t1 <= t0) { el.style.display = 'none'; return; }
+    const x0 = vt.offsetX, span = vt.maxX * vt.scaleX;
+    const dToX = (ms) => x0 + ((Math.max(t0, Math.min(t1, ms)) - t0) / (t1 - t0)) * span;
+    const xL = dToX(bandWin.d0), xR = dToX(bandWin.d1);
+    if (xR - xL < 0.5) { el.style.display = 'none'; return; }
+    // Show: must set a concrete display value — the base `.tree-time-band` rule is
+    // `display:none`, so '' would fall back to that and the band would stay hidden.
+    el.style.display = 'block'; el.style.left = `${xL}px`; el.style.width = `${xR - xL}px`;
+  }
+  tree.onViewChange(() => positionBand());   // track pan / zoom / resize
+
   return {
     /**
      * Select tips by their accession (== leaf name). PearTree's setSelection
@@ -153,6 +184,11 @@ export async function createTreePanel(containerId) {
     onViewChange(cb) { return tree.onViewChange(cb); },
     /** Snapshot the current view transform, or null. */
     getViewTransform() { return tree.getViewTransform(); },
+    /** Show/move the time-window band (inclusive ms bounds), or null to hide it. */
+    setTimeBand(d0, d1) {
+      bandWin = (d0 != null && d1 != null) ? { d0: +d0, d1: +d1 } : null;
+      positionBand();
+    },
     /**
      * Compress the tree CANVAS to fraction f∈[WIDTH_FLOOR,1] of its width by insetting
      * PearTree's #canvas-container (a sibling of the toolbar, so the toolbar is untouched).
