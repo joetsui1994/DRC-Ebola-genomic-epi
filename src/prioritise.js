@@ -113,7 +113,7 @@ export function prioritise({
   const rng = mulberry32(seed);
   const C = cells.map((c) => ({
     location: c.location, timeBin: c.timeBin, risk: c.risk,
-    available0: c.available, available: c.available, h: c.h || 0,
+    available0: c.available, available: c.available, h: c.h || 0, h0: c.h || 0,
     selected: 0, floorSelected: 0, propSelected: 0,
     ids: c.ids ? [...c.ids] : null,
   }));
@@ -153,6 +153,7 @@ export function prioritise({
     decay: Math.round(decayC[i] * 1000) / 1000,
     available: c.available0, selected: c.selected,
     floorSelected: c.floorSelected, propSelected: c.propSelected, hFinal: c.h,
+    h0: c.h0, Hk: (locHistory && locHistory.get(c.location)) || 0,
   })).sort((a, b) => (a.location < b.location ? -1 : a.location > b.location ? 1 : a.timeBin - b.timeBin));
 
   return { selection, cellSummary };
