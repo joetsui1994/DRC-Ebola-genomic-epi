@@ -1,6 +1,6 @@
 // src/prio-knobs.js
 // Shared δ/λ/N/Ct/bin knob strip, used both on the map (inside a Leaflet control) and on
-// the prioritisation page (beside the scatter). λ is log-scaled with an ∞ top stop (its
+// the prioritisation page (beside the allocation matrix). λ is log-scaled with an ∞ top stop (its
 // effect is exponential); the recompute is throttled so dragging stays smooth, while the
 // numeric readout updates instantly.
 

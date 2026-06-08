@@ -3,7 +3,7 @@
 // running the client-side engine and pushing results to the map + chart panels.
 import { prioritise } from './prioritise.js';
 import { buildCells, parseUpload } from './prioritise-data.js';
-import { createScatter } from './prio-scatter.js';
+import { createHeatmap } from './prio-heatmap.js';
 import { buildKnobs } from './prio-knobs.js';
 
 const DEFAULTS = { delta: 0.5, lam: Infinity, n: 50, ctThreshold: 32, binWidthDays: 1 };
@@ -115,11 +115,10 @@ return ranked                     # the top-N list for the lab</pre>
 
 export function createPrioritisationPanel(container, { risk, canon, tips, onChange }) {
   container.innerHTML = METHODOLOGY_HTML
-    + '<h4>Explore the weighting</h4>'
-    + '<p class="ps-cap">Each point is a cell (zone × time-bin): <b>y</b> = risk/(h+δ), <b>x</b> = the weight <em>w</em>. '
-      + 'Cells on the dashed line carry no recency penalty; lower <em>λ</em> to pull older cells left. '
-      + '<span style="color:#205c4c;font-weight:600">Green</span> = would be sequenced (top-<em>N</em>); point size ∝ available samples.</p>'
-    + '<div id="prio-scatter"></div>'
+    + '<h4>Explore the allocation</h4>'
+    + '<p class="ps-cap">Each row corresponds to a health zone (with eligible samples) and each column a time-bin. '
+      + 'Each cell is coloured according to the number of samples to be sequenced according to our heuristic (with a darker colour indicating more samples).</p>'
+    + '<div id="prio-heatmap"></div>'
     + '<div id="prio-scatter-knobs" class="ps-knobs"></div>'
     + '<h4>Export the ranking</h4>'
     + '<p class="ps-cap">Download the prioritisation computed from the current knob values (δ, λ, <em>N</em>, eligibility Ct, bin width). With the public data this is a cell-level ranking; uploads (coming soon) will carry real sample IDs.</p>'
@@ -144,7 +143,7 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
 
   const fileEl = container.querySelector('#prio-file');
   const diagEl = container.querySelector('#prio-diag');
-  const scatter = createScatter(container.querySelector('#prio-scatter'));
+  const heat = createHeatmap(container.querySelector('#prio-heatmap'));
 
   const seqRows = (tips || []).filter((t) => t.date).map((t) => ({ health_zone: t.health_zone, date: t.date }));
   let uploadRows = null;                 // null = public mode
@@ -165,15 +164,23 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
       cells: built.cells, n: params.n, delta: params.delta, lam: params.lam,
       binWidthDays: params.binWidthDays, origin: built.origin, tNow: built.tNow, seed: 1,
     });
-    return { inUpload, selection, cellSummary, origin: built.origin, diagnostics: built.diagnostics };
+    // Ct-stable row universe for the heatmap: all candidate zones with the Ct filter OFF, so the
+    // Ct knob only changes cell values, never adds/removes rows. Independent of δ/λ/N.
+    const universe = buildCells({
+      candidateRows, sequencedRows, risk, canon,
+      ctThreshold: Infinity, binWidthDays: params.binWidthDays,
+      subtractHistory: !inUpload, withIds: false,
+    });
+    const zones = [...new Set(universe.cells.map((c) => c.location))].sort();
+    return { inUpload, selection, cellSummary, origin: built.origin, zones, diagnostics: built.diagnostics };
   }
 
-  // Update the live count readout + the scatter from an engine result (both paths use this).
+  // Update the live count readout + the heatmap from an engine result (both paths use this).
   function render(r) {
     diagEl.textContent = r.inUpload
       ? `${r.diagnostics.kept} eligible, ${r.diagnostics.dropped} dropped · ${r.selection.length} to sequence`
       : `${r.diagnostics.kept} eligible candidates · ${r.selection.length} to sequence`;
-    scatter.update(r.cellSummary, params, { origin: r.origin, binWidthDays: params.binWidthDays });
+    heat.update(r.cellSummary, params, { origin: r.origin, binWidthDays: params.binWidthDays, zones: r.zones });
   }
 
   // Active path: also drive the map + chart.
@@ -183,21 +190,21 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
     render(r);
   }
 
-  // Inactive path: keep the methodology scatter + count live as the shared knobs change.
-  function refreshScatter() { render(runEngine()); }
+  // Inactive path: keep the methodology heatmap + count live as the shared knobs change.
+  function refreshHeatmap() { render(runEngine()); }
 
-  // active → drive the map/chart; otherwise just keep the methodology scatter live.
-  function recompute() { if (active) compute(); else refreshScatter(); }
+  // active → drive the map/chart; otherwise just keep the methodology heatmap live.
+  function recompute() { if (active) compute(); else refreshHeatmap(); }
 
   // Single entry point for a parameter change (from the page knobs OR the on-map knobs).
   function applyParams(p) { params = { ...params, ...p }; recompute(); }
 
   // Toggled by the map's "To sequence" (Seq+) metric: on → compute + drive the map/chart;
-  // off → clear the map/chart (the scatter keeps its last state).
+  // off → clear the map/chart (the heatmap keeps its last state).
   function setActive(on) {
     active = !!on;
     if (active) compute();
-    else { onChange({ active: false }); refreshScatter(); }
+    else { onChange({ active: false }); refreshHeatmap(); }
   }
 
   function download(name, text) {
@@ -236,9 +243,9 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
     return Math.max(1, buildCells({ candidateRows, sequencedRows: [], risk, canon, ctThreshold: 1e9, binWidthDays: 1, subtractHistory: false }).diagnostics.kept);
   }
 
-  // Page knob strip beside the scatter — shares params with the on-map knobs.
+  // Page knob strip beside the heatmap — shares params with the on-map knobs.
   const pageKnobs = buildKnobs(container.querySelector('#prio-scatter-knobs'), { getParams: () => ({ ...params }), onChange: applyParams, getMaxN: eligibleCeiling });
-  refreshScatter();   // initial render (the ResizeObserver paints it once the tab is first shown)
+  refreshHeatmap();   // initial render (the ResizeObserver paints it once the tab is first shown)
 
   return {
     /** Update knobs (from the on-map panel) and recompute. */

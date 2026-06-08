@@ -425,9 +425,9 @@ body {
 #prio-body pre { background: rgba(88,126,114,0.08); border: 1px solid rgba(88,126,114,0.25); border-radius: 5px;
   padding: 8px 10px; margin: 6px 0; font-size: 10.5px; line-height: 1.45; color: var(--ink); overflow-x: auto; white-space: pre; }
 
-/* Weighting scatter (methodology page) + its shared knob strip. */
+/* Allocation heatmap (methodology page) + its shared knob strip. */
 .ps-cap { font-size: 11px; color: var(--muted); margin: 4px 0 2px; line-height: 1.45; }
-#prio-scatter { position: relative; margin: 4px 0; }
+#prio-heatmap { position: relative; margin: 4px 0; }
 .ps-svg { position: relative; width: 100%; }
 .ps-svg svg { display: block; }
 .ps-tip { position: absolute; pointer-events: none; z-index: 5; background: rgba(255,255,255,0.97);
