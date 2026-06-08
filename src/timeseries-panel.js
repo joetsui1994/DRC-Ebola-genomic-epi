@@ -388,7 +388,7 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
     if (win) {
       const bx0 = scale.dateToX(new Date(win.d0)), bx1 = scale.dateToX(new Date(win.d1));
       svg.appendChild(el('rect', { x: Math.min(bx0, bx1), y: PAD.top, width: Math.max(1, Math.abs(bx1 - bx0)),
-        height: baseY - PAD.top, fill: 'rgba(124,29,29,0.10)', stroke: 'rgba(124,29,29,0.45)', 'stroke-width': 1 }));
+        height: baseY - PAD.top, fill: 'rgba(124,29,29,0.10)', stroke: 'rgba(124,29,29,0.45)', 'stroke-width': 1, 'pointer-events': 'none' }));
     }
 
     for (const [dateStr, counts] of byDay) {
