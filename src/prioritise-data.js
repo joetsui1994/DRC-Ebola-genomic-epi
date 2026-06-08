@@ -14,8 +14,9 @@ function normDate(d) {
 }
 
 /**
- * @returns { cells, origin, tNow, diagnostics }
+ * @returns { cells, origin, tNow, locHistory, diagnostics }
  *   cells: [{ location, timeBin, risk, available, h, ids? }]  (location = upper canonical Nom)
+ *   locHistory: Map<location, number> — total pre-batch sequenced count per location (H_k)
  *   diagnostics: { kept, dropped, byReason: {notPositive, ctIneligible, badDate, unknownZone} }
  */
 export function buildCells({
@@ -53,6 +54,13 @@ export function buildCells({
     hMap.set(key, (hMap.get(key) || 0) + 1);
   }
 
+  // location-level pre-batch history total (H_k) — counts ALL history, independent of
+  // whether the location has candidates this batch (cells drop available<=0 cells).
+  const locHistory = new Map();
+  for (const r of seq) {
+    locHistory.set(r.loc, (locHistory.get(r.loc) || 0) + 1);
+  }
+
   // candidate pool per cell
   const pool = new Map();   // key -> { location, timeBin, count, ids }
   for (const r of eligible) {
@@ -75,7 +83,7 @@ export function buildCells({
     });
   }
 
-  return { cells, origin: o, tNow: t, diagnostics: { kept: eligible.length, dropped: candidateRows.length - eligible.length, byReason: reason } };
+  return { cells, origin: o, tNow: t, locHistory, diagnostics: { kept: eligible.length, dropped: candidateRows.length - eligible.length, byReason: reason } };
 }
 
 /** Parse an uploaded CSV (naive split; header case-insensitive) into rows. */

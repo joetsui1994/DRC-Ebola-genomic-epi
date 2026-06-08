@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { mulberry32, assignCell, decay } from './prioritise.js';
+import { mulberry32, assignCell, decay, resolveFloorBudget } from './prioritise.js';
 
 describe('mulberry32', () => {
   it('is deterministic for a given seed and in [0,1)', () => {
@@ -113,5 +113,109 @@ describe('prioritise', () => {
     const s2 = prioritise({ ...base, cells: mk(), n: 4, delta: 0.5 }).selection;
     expect(s1).toEqual(s2);
     expect(s1.every(p => p.sampleId)).toBe(true);
+  });
+});
+
+describe('resolveFloorBudget', () => {
+  it('null cap → full budget', () => {
+    expect(resolveFloorBudget(null, 50)).toBe(50);
+  });
+  it('fraction in (0,1] → ceil(frac*n)', () => {
+    expect(resolveFloorBudget(0.2, 50)).toBe(10);
+    expect(resolveFloorBudget(0.25, 50)).toBe(13);   // ceil(12.5)
+    expect(resolveFloorBudget(1, 50)).toBe(50);      // ceil(1*50)
+  });
+  it('cap > 1 → floor(cap), clamped to n', () => {
+    expect(resolveFloorBudget(5, 50)).toBe(5);
+    expect(resolveFloorBudget(2.7, 50)).toBe(2);     // float > 1 is floored
+    expect(resolveFloorBudget(80, 50)).toBe(50);     // clamped to n
+  });
+  it('non-positive cap → 0 (no floor picks)', () => {
+    expect(resolveFloorBudget(0, 50)).toBe(0);
+    expect(resolveFloorBudget(-1, 50)).toBe(0);
+  });
+});
+
+describe('coverage floor', () => {
+  const floorBase = { origin: '2026-04-05', tNow: '2026-04-05', lam: Infinity, binWidthDays: 7, seed: 1 };
+  // A: high risk, already covered (H=3); B,C: low risk, never sequenced (uncovered).
+  const mkCells = () => [
+    { location: 'A', timeBin: 0, risk: 10, available: 10, h: 0 },
+    { location: 'B', timeBin: 0, risk: 1, available: 10, h: 0 },
+    { location: 'C', timeBin: 0, risk: 1, available: 10, h: 0 },
+  ];
+  const locHistory = new Map([['A', 3]]);   // only A has prior history
+
+  it('proportional mode (default) ignores the floor and is unchanged', () => {
+    const { selection } = prioritise({ ...floorBase, cells: mkCells(), locHistory, n: 5, delta: 0.5, mode: 'proportional' });
+    expect(selectedByLoc(selection).A).toBe(5);
+  });
+
+  it('both mode floors every uncovered location before the proportional loop', () => {
+    const { selection } = prioritise({ ...floorBase, cells: mkCells(), locHistory, n: 5, delta: 0.5, mode: 'both', floorSize: 1 });
+    const byLoc = selectedByLoc(selection);
+    expect(byLoc.B).toBeGreaterThanOrEqual(1);
+    expect(byLoc.C).toBeGreaterThanOrEqual(1);
+    const floorPicks = selection.filter((s) => s.layer === 'floor');
+    expect(floorPicks.length).toBe(2);
+    expect(floorPicks.map((s) => s.rank)).toEqual([1, 2]);
+    expect(new Set(floorPicks.map((s) => s.location))).toEqual(new Set(['B', 'C']));
+    expect(selection.filter((s) => s.layer === 'proportional').length).toBe(3);
+  });
+
+  it('floorSize takes multiple per uncovered location, capped at availability', () => {
+    const cells = [
+      { location: 'A', timeBin: 0, risk: 10, available: 10, h: 0 },
+      { location: 'B', timeBin: 0, risk: 1, available: 1, h: 0 },
+      { location: 'C', timeBin: 0, risk: 1, available: 10, h: 0 },
+    ];
+    const { selection } = prioritise({ ...floorBase, cells, locHistory, n: 10, delta: 0.5, mode: 'floor', floorSize: 3 });
+    const byLoc = selectedByLoc(selection);
+    expect(byLoc.B).toBe(1);
+    expect(byLoc.C).toBe(3);
+    expect(byLoc.A).toBeUndefined();
+  });
+
+  it('floor mode leaves leftover budget unused', () => {
+    const { selection } = prioritise({ ...floorBase, cells: mkCells(), locHistory, n: 50, delta: 0.5, mode: 'floor', floorSize: 1 });
+    expect(selection.length).toBe(2);
+    expect(selection.every((s) => s.layer === 'floor')).toBe(true);
+  });
+
+  it('floorBudgetCap bounds the floor picks (carry-over)', () => {
+    const cells = [
+      { location: 'B', timeBin: 0, risk: 1, available: 10, h: 0 },
+      { location: 'C', timeBin: 0, risk: 1, available: 10, h: 0 },
+      { location: 'D', timeBin: 0, risk: 1, available: 10, h: 0 },
+    ];
+    const { selection } = prioritise({ ...floorBase, cells, locHistory: new Map(), n: 10, delta: 0.5, mode: 'floor', floorSize: 1, floorBudgetCap: 0.2 });
+    expect(selection.filter((s) => s.layer === 'floor').length).toBe(2);
+  });
+
+  it('a floored location is demoted in the subsequent proportional loop', () => {
+    const cells = [
+      { location: 'A', timeBin: 0, risk: 5, available: 10, h: 0 },
+      { location: 'B', timeBin: 0, risk: 5, available: 10, h: 0 },
+    ];
+    const { cellSummary } = prioritise({ ...floorBase, cells, locHistory: new Map(), n: 6, delta: 0.5, mode: 'both', floorSize: 1 });
+    const a = cellSummary.find((c) => c.location === 'A');
+    const b = cellSummary.find((c) => c.location === 'B');
+    expect(a.floorSelected).toBe(1);
+    expect(b.floorSelected).toBe(1);
+    expect(a.propSelected).toBe(b.propSelected);   // equal risk + equal floor → even proportional split
+    expect(a.selected + b.selected).toBe(6);
+  });
+
+  it('floor mode with null locHistory treats every location as uncovered', () => {
+    const { selection } = prioritise({ ...floorBase, cells: mkCells(), locHistory: null, n: 3, delta: 0.5, mode: 'floor', floorSize: 1 });
+    expect(selection.length).toBe(3);   // A, B, C each floored once
+    expect(new Set(selection.map((s) => s.location))).toEqual(new Set(['A', 'B', 'C']));
+    expect(selection.every((s) => s.layer === 'floor')).toBe(true);
+  });
+
+  it('determinism: same seed → identical selection with floor on', () => {
+    const s1 = prioritise({ ...floorBase, cells: mkCells(), locHistory, n: 5, delta: 0.5, mode: 'both' }).selection;
+    const s2 = prioritise({ ...floorBase, cells: mkCells(), locHistory, n: 5, delta: 0.5, mode: 'both' }).selection;
+    expect(s1).toEqual(s2);
   });
 });

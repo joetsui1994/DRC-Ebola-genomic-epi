@@ -74,3 +74,31 @@ describe('upload end-to-end', () => {
     expect(selection.every((s) => /^(A1|A2|B1)$/.test(s.sampleId))).toBe(true);
   });
 });
+
+describe('buildCells locHistory', () => {
+  it('counts all prior history per location, including locations with no candidates this batch', () => {
+    const candidateRows = [
+      { health_zone: 'Bunia', status: 'Positive', ct: '24', date: '2026-04-12' }, // bin 1, candidate
+    ];
+    const sequencedRows = [
+      { health_zone: 'Bunia', date: '2026-04-05' },   // bin 0 — no candidate in this bin
+      { health_zone: 'Katwa', date: '2026-04-05' },   // Katwa has NO candidates at all this batch
+    ];
+    const { cells, locHistory } = buildCells({
+      candidateRows, sequencedRows, risk, canon, ctThreshold: 31, binWidthDays: 7, subtractHistory: true,
+    });
+    // Katwa is absent from cells (no candidates) but its history is still counted:
+    expect(cells.find((c) => c.location === 'KATWA')).toBeUndefined();
+    expect(locHistory.get('KATWA')).toBe(1);
+    // Bunia's bin-0 history counts toward its location total even though the candidate is in bin 1:
+    expect(locHistory.get('BUNIA')).toBe(1);
+  });
+
+  it('locHistory is empty when there is no history', () => {
+    const { locHistory } = buildCells({
+      candidateRows: [{ health_zone: 'Bunia', status: 'Positive', ct: '24', date: '2026-04-05' }],
+      risk, canon, ctThreshold: 31, binWidthDays: 7,
+    });
+    expect(locHistory.size).toBe(0);
+  });
+});

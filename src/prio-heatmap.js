@@ -106,7 +106,10 @@ export function createHeatmap(host) {
     tip.innerHTML = `<div class="ps-tip-h">${titleCase(zone)}</div><div>${when}</div>`
       + (c
         ? `<div>avail <b>${c.available}</b> · risk <b>${(+c.risk).toFixed(3)}</b></div>`
-          + `<div><span style="color:${TEAL}">to sequence <b>${c.selected}</b></span></div>`
+          + `<div><span style="color:${TEAL}">to sequence <b>${c.selected}</b></span>`
+            + ((c.floorSelected > 0 && c.propSelected > 0)
+              ? ` <span style="color:#9c968b">(floor ${c.floorSelected} + prop ${c.propSelected})</span>` : '')
+            + `</div>`
         : '<div style="color:#9c968b">no samples</div>');
     tip.style.display = 'block';
     const rect = host.getBoundingClientRect();

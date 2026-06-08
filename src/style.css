@@ -466,6 +466,8 @@ body {
 .pk-l { width: 38px; color: var(--muted); flex: none; }
 .pk-row input[type=range] { width: 68px; accent-color: #587e72; }
 .pk-v { width: 26px; text-align: right; font-variant-numeric: tabular-nums; color: #587e72; font-weight: 600; }
+.pk-row.pk-disabled { opacity: 0.4; pointer-events: none; }
+.pk-row .pk-mode { flex: 1; min-width: 0; font-size: 11px; }
 
 /* Time-window band overlaid on the tree canvas (positioned by the view transform). */
 .tree-time-band {
