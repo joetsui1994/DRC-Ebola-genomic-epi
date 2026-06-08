@@ -156,6 +156,18 @@ body {
 .dist-tip .tip-row i { width: 9px; height: 9px; border-radius: 2px; display: inline-block; flex: none; }
 .dist-tip .tip-row b { margin-left: auto; padding-left: 12px; font-variant-numeric: tabular-nums; }
 
+/* Summary card for the brushed time window (bottom-left of the histogram) */
+.dist-window-summary {
+  position: absolute; left: 8px; bottom: 6px; z-index: 4; pointer-events: none;
+  background: rgba(255, 255, 255, 0.92); border: 1px solid var(--border); border-radius: 6px;
+  box-shadow: 0 2px 7px rgba(30, 25, 18, 0.12); padding: 5px 8px;
+  font-size: 11px; line-height: 1.5; color: var(--ink); white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.dist-window-summary .ws-range { font-weight: 600; margin-bottom: 2px; }
+.dist-window-summary .ws-dim { color: var(--muted); }
+.dist-window-summary .ws-alloc { color: #205c4c; font-weight: 600; }
+
 /* Floating node-info card (pinned top-left of the tree, below the toolbar — `top` set in JS) */
 .node-info {
   position: absolute; left: 10px; top: 50px; z-index: 5;

@@ -129,7 +129,13 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
   const tip = document.createElement('div');
   tip.className = 'dist-tip';
   tip.style.display = 'none';
-  host.append(controls, holder, tip);   // tip on host (holder is wiped each render)
+  // Persistent summary card for the brushed window (bottom-left). Like `tip`, it lives on
+  // host (not holder) so the per-render SVG wipe doesn't remove it; pointer-events:none so it
+  // never blocks brushing/hover on the bars beneath. Hidden until a window is brushed.
+  const summary = document.createElement('div');
+  summary.className = 'dist-window-summary';
+  summary.style.display = 'none';
+  host.append(controls, holder, tip, summary);   // tip/summary on host (holder is wiped each render)
 
   function showTip(ev, dateStr, counts) {
     const d = new Date(dateStr);
@@ -262,6 +268,46 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
     note.innerHTML = `· ${total} not shown (${parts.join(', ')})`;
     note.title = `${total} samples not shown — ${plain.join(', ')}`;
     note.style.display = '';
+  }
+
+  // Summary card for the brushed window — recomputed in render(), so it tracks the window,
+  // the location selection (filteredRows/filteredTips), the Ct filter (ctPass), and the
+  // prioritisation allocation (allocation) automatically. Hidden when no window is set.
+  function updateWindowSummary() {
+    if (!win) { summary.style.display = 'none'; return; }
+    const lo = Math.min(win.d0, win.d1), hi = Math.max(win.d0, win.d1);
+    const inWin = (v) => { const t = +new Date(v); return !isNaN(t) && t >= lo && t <= hi; };
+
+    // Test positivity within the window: positives / (positives + negatives), Ct-filtered.
+    let pos = 0, neg = 0;
+    for (const r of filteredRows()) {
+      if (!inWin(r.date) || !ctPass(r, ctThreshold)) continue;
+      if (r.status === 'Positive') pos++;
+      else if (r.status === 'Negative') neg++;
+    }
+    const tested = pos + neg;
+    const pct = tested ? Math.round((pos / tested) * 100) : null;
+
+    // Sequences (tree tips) available in the window for the current selection.
+    let seq = 0;
+    for (const tp of filteredTips()) if (inWin(tp.date)) seq++;
+
+    // Additional sequences the prioritisation would take in the window (only when Seq+ active).
+    let toSeq = 0;
+    if (allocation) {
+      const m = allocByDate(allocOpts?.binWidthDays || 7, allocOpts?.origin || domain.minDate);
+      for (const [day, n] of m) if (inWin(day)) toSeq += n;
+    }
+
+    const days = Math.max(1, Math.round((hi - lo) / 86400000));
+    const lines = [`<div class="ws-range">${fmtDay(lo)} – ${fmtDay(hi)} · ${days} d</div>`];
+    lines.push(`<div>${pct == null
+      ? '<span class="ws-dim">no tests in range</span>'
+      : `<b>${pct}%</b> positive <span class="ws-dim">(${pos}/${tested})</span>`}</div>`);
+    lines.push(`<div><b>${seq}</b> existing sequence${seq === 1 ? '' : 's'}</div>`);
+    if (allocation) lines.push(`<div class="ws-alloc"><b>${toSeq}</b> to sequence next</div>`);
+    summary.innerHTML = lines.join('');
+    summary.style.display = '';
   }
 
   function aggregate() {
@@ -452,6 +498,7 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
     svg.addEventListener('mouseleave', hideTip);
 
     updateNote();
+    updateWindowSummary();
   }
 
   // Horizontal brush: drag on the chart to pick a time window; a click (tiny drag) clears it.
