@@ -27,13 +27,6 @@ function modeRow(val) {
   return `<div class="pk-row" data-row="mode"><span class="pk-l">mode</span>`
     + `<select class="pk-mode" data-k="mode">${opts}</select></div>`;
 }
-// Seed: a read-out + a re-roll button. The seed drives all randomness (tie-breaks +
-// within-cell draws), so re-rolling lets users see which structure is stable vs. tie-break luck.
-function seedRow(val) {
-  return `<div class="pk-row" data-row="seed"><span class="pk-l">seed</span>`
-    + `<span class="pk-v pk-seed" data-v="seed">${val}</span>`
-    + `<button type="button" class="pk-reroll" data-k="seed-reroll" title="Randomise the seed — re-roll tie-breaks and within-cell draws">🎲</button></div>`;
-}
 
 /**
  * Build the knob rows into `root`, reading initial values from getParams(); each change fires
@@ -49,8 +42,7 @@ export function buildKnobs(root, { getParams, onChange, getMaxN, throttleMs = 15
     row('N', 'n', P.n, 1, nMax, 1) + row('Ct<', 'ctThreshold', P.ctThreshold, 1, 45, 1) +
     row('bin (d)', 'binWidthDays', P.binWidthDays, 1, 30, 1) +
     row('floor', 'floorSize', P.floorSize ?? 1, 1, 5, 1) +
-    row('cap', 'floorBudgetCap', capToSlider(P.floorBudgetCap), 0, 100, 1, capLabel(P.floorBudgetCap)) +
-    seedRow(P.seed ?? 1);
+    row('cap', 'floorBudgetCap', capToSlider(P.floorBudgetCap), 0, 100, 1, capLabel(P.floorBudgetCap));
 
   let pending = null, timer = null, lastRun = 0;
   const applyNow = () => { timer = null; lastRun = Date.now(); const p = pending; pending = null; if (p) onChange(p); };
@@ -86,13 +78,6 @@ export function buildKnobs(root, { getParams, onChange, getMaxN, throttleMs = 15
   const modeSel = root.querySelector('select[data-k="mode"]');
   modeSel.addEventListener('change', () => { syncFloorEnabled(modeSel.value); onChange({ mode: modeSel.value }); });
 
-  // Re-roll: pick a fresh seed, show it, recompute. Reproducible — note the number to return to it.
-  root.querySelector('[data-k="seed-reroll"]').addEventListener('click', () => {
-    const seed = Math.floor(Math.random() * 1e6);
-    root.querySelector('[data-v="seed"]').textContent = seed;
-    onChange({ seed });
-  });
-
   // Re-sync sliders + the mode select to the current (shared) params — call when this strip
   // becomes visible, so it never shows stale values after the other strip was used.
   function refresh() {
@@ -105,8 +90,28 @@ export function buildKnobs(root, { getParams, onChange, getMaxN, throttleMs = 15
     });
     const m = P.mode || 'proportional';
     root.querySelector('select[data-k="mode"]').value = m;
-    root.querySelector('[data-v="seed"]').textContent = String(P.seed ?? 1);
     syncFloorEnabled(m);
   }
   return { refresh };
+}
+
+/**
+ * Standalone seed re-roll control, rendered OUTSIDE the knob box. Shows an optional
+ * description, a 🎲 button, and the current seed in parentheses. Re-rolling resamples all
+ * randomness (tie-breaks + within-cell draws) and recomputes via onChange({ seed }). Shares
+ * the same params as buildKnobs, so call refresh() when the strip is shown to stay in sync.
+ */
+export function buildSeedControl(root, { getParams, onChange, text = '' }) {
+  const seedOf = () => getParams().seed ?? 1;
+  root.innerHTML =
+    (text ? `<span class="prio-seed-desc">${text}</span>` : '')
+    + `<button type="button" class="pk-reroll" data-k="seed-reroll" title="Randomise the seed — re-roll tie-breaks and within-cell draws">🎲</button>`
+    + `<span class="prio-seed-val" data-v="seed">(seed ${seedOf()})</span>`;
+  const valEl = root.querySelector('[data-v="seed"]');
+  root.querySelector('[data-k="seed-reroll"]').addEventListener('click', () => {
+    const seed = Math.floor(Math.random() * 1e6);
+    valEl.textContent = `(seed ${seed})`;
+    onChange({ seed });
+  });
+  return { refresh() { valEl.textContent = `(seed ${seedOf()})`; } };
 }

@@ -468,9 +468,14 @@ body {
 .pk-v { width: 26px; text-align: right; font-variant-numeric: tabular-nums; color: #587e72; font-weight: 600; }
 .pk-row.pk-disabled { opacity: 0.4; pointer-events: none; }
 .pk-row .pk-mode { flex: 1; min-width: 0; font-size: 11px; }
-.pk-row .pk-seed { width: auto; flex: 1; text-align: left; }
-.pk-row .pk-reroll { border: 1px solid rgba(88,126,114,0.4); background: #fff; border-radius: 5px; cursor: pointer; font-size: 12px; line-height: 1; padding: 2px 5px; }
-.pk-row .pk-reroll:hover { background: #eef3f1; }
+.pk-reroll { border: 1px solid rgba(88,126,114,0.4); background: #fff; border-radius: 5px; cursor: pointer; font-size: 12px; line-height: 1; padding: 2px 5px; }
+.pk-reroll:hover { background: #eef3f1; }
+/* Seed re-roll on the prioritisation page: a right-aligned line below the knob box. */
+.prio-seed-page { display: flex; justify-content: flex-end; align-items: center; gap: 6px; margin-top: 6px; }
+.prio-seed-desc { font-size: 11px; color: #6b6b6b; }
+.prio-seed-val { font-size: 11px; font-weight: 600; color: #587e72; font-variant-numeric: tabular-nums; }
+/* Seed re-roll on the map: a separate box at the top of the knob control, aligned left. */
+.prio-seed-map { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 8px; padding: 3px 6px; border: 1px solid rgba(88,126,114,0.3); border-radius: 6px; background: #fff; }
 
 /* Time-window band overlaid on the tree canvas (positioned by the view transform). */
 .tree-time-band {

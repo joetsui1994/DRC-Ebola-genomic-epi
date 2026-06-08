@@ -1,6 +1,6 @@
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { buildKnobs } from './prio-knobs.js';
+import { buildKnobs, buildSeedControl } from './prio-knobs.js';
 import { tallyZones } from './zone-tally.js';
 
 // Leaflet map. Markers are built from the tips themselves: tips are grouped by
@@ -357,7 +357,12 @@ export function createMapPanel(containerId, tips, { onCtChange = () => {} } = {}
       ctl.onAdd = () => {
         const d = L.DomUtil.create('div', 'prio-knobs');
         L.DomEvent.disableClickPropagation(d); L.DomEvent.disableScrollPropagation(d);
-        mapKnobsRefresh = buildKnobs(d, { getParams: () => prio.getParams(), onChange: (p) => prio.setParams(p), getMaxN: () => prio.getMaxN?.() ?? 200 }).refresh;
+        // Separate seed box at the top, then the knob strip below.
+        const seedBox = L.DomUtil.create('div', 'prio-seed-map', d);
+        const knobBox = L.DomUtil.create('div', '', d);
+        const seedRefresh = buildSeedControl(seedBox, { getParams: () => prio.getParams(), onChange: (p) => prio.setParams(p) }).refresh;
+        const knobsRefresh = buildKnobs(knobBox, { getParams: () => prio.getParams(), onChange: (p) => prio.setParams(p), getMaxN: () => prio.getMaxN?.() ?? 200 }).refresh;
+        mapKnobsRefresh = () => { seedRefresh(); knobsRefresh(); };
         return d;
       };
       prioKnobsCtl = ctl;

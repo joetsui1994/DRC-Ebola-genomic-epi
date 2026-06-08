@@ -4,7 +4,7 @@
 import { prioritise } from './prioritise.js';
 import { buildCells, parseUpload } from './prioritise-data.js';
 import { createHeatmap } from './prio-heatmap.js';
-import { buildKnobs } from './prio-knobs.js';
+import { buildKnobs, buildSeedControl } from './prio-knobs.js';
 
 const DEFAULTS = { delta: 0.5, lam: Infinity, n: 50, ctThreshold: 32, binWidthDays: 1, mode: 'proportional', floorSize: 1, floorBudgetCap: null, stalenessWindow: null, seed: 1 };
 
@@ -151,6 +151,7 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
       + 'Each cell is coloured according to the number of samples to be sequenced according to our heuristic (with a darker colour indicating more samples).</p>'
     + '<div id="prio-heatmap"></div>'
     + '<div id="prio-scatter-knobs" class="ps-knobs"></div>'
+    + '<div id="prio-seed" class="prio-seed-page"></div>'
     + '<h4>Export the ranking</h4>'
     + '<p class="ps-cap">Download the prioritisation computed from the current knob values (δ, λ, <em>N</em>, eligibility Ct, bin width). With the public data this is a cell-level ranking; uploads (coming soon) will carry real sample IDs.</p>'
     + '<div class="prio-dl"><button class="prio-dl-btn" id="dl-ranked" type="button">⤓ ranked list (CSV)</button>'
@@ -278,6 +279,8 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
 
   // Page knob strip beside the heatmap — shares params with the on-map knobs.
   const pageKnobs = buildKnobs(container.querySelector('#prio-scatter-knobs'), { getParams: () => ({ ...params }), onChange: applyParams, getMaxN: eligibleCeiling });
+  // Seed re-roll — sits below the knob box, shares the same params.
+  const pageSeed = buildSeedControl(container.querySelector('#prio-seed'), { getParams: () => ({ ...params }), onChange: applyParams, text: 'Re-roll random tie-breaks &amp; within-cell draws:' });
   refreshHeatmap();   // initial render (the ResizeObserver paints it once the tab is first shown)
 
   return {
@@ -285,8 +288,8 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
     setParams(p) { applyParams(p); },
     /** Toggle prioritisation — called by the map's "To sequence" (Seq+) metric. */
     setActive,
-    /** Re-sync the page knob sliders to the shared params (called when the tab is shown). */
-    refreshKnobs: () => pageKnobs.refresh(),
+    /** Re-sync the page knob sliders + seed read-out to the shared params (called when the tab is shown). */
+    refreshKnobs: () => { pageKnobs.refresh(); pageSeed.refresh(); },
     /** Eligible-candidate ceiling — the on-map knobs use it as the N slider max. */
     getMaxN: () => eligibleCeiling(),
     isActive: () => active,
