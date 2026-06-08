@@ -6,7 +6,7 @@ import { buildCells, parseUpload } from './prioritise-data.js';
 import { createHeatmap } from './prio-heatmap.js';
 import { buildKnobs } from './prio-knobs.js';
 
-const DEFAULTS = { delta: 0.5, lam: Infinity, n: 50, ctThreshold: 32, binWidthDays: 1 };
+const DEFAULTS = { delta: 0.5, lam: Infinity, n: 50, ctThreshold: 32, binWidthDays: 1, mode: 'proportional', floorSize: 1, floorBudgetCap: null, stalenessWindow: null };
 
 const METHODOLOGY_HTML = `
   <p class="prio-lead">Risk-based sequencing prioritisation</p>
@@ -73,7 +73,7 @@ const METHODOLOGY_HTML = `
     <tbody>
       <tr>
         <td style="width: 50px;">→ 0</td>
-        <td>Every cell with an available, eligible sample has at least one sample sequenced; locations and time periods with low prevalence may be over-represented</td>
+        <td>Spreads effort toward thinly-sampled cells; low-prevalence cells may be over-represented. Coverage of never-sequenced locations is now guaranteed by the <em>coverage floor</em> (below) rather than by driving δ to 0, so δ can sit at its gentle-smoother default.</td>
       </tr>
       <tr>
         <td style="width: 50px;">≈ 0.5</td>
@@ -113,8 +113,34 @@ return ranked                     # the top-N list for the lab</pre>
   <p>Only sample <strong>#004</strong> is sequenced in this iteration — its corresponding cell has the highest weight (a recent, un-sequenced cell), while <strong>#003</strong> (negative) and <strong>#005</strong> (Ct ≥ 32) are ineligible.</p>
 `;
 
+const COVERAGE_FLOOR_HTML = `
+  <h4>Coverage floor</h4>
+  <p>The proportional scheme above treats cells independently, so a location with low
+  relative risk can receive <strong>zero</strong> sequences when budget is tight. The
+  <strong>coverage floor</strong> is a priority pass that runs <em>before</em> the
+  proportional loop and guarantees every <em>uncovered</em> location — one never sequenced
+  (H<sub><em>k</em></sub> = 0) — at least <em>floor&nbsp;size</em> samples, drawn from its
+  highest-weight cell(s). Low-risk locations may be under-sampled relative to hotspots; they
+  are never shut out.</p>
+  <p>Floor picks occupy the top of the ranked list, and their counts update <em>h</em> before
+  the proportional loop runs — so the proportional layer sees their effect and does not
+  double-count a just-floored location. The floor reuses the <em>same</em> cell weight
+  w(<em>k</em>, τ); it changes only <em>which</em> cells are picked first.</p>
+  <table>
+    <thead><tr><th>Parameter</th><th>Default</th><th>Meaning</th></tr></thead>
+    <tbody>
+      <tr><td style="width:90px;">floor size</td><td>1</td><td>Samples guaranteed per uncovered location (capped at availability). 1 = "seen at least once".</td></tr>
+      <tr><td style="width:90px;">budget cap</td><td>∞</td><td>Maximum share of the batch budget <em>N</em> the floor may consume; ∞ = uncapped. Protects the proportional layer when many new locations appear at once.</td></tr>
+    </tbody>
+  </table>
+  <p>Three modes are available below: <strong>Proportional only</strong> (the scheme above),
+  <strong>Floor + proportional</strong> (floor pass, then proportional spends the rest), and
+  <strong>Floor only</strong> (coverage guarantee alone; any remaining budget is unused).</p>
+`;
+
 export function createPrioritisationPanel(container, { risk, canon, tips, onChange }) {
   container.innerHTML = METHODOLOGY_HTML
+    + COVERAGE_FLOOR_HTML
     + '<h4>Explore the allocation</h4>'
     + '<p class="ps-cap">Each row corresponds to a health zone (with eligible samples) and each column a time-bin. '
       + 'Each cell is coloured according to the number of samples to be sequenced according to our heuristic (with a darker colour indicating more samples).</p>'
@@ -161,8 +187,10 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
       subtractHistory: !inUpload, withIds: inUpload,
     });
     const { selection, cellSummary } = prioritise({
-      cells: built.cells, n: params.n, delta: params.delta, lam: params.lam,
+      cells: built.cells, locHistory: built.locHistory, n: params.n, delta: params.delta, lam: params.lam,
       binWidthDays: params.binWidthDays, origin: built.origin, tNow: built.tNow, seed: 1,
+      mode: params.mode, floorSize: params.floorSize, floorBudgetCap: params.floorBudgetCap,
+      stalenessWindow: params.stalenessWindow,
     });
     // Ct-stable row universe for the heatmap: all candidate zones with the Ct filter OFF, so the
     // Ct knob only changes cell values, never adds/removes rows. Independent of δ/λ/N.
@@ -226,13 +254,13 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
   const binDate = (bin, origin) => new Date(+new Date(origin) + (bin + 0.5) * params.binWidthDays * 86400000).toISOString().slice(0, 10);
   container.querySelector('#dl-ranked').addEventListener('click', () => {
     const r = runEngine();
-    download('prioritisation_ranked.csv', ['rank,sample_id,location,time_bin,date,weight',
-      ...r.selection.map((s) => [s.rank, s.sampleId ?? '', s.location, s.timeBin, binDate(s.timeBin, r.origin), round(s.weight)].join(','))].join('\n'));
+    download('prioritisation_ranked.csv', ['rank,sample_id,location,time_bin,date,weight,layer',
+      ...r.selection.map((s) => [s.rank, s.sampleId ?? '', s.location, s.timeBin, binDate(s.timeBin, r.origin), round(s.weight), s.layer].join(','))].join('\n'));
   });
   container.querySelector('#dl-counts').addEventListener('click', () => {
     const r = runEngine();
-    download('prioritisation_counts.csv', ['location,time_bin,risk,decay,available,selected,h_final',
-      ...r.cellSummary.map((c) => [c.location, c.timeBin, c.risk, c.decay, c.available, c.selected, c.hFinal].join(','))].join('\n'));
+    download('prioritisation_counts.csv', ['location,time_bin,risk,decay,available,selected,floor_selected,prop_selected,h_final',
+      ...r.cellSummary.map((c) => [c.location, c.timeBin, c.risk, c.decay, c.available, c.selected, c.floorSelected, c.propSelected, c.hFinal].join(','))].join('\n'));
   });
 
   // The N budget can be dialled up to the full eligible-candidate pool. Eligibility maxes
