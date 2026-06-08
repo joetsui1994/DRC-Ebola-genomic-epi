@@ -35,6 +35,28 @@ function shuffle(arr, rng) {
   }
 }
 
+/** Resolve the floor budget: null → n; fraction in (0,1] → ceil(frac·n); int > 1 → min(int, n). */
+export function resolveFloorBudget(cap, n) {
+  if (cap == null) return n;
+  if (cap > 0 && cap <= 1) return Math.min(n, Math.ceil(cap * n));
+  return Math.min(n, Math.floor(cap));
+}
+
+/**
+ * Pick the highest-weight index from `eligIdx` (random tie-break via `rng`).
+ * Infinity-safe: a relative tolerance is NaN at w=∞, so match on exact equality there.
+ * Returns the chosen index, or null when `eligIdx` is empty.
+ */
+function pickBest(eligIdx, wOf, rng) {
+  if (!eligIdx.length) return null;
+  let wmax = -Infinity;
+  for (const i of eligIdx) { const w = wOf(i); if (w > wmax) wmax = w; }
+  const ties = isFinite(wmax)
+    ? eligIdx.filter((i) => wOf(i) >= wmax - 1e-9 * wmax)
+    : eligIdx.filter((i) => wOf(i) === wmax);
+  return ties.length > 1 ? ties[Math.floor(rng() * ties.length)] : ties[0];
+}
+
 /**
  * Greedy "highest-averages" prioritisation.
  * cells: [{ location, timeBin, risk, available, h, ids? }]
@@ -49,27 +71,21 @@ export function prioritise({ cells, n, delta = 0.5, lam = 14, binWidthDays = 7, 
   }));
   for (const c of C) if (c.ids) shuffle(c.ids, rng);
   const decayC = C.map((c) => decay(c.timeBin, origin, binWidthDays, tNow, lam));
+  const wOf = (i) => C[i].risk / (C[i].h + delta) * decayC[i];
 
   const selection = [];
   for (let rank = 1; rank <= n; rank++) {
     const elig = [];
     for (let i = 0; i < C.length; i++) {
       if (C[i].available <= 0 || C[i].risk <= 0) continue;
-      elig.push({ i, w: C[i].risk / (C[i].h + delta) * decayC[i] });
+      elig.push(i);
     }
-    if (!elig.length) break;
-    const wmax = elig.reduce((m, e) => (e.w > m ? e.w : m), -Infinity);
-    // Guard the degenerate case (e.g. delta=0 with h=0 ⇒ w=Infinity): the relative
-    // tolerance `wmax - 1e-9*wmax` becomes NaN, so match on exact equality instead.
-    const ties = isFinite(wmax)
-      ? elig.filter((e) => e.w >= wmax - 1e-9 * wmax).map((e) => e.i)
-      : elig.filter((e) => e.w === wmax).map((e) => e.i);
-    const idx = ties.length > 1 ? ties[Math.floor(rng() * ties.length)] : ties[0];
+    const idx = pickBest(elig, wOf, rng);
+    if (idx == null) break;
     const c = C[idx];
     selection.push({
       rank, location: c.location, timeBin: c.timeBin,
-      weight: c.risk / (c.h + delta) * decayC[idx],
-      sampleId: c.ids ? c.ids.pop() : null,
+      weight: wOf(idx), sampleId: c.ids ? c.ids.pop() : null,
     });
     c.available -= 1; c.h += 1; c.selected += 1;
   }

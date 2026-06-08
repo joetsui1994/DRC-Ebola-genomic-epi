@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { mulberry32, assignCell, decay } from './prioritise.js';
+import { mulberry32, assignCell, decay, resolveFloorBudget } from './prioritise.js';
 
 describe('mulberry32', () => {
   it('is deterministic for a given seed and in [0,1)', () => {
@@ -113,5 +113,20 @@ describe('prioritise', () => {
     const s2 = prioritise({ ...base, cells: mk(), n: 4, delta: 0.5 }).selection;
     expect(s1).toEqual(s2);
     expect(s1.every(p => p.sampleId)).toBe(true);
+  });
+});
+
+describe('resolveFloorBudget', () => {
+  it('null cap → full budget', () => {
+    expect(resolveFloorBudget(null, 50)).toBe(50);
+  });
+  it('fraction in (0,1] → ceil(frac*n), clamped to n', () => {
+    expect(resolveFloorBudget(0.2, 50)).toBe(10);
+    expect(resolveFloorBudget(0.25, 50)).toBe(13);   // ceil(12.5)
+    expect(resolveFloorBudget(1, 50)).toBe(50);
+  });
+  it('integer > 1 → min(int, n)', () => {
+    expect(resolveFloorBudget(5, 50)).toBe(5);
+    expect(resolveFloorBudget(80, 50)).toBe(50);
   });
 });
