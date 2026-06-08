@@ -436,7 +436,19 @@ export function createMapPanel(containerId, tips, { onCtChange = () => {} } = {}
         return `${nom} (health zone)`;
       };
       zoneLayer.bindTooltip('', { sticky: true });
-      zoneLayer.on('mouseover mousemove', (e) => { const f = e.layer && e.layer.feature; if (f) zoneLayer.setTooltipContent(tooltipFor(f)); });
+      // Track the DOM event of the latest move that landed on a zone polygon. Leaflet
+      // fires the layer event before the map event for the same physical mouse move, so
+      // a map `mousemove` whose originalEvent differs means the cursor is NOT over a zone.
+      let lastZoneEvt = null;
+      zoneLayer.on('mouseover mousemove', (e) => {
+        lastZoneEvt = e.originalEvent;
+        const f = e.layer && e.layer.feature;
+        if (f) zoneLayer.setTooltipContent(tooltipFor(f));
+      });
+      // Close on any move that isn't over a zone. Unlike layer `mouseout`, mousemove keeps
+      // firing in the gaps between packed polygons, so a dropped/coalesced boundary mouseout
+      // (common with small zones + fast cursor) can't leave the tooltip stuck open.
+      map.on('mousemove', (e) => { if (e.originalEvent !== lastZoneEvt) zoneLayer.closeTooltip(); });
       map.on('mouseout', () => zoneLayer.closeTooltip());
 
       // legend — rebuilt for the active metric (hidden when Off)

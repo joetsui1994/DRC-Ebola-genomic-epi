@@ -161,7 +161,9 @@ export async function createTreePanel(containerId, meta = null) {
     const dToX = (ms) => x0 + ((Math.max(t0, Math.min(t1, ms)) - t0) / (t1 - t0)) * span;
     const xL = dToX(bandWin.d0), xR = dToX(bandWin.d1);
     if (xR - xL < 0.5) { el.style.display = 'none'; return; }
-    el.style.display = ''; el.style.left = `${xL}px`; el.style.width = `${xR - xL}px`;
+    // Show: must set a concrete display value — the base `.tree-time-band` rule is
+    // `display:none`, so '' would fall back to that and the band would stay hidden.
+    el.style.display = 'block'; el.style.left = `${xL}px`; el.style.width = `${xR - xL}px`;
   }
   tree.onViewChange(() => positionBand());   // track pan / zoom / resize
 
