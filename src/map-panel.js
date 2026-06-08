@@ -11,6 +11,7 @@ import { tallyZones } from './zone-tally.js';
 
 const BASE_STYLE      = { color: '#33567a', fillColor: '#5b86b3', fillOpacity: 0.85, weight: 1.5 }; // muted blue
 const HIGHLIGHT_STYLE = { color: '#9a7a16', fillColor: '#f2c84b', fillOpacity: 0.95, weight: 2 };   // yellow (selected)
+const HIDDEN_STYLE    = { opacity: 0, fillOpacity: 0 };   // marker filtered out by the time window
 
 const RISK_RAMP   = ['#f6e3df', '#e8b3a6', '#d08163', '#aa4a32', '#7c1d1d'];   // risk + total
 const RISK_NODATA = '#e8e6e1';
@@ -123,7 +124,7 @@ export function createMapPanel(containerId, tips, { onCtChange = () => {} } = {}
 
   let clickHandler = null;
   let bgHandler = null;
-  for (const { group, marker } of markers) marker.on('click', () => clickHandler && clickHandler(group.tipIds));
+  for (const { group, marker } of markers) marker.on('click', () => { if (!group._winHidden && clickHandler) clickHandler(group.tipIds); });
   map.on('click', () => bgHandler && bgHandler());   // empty-map click → deselect
 
   // Leaflet needs a sized container; Safari resolves the flex/absolute layout
@@ -296,10 +297,11 @@ export function createMapPanel(containerId, tips, { onCtChange = () => {} } = {}
     highlight(selectedTipIds) {
       const sel = new Set(selectedTipIds);
       for (const { group, marker } of markers) {
+        if (group._winHidden) { marker.setStyle(HIDDEN_STYLE); continue; }   // window-hidden stays hidden
         marker.setStyle(group.tipIds.some(id => sel.has(id)) ? HIGHLIGHT_STYLE : BASE_STYLE);
       }
     },
-    clearHighlight() { for (const { marker } of markers) marker.setStyle(BASE_STYLE); },
+    clearHighlight() { for (const { group, marker } of markers) marker.setStyle(group._winHidden ? HIDDEN_STYLE : BASE_STYLE); },
 
     /** Outline the zone polygons for the given health-zone names (+ refresh mobility). */
     highlightZones(zoneNames) {
@@ -327,8 +329,8 @@ export function createMapPanel(containerId, tips, { onCtChange = () => {} } = {}
      *  Re-tallies the line-list rows, reclasses, and shows/resizes markers by in-window count. */
     setDateWindow(d0, d1) {
       const win = (d0 != null && d1 != null) ? { d0: +d0, d1: +d1 } : null;
-      const t = tallyZones(linelistRows, win);
-      zoneCounts = t.zoneCounts; zonePosCt = t.zonePosCt;
+      const tally = tallyZones(linelistRows, win);
+      zoneCounts = tally.zoneCounts; zonePosCt = tally.zonePosCt;
       applyCounts?.();
       for (const { group, marker } of markers) {
         let n = group.tipIds.length;
@@ -336,10 +338,12 @@ export function createMapPanel(containerId, tips, { onCtChange = () => {} } = {}
           n = 0;
           for (const ds of group.dates) { const tt = +new Date(ds); if (!isNaN(tt) && tt >= win.d0 && tt <= win.d1) n++; }
         }
-        if (n === 0) { marker.setStyle({ opacity: 0, fillOpacity: 0 }); marker.options.interactive = false; }
+        // _winHidden is honoured by highlight()/clearHighlight() and the marker click handler
+        // (Leaflet ignores a runtime `interactive` change, so the flag gates clicks instead).
+        group._winHidden = (n === 0);
+        if (n === 0) marker.setStyle(HIDDEN_STYLE);
         else {
           marker.setStyle({ opacity: 1, fillOpacity: BASE_STYLE.fillOpacity });
-          marker.options.interactive = true;
           marker.setRadius(6 + 3 * Math.sqrt(n));
         }
       }
@@ -365,7 +369,7 @@ export function createMapPanel(containerId, tips, { onCtChange = () => {} } = {}
      * sample counts by status) with clickable selection. A button group switches the
      * metric; "Off" hides the colour but keeps zones clickable.
      * @param {GeoJSON.FeatureCollection} geojson  features w/ { Nom, PROVINCE, relative_risk, cx, cy }
-     * @param {Map<string,{Positive:number,Negative:number,Invalid:number,Unclassified:number,total:number}>} zoneCounts  by upper-cased Nom
+     * @param {Map<string,{Positive:number,Negative:number,Invalid:number,Unclassified:number,total:number}>} seedCounts  initial per-zone counts (upper-cased Nom)
      */
     addZoneLayer(geojson, seedCounts = new Map(), posCt = new Map(), rows = []) {
       const ZERO = { Positive: 0, Negative: 0, Invalid: 0, Unclassified: 0, total: 0 };
