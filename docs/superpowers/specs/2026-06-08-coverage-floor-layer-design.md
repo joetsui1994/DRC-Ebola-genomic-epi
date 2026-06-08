@@ -91,7 +91,7 @@ The shipped default remains `'proportional'` so existing behaviour is unchanged 
 Input change: the engine needs **location-level pre-batch history** to compute `H_k`. The per-cell `h` already on `cells[]` is **not sufficient** (see §4.2 — cells with no current candidates are dropped). So `prioritise()` accepts a new input, `locHistory`, supplied by `buildCells` (§4.2).
 
 New internal `coverageFloor(...)` step, run before the existing greedy loop when `mode !== 'proportional'`:
-- Compute `floorBudget = resolveCap(floorBudgetCap, n)` — `null` → `n`; fraction → `ceil(frac · n)`; int → `min(int, n)`.
+- Compute `floorBudget = resolveFloorBudget(floorBudgetCap, n)` — `null` → `n`; fraction in `(0,1]` → `ceil(frac · n)`; otherwise `floor(cap)` clamped to `[0, n]` (so non-integers floor and negatives become 0).
 - `uncovered` = locations with `H_k == 0` (from `locHistory`) that have ≥1 cell with `available > 0 && risk > 0`.
 - Rank `uncovered` by each location's **single best available cell weight** (`risk/(h+δ)·decay`, `h == 0` here), descending; random tie-break with the existing seeded RNG.
 - For each uncovered location in order, while `floorBudget > 0`: pick from its top cells by weight, taking `min(floorSize, locAvailable, floorBudget)` total; for each pick decrement that cell's `available`, increment its `h`/`selected`, pop an `id` in upload mode, and append a `{ ...pick, layer: 'floor' }` to the selection; decrement `floorBudget`.
