@@ -157,6 +157,41 @@ body {
    to the right of the tab strip (not floated). Shown only on Map tab + Positive metric. */
 .map-ct { float: none; margin: 0 2px 0 auto; align-self: center; }
 
+/* CSV export confirmation dialog (sample-distribution download) */
+.export-modal-overlay {
+  position: fixed; inset: 0; z-index: 3000;
+  background: rgba(30, 25, 18, 0.38);
+  display: flex; align-items: center; justify-content: center;
+}
+.export-modal {
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(30, 25, 18, 0.25); padding: 16px 18px;
+  width: 380px; max-width: 92vw; font-size: 12px; color: var(--ink);
+}
+.export-modal h4 {
+  margin: 0 0 12px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--ink);
+}
+.export-summary { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; margin: 0 0 14px; }
+.export-summary dt { color: var(--muted); font-size: 10.5px; }
+.export-summary dd { margin: 0; font-weight: 500; }
+.export-filename { display: flex; flex-direction: column; gap: 5px; font-size: 10.5px; color: var(--muted); margin-bottom: 16px; }
+.export-filename input {
+  font-size: 12px; padding: 6px 8px; border: 1px solid var(--border); border-radius: 5px;
+  color: var(--ink); font-family: inherit;
+}
+.export-filename input:focus { outline: none; border-color: var(--terracotta); }
+.export-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.export-actions button {
+  font-size: 11px; font-weight: 600; padding: 6px 13px; border-radius: 5px;
+  cursor: pointer; border: 1px solid var(--border);
+}
+.export-cancel { background: transparent; color: var(--ink); }
+.export-cancel:hover { background: rgba(30, 25, 18, 0.05); }
+.export-go { background: var(--maroon); color: #fff; border-color: var(--maroon); }
+.export-go:hover { background: #6a1717; }
+.export-go:disabled { opacity: 0.5; cursor: not-allowed; }
+
 /* Sample-distribution hover tooltip */
 .dist-tip {
   position: absolute; z-index: 4; pointer-events: none;

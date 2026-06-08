@@ -211,27 +211,114 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
   btnArea.onclick = () => { if (sel.areas.length === 0) return; mode = 'area'; updateToggleUI(); applyExtent(); };
   updateToggleUI();
 
-  // Download the currently-shown aggregated daily counts as CSV.
-  function downloadCsv() {
-    const byDay = aggregate();
-    const dates = [...byDay.keys()].sort();
-    const lines = [['date', ...STATUS, 'total'].join(',')];
-    for (const ds of dates) {
-      const c = byDay.get(ds);
-      const tot = STATUS.reduce((s, k) => s + c[k], 0);
-      lines.push([ds, ...STATUS.map(k => c[k]), tot].join(','));
-    }
-    const scope = mode === 'area' ? sel.areas : sel.zones;
-    const tag = (scope.length ? scope.join('-') : 'all').replace(/[^\w.-]+/g, '_');
-    const blob = new Blob([lines.join('\n') + '\n'], { type: 'text/csv;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = `sample-distribution_${tag}.csv`;
-    document.body.appendChild(a); a.click(); a.remove();
-    URL.revokeObjectURL(url);
+  // ── CSV export ─────────────────────────────────────────────────────────────
+  // One row per date: status counts (Ct-filtered), total, existing sequences, and the
+  // to-sequence-next allocation. Honours the location selection, the Ct filter, and the
+  // brushed window (when set, dates are clipped to it; otherwise to the visible axis).
+  const EXPORT_COLS = ['date', ...STATUS, 'total', 'existing_seq', 'to_sequence'];
+  const ymd = (ms) => new Date(ms).toISOString().slice(0, 10);
+  function exportWindow() { return win ? { lo: Math.min(win.d0, win.d1), hi: Math.max(win.d0, win.d1) } : null; }
+  function exportRows() {
+    const w = exportWindow();
+    const inRange = (ds) => {
+      const t = +new Date(ds);
+      if (isNaN(t)) return false;
+      return w ? (t >= w.lo && t <= w.hi) : (t >= t0 && t <= effMaxMs);
+    };
+    const counts = aggregate();                                          // selection + Ct, [t0,effMaxMs]
+    const seq = seqByDate();                                             // selection, [t0,t1]
+    const alloc = allocByDate(allocOpts?.binWidthDays || 7, allocOpts?.origin || domain.minDate);
+    const days = new Set();
+    for (const d of counts.keys()) if (inRange(d)) days.add(d);
+    for (const d of seq.keys()) if (inRange(d)) days.add(d);
+    for (const d of alloc.keys()) if (inRange(d)) days.add(d);
+    return [...days].sort().map((ds) => {
+      const c = counts.get(ds) || { Positive: 0, Negative: 0, Invalid: 0, Unclassified: 0 };
+      const total = STATUS.reduce((s, k) => s + c[k], 0);
+      return { date: ds, ...c, total, existing_seq: seq.get(ds) || 0, to_sequence: alloc.get(ds) || 0 };
+    });
+  }
+  const buildCsvText = (rows) =>
+    [EXPORT_COLS.join(','), ...rows.map((r) => EXPORT_COLS.map((k) => r[k]).join(','))].join('\n') + '\n';
+
+  // Human-readable description of the active filters + a default (editable) filename.
+  function exportFacts() {
+    const names = mode === 'area' ? sel.areas : sel.zones;
+    const level = mode === 'area' ? 'health area' : 'health zone';
+    const location = names.length
+      ? `${names.join(', ')} (${names.length} ${level}${names.length > 1 ? 's' : ''})`
+      : 'All locations';
+    const w = exportWindow();
+    const timeRange = w ? `${fmtDay(w.lo)} – ${fmtDay(w.hi)} (selected window)`
+      : showBeyond ? `${fmtDay(t0)} – ${fmtDay(effMaxMs)} (incl. beyond tree)`
+      : `${fmtDay(t0)} – ${fmtDay(t1)} (full range)`;
+    const ct = ctThreshold == null ? 'None' : `Ct < ${ctThreshold} (positives only)`;
+    const locTag = names.length ? names.join('-') : 'all';
+    const rangeTag = w ? `${ymd(w.lo)}_${ymd(w.hi)}` : (showBeyond ? `${ymd(t0)}_${ymd(effMaxMs)}` : 'full');
+    const ctTag = ctThreshold == null ? '' : `_ct${ctThreshold}`;
+    const filename = `sample-distribution_${locTag}_${rangeTag}${ctTag}`.replace(/[^\w.-]+/g, '_') + '.csv';
+    return { location, timeRange, ct, filename };
+  }
+
+  // Confirmation dialog: shows what's being exported, lets the user edit the filename, downloads.
+  let exportModal = null;
+  function ensureExportModal() {
+    if (exportModal) return exportModal;
+    const overlay = document.createElement('div');
+    overlay.className = 'export-modal-overlay';
+    overlay.style.display = 'none';
+    overlay.innerHTML = `
+      <div class="export-modal" role="dialog" aria-modal="true" aria-label="Download sample distribution">
+        <h4>Download data</h4>
+        <dl class="export-summary">
+          <dt>Location</dt><dd data-k="location"></dd>
+          <dt>Time range</dt><dd data-k="time"></dd>
+          <dt>Ct filter</dt><dd data-k="ct"></dd>
+        </dl>
+        <label class="export-filename">Filename<input type="text" spellcheck="false"></label>
+        <div class="export-actions">
+          <button type="button" class="export-cancel">Cancel</button>
+          <button type="button" class="export-go">Download CSV</button>
+        </div>
+      </div>`;
+    document.body.appendChild(overlay);
+    const close = () => { overlay.style.display = 'none'; };
+    overlay.addEventListener('mousedown', (e) => { if (e.target === overlay) close(); });
+    overlay.querySelector('.export-cancel').onclick = close;
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && overlay.style.display !== 'none') close(); });
+    exportModal = {
+      overlay, close,
+      val: (k) => overlay.querySelector(`[data-k="${k}"]`),
+      input: overlay.querySelector('.export-filename input'),
+      go: overlay.querySelector('.export-go'),
+    };
+    return exportModal;
+  }
+  function openExportDialog() {
+    const m = ensureExportModal();
+    const facts = exportFacts();
+    const rows = exportRows();
+    m.val('location').textContent = facts.location;
+    m.val('time').textContent = facts.timeRange;
+    m.val('ct').textContent = facts.ct;
+    m.input.value = facts.filename;
+    m.go.disabled = rows.length === 0;
+    m.go.onclick = () => {
+      let name = (m.input.value || '').trim() || 'sample-distribution';
+      if (!/\.csv$/i.test(name)) name += '.csv';
+      const blob = new Blob([buildCsvText(rows)], { type: 'text/csv;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = name;
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+      m.close();
+    };
+    m.overlay.style.display = '';
+    m.input.focus(); m.input.select();
   }
   const downloadEl = document.getElementById('dist-download');
-  if (downloadEl) downloadEl.onclick = downloadCsv;
+  if (downloadEl) downloadEl.onclick = openExportDialog;
   const beyondEl = document.getElementById('dist-beyond');
   if (beyondEl) beyondEl.onclick = () => {
     showBeyond = !showBeyond;
