@@ -57,7 +57,10 @@ body {
 #left { display: flex; flex-direction: column; flex: 1 1 0; min-width: 220px; }
 #map  { flex: 1 1 0; min-width: 220px; }
 #tree       { flex: 3 1 0; min-height: 140px; }
-#timeseries { flex: 2 1 0; min-height: 110px; }
+#timeseries { flex: 2 1 0; min-height: 110px; display: flex; flex-direction: column; }
+/* Body follows the (now wrap-capable) header instead of a fixed top offset; relative so it
+   stays the positioning context for the absolutely-laid-out chart/controls/tooltip. */
+#timeseries > .panel-body { position: relative; inset: auto; flex: 1 1 0; min-height: 0; }
 
 /* ── Cards ────────────────────────────────────────────────── */
 .panel {
@@ -127,7 +130,17 @@ body {
   margin-left: 7px; font-size: 9px; font-weight: 500; letter-spacing: 0.02em;
   text-transform: none; color: var(--muted);
 }
-#timeseries > h3 { white-space: nowrap; overflow: hidden; }   /* keep the header one line */
+/* Header: title+scope wrap to as many lines as needed; the Ct/CSV/→ tools stay pinned
+   top-right (align-items:flex-start) so a long zone list never pushes them down. */
+#timeseries > h3 { display: flex; align-items: flex-start; gap: 8px; white-space: normal; }
+/* Title is a fixed column; the scope/note wrap in their own column beside it, so wrapped
+   lines hang-indent to where the zone list begins rather than under the title. */
+.dist-head-main { flex: 1 1 auto; min-width: 0; display: flex; align-items: flex-start; gap: 5px; }
+.dist-head-title { flex: none; }
+.dist-head-sub { flex: 1 1 auto; min-width: 0; }
+.dist-tools { flex: none; display: flex; align-items: center; gap: 8px; }
+.dist-tools .dist-ct { margin: 0; }
+.dist-tools #dist-beyond { margin-left: 0; }
 
 /* Ct filter (positives): label + small number input, in the header (gap to the CSV button) */
 .dist-ct {

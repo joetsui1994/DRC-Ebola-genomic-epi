@@ -97,8 +97,9 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
   ctWrap.className = 'dist-ct';
   ctWrap.innerHTML = '<label>Ct&lt;</label><input type="number" min="1" max="99" step="1" placeholder="off">';
   const ctInput = ctWrap.querySelector('input');
-  const distHeader = document.querySelector('#timeseries > h3');
-  if (distHeader) distHeader.appendChild(ctWrap);
+  // Prepend into the header's pinned tools group so it reads Ct · CSV · → left-to-right.
+  const distTools = document.getElementById('dist-tools');
+  if (distTools) distTools.prepend(ctWrap);
   let ctThreshold = null;   // null = off
   ctInput.addEventListener('input', () => {
     const v = parseInt(ctInput.value, 10);
