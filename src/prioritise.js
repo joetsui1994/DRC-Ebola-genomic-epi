@@ -106,8 +106,10 @@ function coverageFloor({ C, decayC, wOf, rng, locHistory, floorSize, floorBudget
  */
 export function prioritise({
   cells, locHistory = null, n, delta = 0.5, lam = 14, binWidthDays = 7, origin, tNow, seed = 1,
-  mode = 'proportional', floorSize = 1, floorBudgetCap = null, stalenessWindow = null,
+  mode = 'proportional', floorSize = 1, floorBudgetCap = null,
+  stalenessWindow = null, // reserved for a future "covered within window" rule; unused in v1 (covered = ever sequenced)
 }) {
+  void stalenessWindow;   // intentionally unused in v1
   const rng = mulberry32(seed);
   const C = cells.map((c) => ({
     location: c.location, timeBin: c.timeBin, risk: c.risk,

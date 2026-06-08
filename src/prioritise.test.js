@@ -202,7 +202,15 @@ describe('coverage floor', () => {
     const b = cellSummary.find((c) => c.location === 'B');
     expect(a.floorSelected).toBe(1);
     expect(b.floorSelected).toBe(1);
+    expect(a.propSelected).toBe(b.propSelected);   // equal risk + equal floor → even proportional split
     expect(a.selected + b.selected).toBe(6);
+  });
+
+  it('floor mode with null locHistory treats every location as uncovered', () => {
+    const { selection } = prioritise({ ...floorBase, cells: mkCells(), locHistory: null, n: 3, delta: 0.5, mode: 'floor', floorSize: 1 });
+    expect(selection.length).toBe(3);   // A, B, C each floored once
+    expect(new Set(selection.map((s) => s.location))).toEqual(new Set(['A', 'B', 'C']));
+    expect(selection.every((s) => s.layer === 'floor')).toBe(true);
   });
 
   it('determinism: same seed → identical selection with floor on', () => {
