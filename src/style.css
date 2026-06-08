@@ -406,3 +406,10 @@ body {
 .pk-l { width: 38px; color: var(--muted); flex: none; }
 .pk-row input[type=range] { width: 68px; accent-color: #587e72; }
 .pk-v { width: 26px; text-align: right; font-variant-numeric: tabular-nums; color: #587e72; font-weight: 600; }
+
+/* Time-window band overlaid on the tree canvas (positioned by the view transform). */
+.tree-time-band {
+  position: absolute; top: 0; bottom: 0; z-index: 2; pointer-events: none;
+  background: rgba(124, 29, 29, 0.10); border-left: 1px solid rgba(124, 29, 29, 0.45);
+  border-right: 1px solid rgba(124, 29, 29, 0.45); display: none;
+}
