@@ -41,6 +41,13 @@ export function extentFraction(rows, t0, t1, on, ct = null, F_MIN = 0.4) {
   return { effMax, f };
 }
 
+/** Convert a drag's start/end x (svg px) to an ordered time window, or null if the drag was
+ *  too short to be a brush (a click → clear). `scale` exposes xToDate. */
+export function brushWindow(x0, x1, scale, minPx = 3) {
+  if (Math.abs(x1 - x0) < minPx) return null;
+  return { d0: +scale.xToDate(Math.min(x0, x1)), d1: +scale.xToDate(Math.max(x0, x1)) };
+}
+
 const SEQ_COLOR = '#7c1d1d';   // sequence-availability track (genomic samples) — maroon
 const ALLOC_COLOR = '#205c4c'; // to-sequence allocation track (prioritisation) — teal-green
 
@@ -81,7 +88,7 @@ function timeTicks(pxWidth, t0, t1) {
  * @param {{minDate:string,maxDate:string}} domain  tree time domain (root → most-recent)
  * @param {{onCtChange?:(t:?number)=>void}} [opts]  notified when the Ct filter changes
  */
-export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = () => {}, tips = [], onExtentChange = () => {} } = {}) {
+export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = () => {}, tips = [], onExtentChange = () => {}, onWindowChange = () => {} } = {}) {
   const host = document.getElementById(containerId);
   host.replaceChildren();
 
@@ -160,6 +167,7 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
   const t1 = +new Date(domain.maxDate);
 
   let showBeyond = false;            // toggle: extend the axis past the tree's latest date
+  let win = null;                    // brushed time window { d0, d1 } in ms, or null
   let effMaxMs = t1;                 // current effective right-edge date (ms); = t1 when off
   let extentRaf = 0;                 // rAF handle, coalesces tree-resize requests
 
@@ -376,6 +384,13 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
       svg.appendChild(lbl);
     }
 
+    // Brushed time-window band (behind the bars; persists across re-renders, tracks the scale).
+    if (win) {
+      const bx0 = scale.dateToX(new Date(win.d0)), bx1 = scale.dateToX(new Date(win.d1));
+      svg.appendChild(el('rect', { x: Math.min(bx0, bx1), y: PAD.top, width: Math.max(1, Math.abs(bx1 - bx0)),
+        height: baseY - PAD.top, fill: 'rgba(124,29,29,0.10)', stroke: 'rgba(124,29,29,0.45)', 'stroke-width': 1 }));
+    }
+
     for (const [dateStr, counts] of byDay) {
       const x = scale.dateToX(dateStr) - barW / 2;
       let top = baseY;
@@ -438,6 +453,35 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
 
     updateNote();
   }
+
+  // Horizontal brush: drag on the chart to pick a time window; a click (tiny drag) clears it.
+  // Listeners live on `holder` (persistent) since the svg is rebuilt each render; a live <rect>
+  // is drawn directly during the drag (no re-render), finalised on mouseup.
+  let drag = null;   // { x0, rect } while dragging
+  const relX = (ev) => ev.clientX - holder.getBoundingClientRect().left;
+  holder.addEventListener('mousedown', (ev) => {
+    if (ev.button !== 0 || !scale) return;
+    hideTip();
+    const svgEl = holder.querySelector('svg');
+    const rect = svgEl ? el('rect', { x: relX(ev), y: PAD.top, width: 0, height: H - PAD.bottom - PAD.top,
+      fill: 'rgba(124,29,29,0.10)', stroke: 'rgba(124,29,29,0.45)', 'stroke-width': 1, 'pointer-events': 'none' }) : null;
+    if (rect && svgEl) svgEl.appendChild(rect);
+    drag = { x0: relX(ev), rect };
+    ev.preventDefault();
+  });
+  window.addEventListener('mousemove', (ev) => {
+    if (!drag) return;
+    const x = relX(ev), xl = Math.min(drag.x0, x), w = Math.abs(x - drag.x0);
+    if (drag.rect) { drag.rect.setAttribute('x', xl); drag.rect.setAttribute('width', Math.max(0, w)); }
+  });
+  window.addEventListener('mouseup', (ev) => {
+    if (!drag) return;
+    const next = brushWindow(drag.x0, relX(ev), scale);
+    drag = null;
+    win = next;
+    onWindowChange(next ? next.d0 : null, next ? next.d1 : null);
+    render();   // draw the persistent band (or none) and drop the live rect
+  });
 
   render();
   const ro = new ResizeObserver(() => render());

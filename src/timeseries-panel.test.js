@@ -51,3 +51,19 @@ describe('extentFraction', () => {
     expect(f).toBe(0.4);
   });
 });
+
+import { brushWindow } from './timeseries-panel.js';
+
+describe('brushWindow', () => {
+  const scale = { xToDate: (x) => new Date(+new Date('2026-04-05') + x * 86400000) };  // 1px = 1 day
+  it('returns null for a click (drag below the px threshold)', () => {
+    expect(brushWindow(100, 102, scale, 3)).toBeNull();
+  });
+  it('orders the window regardless of drag direction', () => {
+    const a = brushWindow(10, 40, scale, 3);
+    const b = brushWindow(40, 10, scale, 3);
+    expect(a).toEqual(b);
+    expect(a.d0).toBe(+scale.xToDate(10));
+    expect(a.d1).toBe(+scale.xToDate(40));
+  });
+});
