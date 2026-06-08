@@ -126,6 +126,10 @@ const COVERAGE_FLOOR_HTML = `
   the proportional loop runs — so the proportional layer sees their effect and does not
   double-count a just-floored location. The floor reuses the <em>same</em> cell weight
   w(<em>k</em>, τ); it changes only <em>which</em> cells are picked first.</p>
+  <p>Uncovered locations are filled in order of their best cell's weight (risk × recency). When
+  several are tied — for example under flat risk — the order is broken <em>at random but
+  reproducibly</em> (a fixed seed), and any locations not reached within the floor budget carry
+  over and become covered in a later batch.</p>
   <table>
     <thead><tr><th>Parameter</th><th>Default</th><th>Meaning</th></tr></thead>
     <tbody>
