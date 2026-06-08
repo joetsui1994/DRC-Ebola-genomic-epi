@@ -136,6 +136,23 @@ export async function createTreePanel(containerId, meta = null) {
   }
   legendBtn?.addEventListener('click', () => setLegend(!legendOn));
 
+  // Node-bars toggle. Same situation as the legend: applySettings can't push nodeBars to the
+  // renderer at runtime, so we drive PearTree's internal "Show" select (#node-bars-show, off/on)
+  // and dispatch the change it listens for (→ applyNodeBars re-render). Starts on to match the
+  // nodeBarsEnabled:'on' init-setting, so the button begins active.
+  let nodeBarsOn = true;
+  const nodeBarsBtn = document.getElementById('nodebars-toggle');
+  function setNodeBars(on) {
+    const sel = document.getElementById('node-bars-show');
+    if (!sel) return;
+    sel.value = on ? 'on' : 'off';
+    sel.dispatchEvent(new Event('change', { bubbles: true }));
+    nodeBarsOn = on;
+    nodeBarsBtn?.classList.toggle('active', on);
+  }
+  nodeBarsBtn?.classList.toggle('active', nodeBarsOn);   // reflect the default-on state
+  nodeBarsBtn?.addEventListener('click', () => setNodeBars(!nodeBarsOn));
+
   // Shaded time-window band overlaid on the canvas. Positioned with the SAME date→x mapping
   // the histogram uses (root → offsetX, mostRecent → offsetX + maxX·scaleX), so it lines up
   // with the histogram's brush band. Repositioned on every view change; clamped to the tree's

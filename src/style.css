@@ -85,22 +85,22 @@ body {
 .dist-download:hover { background: rgba(124, 29, 29, 0.16); }
 .dist-download.active { background: var(--maroon); color: #fff; }
 #dist-beyond { margin-left: 10px; font-weight: 700; }   /* match the Ct↔CSV gap; arrow glyph */
-.legend-toggle {
-  float: right; margin-top: -1px;
+.tree-toggle {
+  float: right; margin-top: -1px; margin-left: 6px;
   font-size: 9.5px; font-weight: 600; letter-spacing: 0.03em; text-transform: none;
   color: var(--maroon); background: rgba(124, 29, 29, 0.08);
   border: 1px solid rgba(124, 29, 29, 0.25); border-radius: 5px;
   padding: 1px 8px; cursor: pointer;
 }
-.legend-toggle:hover { background: rgba(124, 29, 29, 0.16); }
-.legend-toggle.active { background: var(--maroon); color: #fff; }
+.tree-toggle:hover { background: rgba(124, 29, 29, 0.16); }
+.tree-toggle.active { background: var(--maroon); color: #fff; }
 .panel-body { position: absolute; top: 31px; left: 0; right: 0; bottom: 0; }
 
 /* Sample-distribution: zone/area toggle + status legend, a row offset from the
    left edge so it clears the y-axis tick labels */
 .dist-svg { position: absolute; inset: 0; }
 .dist-controls {
-  position: absolute; top: 4px; left: 42px; z-index: 1;
+  position: absolute; top: 8px; left: 42px; z-index: 1;
   display: flex; align-items: center; gap: 10px;
 }
 .dist-toggle {

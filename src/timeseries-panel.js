@@ -7,7 +7,7 @@ import { createTimeScale, scaleFromAnchors } from './time-scale.js';
 // a tip selection filters the line-list by health_zone or health_area.
 
 const SVNS = 'http://www.w3.org/2000/svg';
-const PAD = { left: 34, right: 20, top: 10, bottom: 22 };
+const PAD = { left: 34, right: 20, top: 14, bottom: 22 };
 const DAY_MS = 86400000;
 
 const STATUS = ['Positive', 'Negative', 'Invalid', 'Unclassified'];
