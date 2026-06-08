@@ -65,6 +65,10 @@ export async function createTreePanel(containerId) {
       axisMinorInterval: 'auto',
       axisMajorLabelFormat: 'component',
       axisMinorLabelFormat: 'component',
+      // Show node uncertainty bars by default: the 95% HPD interval of internal-node ages
+      // (reads height_95%_HPD). The wider full-range whiskers (nodeBarsRange) are left off.
+      // Init-setting (applySettings doesn't push nodeBars to the renderer).
+      nodeBarsEnabled: 'on',
       // Distinct selection highlight — yellow to match the map's selected marker,
       // with a thicker opaque border and a bigger grow so it stands out from the
       // mauve tip / teal node colours. (These selection keys take as embed
