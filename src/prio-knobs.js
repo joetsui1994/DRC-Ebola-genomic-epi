@@ -15,7 +15,7 @@ const capFromSlider = (p) => p >= 100 ? null : p / 100;
 const capToSlider = (cap) => cap == null ? 100 : Math.round(cap * 100);
 const capLabel = (cap) => cap == null ? '∞' : `${Math.round(cap * 100)}%`;
 
-const MODES = [['proportional', 'Proportional only'], ['both', 'Floor + proportional'], ['floor', 'Floor only']];
+const MODES = [['proportional', 'risk-based only'], ['both', 'spatial coverage + risk-based'], ['floor', 'spatial coverage']];
 
 function row(label, k, val, min, max, step, disp) {
   return `<div class="pk-row" data-row="${k}"><span class="pk-l">${label}</span>`
@@ -105,8 +105,8 @@ export function buildSeedControl(root, { getParams, onChange, text = '' }) {
   const seedOf = () => getParams().seed ?? 1;
   root.innerHTML =
     (text ? `<span class="prio-seed-desc">${text}</span>` : '')
-    + `<button type="button" class="pk-reroll" data-k="seed-reroll" title="Randomise the seed — re-roll tie-breaks and within-cell draws">🎲</button>`
-    + `<span class="prio-seed-val" data-v="seed">(seed ${seedOf()})</span>`;
+    + `<span class="prio-seed-val" data-v="seed">(seed ${seedOf()})</span>`
+    + `<button type="button" class="pk-reroll" data-k="seed-reroll" title="Randomise the seed — re-roll tie-breaks and within-cell draws">🎲</button>`;
   const valEl = root.querySelector('[data-v="seed"]');
   root.querySelector('[data-k="seed-reroll"]').addEventListener('click', () => {
     const seed = Math.floor(Math.random() * 1e6);

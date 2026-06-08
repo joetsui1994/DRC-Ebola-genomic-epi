@@ -114,33 +114,26 @@ return ranked                     # the top-N list for the lab</pre>
 `;
 
 const COVERAGE_FLOOR_HTML = `
-  <h4>Coverage floor</h4>
-  <p>The proportional scheme above treats cells independently, so a location with low
-  relative risk can receive <strong>zero</strong> sequences when budget is tight. The
-  <strong>coverage floor</strong> is a priority pass that runs <em>before</em> the
-  proportional loop and guarantees every <em>uncovered</em> location — one never sequenced
-  (H<sub><em>k</em></sub> = 0) — at least <em>floor&nbsp;size</em> samples, drawn from its
-  highest-weight cell(s). Low-risk locations may be under-sampled relative to hotspots; they
-  are never shut out.</p>
-  <p>Floor picks occupy the top of the ranked list, and their counts update <em>h</em> before
-  the proportional loop runs — so the proportional layer sees their effect and does not
-  double-count a just-floored location. The floor reuses the <em>same</em> cell weight
-  w(<em>k</em>, τ); it changes only <em>which</em> cells are picked first.</p>
-  <p>Uncovered locations are filled in order of their best cell's weight (risk × recency). When
-  several are tied — for example under flat risk — the order is broken <em>at random but
-  reproducibly</em> (a fixed seed), and any locations not reached within the floor budget carry
-  over and become covered in a later batch. Use the <strong>🎲 re-roll</strong> control (by the
-  knobs) to resample the seed: whatever shifts is tie-break luck, whatever holds is structural.</p>
+  <h4>Ensuring spatial coverage</h4>
+  <p>The selection procedure above treats each cell (<em>k</em>, τ) independently - as a result a 
+  location may receive <strong>zero</strong> sequencing quota for a given batch, even if it has
+  no previously sequenced samples. While this is not unexpected given the objective of the heuristic,
+  such an approach might not be desirable if we also want to ensure that any viral importation events to
+  previously unaffected locations are likely to be captured in the phylogeny.
+  <p>To address this, we here introduce an additional selection pass where every location with no
+  previously sequenced samples is allocated <em>floor size</em> sequencing quota, with samples then drawn from the
+  highest-weight cell(s) in the location. A budget cap can be specified to ensure that only a certain
+  proportion of the total sequencing budget is used for this pass.
+  <p>It should be noted that this pass runs <em>before</em> the risk-based selection procedure, using the
+  same priority weight above to determine which cell(s) to draw from given the allocated quota for a given location.
+  Ties between cells with the same weight are broken at random.
   <table>
     <thead><tr><th>Parameter</th><th>Default</th><th>Meaning</th></tr></thead>
     <tbody>
-      <tr><td style="width:90px;">floor size</td><td>1</td><td>Samples guaranteed per uncovered location (capped at availability). 1 = "seen at least once".</td></tr>
-      <tr><td style="width:90px;">budget cap</td><td>∞</td><td>Maximum share of the batch budget <em>N</em> the floor may consume; ∞ = uncapped. Protects the proportional layer when many new locations appear at once.</td></tr>
+      <tr><td style="width:90px;">floor size</td><td>1</td><td>Maximum number of samples to be drawn from each location with no previously sequenced samples; 1 = "one sample per location, if available".</td></tr>
+      <tr><td style="width:90px;">budget cap</td><td>∞</td><td>Maximum total number of samples to be drawn from locations with no previously sequenced samples; ∞ = no guarantee for leftover sequencing budget for risk-based selection.</td></tr>
     </tbody>
   </table>
-  <p>Three modes are available below: <strong>Proportional only</strong> (the scheme above),
-  <strong>Floor + proportional</strong> (floor pass, then proportional spends the rest), and
-  <strong>Floor only</strong> (coverage guarantee alone; any remaining budget is unused).</p>
 `;
 
 export function createPrioritisationPanel(container, { risk, canon, tips, onChange }) {

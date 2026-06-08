@@ -464,10 +464,33 @@ body {
   box-shadow: 0 1px 2px rgba(30,25,18,0.1); padding: 5px 8px; font-size: 10px; color: var(--ink); }
 .pk-row { display: flex; align-items: center; gap: 6px; line-height: 1.7; }
 .pk-l { width: 38px; color: var(--muted); flex: none; }
-.pk-row input[type=range] { width: 68px; accent-color: #587e72; }
+/* Slim slider: narrow track + small round thumb. Custom track/thumb means we drop
+   the native accent-color rendering and paint the parts ourselves (both knob strips
+   share this rule, so the map and the prioritisation page stay in sync). */
+.pk-row input[type=range] {
+  width: 68px; -webkit-appearance: none; appearance: none;
+  background: transparent; height: 9px; cursor: pointer;
+}
+.pk-row input[type=range]::-webkit-slider-runnable-track {
+  height: 4px; border-radius: 2px; background: rgba(88,126,114,0.3);
+}
+.pk-row input[type=range]::-moz-range-track {
+  height: 4px; border-radius: 2px; background: rgba(88,126,114,0.3);
+}
+.pk-row input[type=range]::-moz-range-progress { height: 4px; border-radius: 2px; background: #587e72; }
+.pk-row input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 9px; height: 9px; border-radius: 50%; background: #587e72;
+  border: none; margin-top: -2.5px;   /* centre the 9px thumb on the 4px track */
+}
+.pk-row input[type=range]::-moz-range-thumb {
+  width: 9px; height: 9px; border-radius: 50%; background: #587e72; border: none;
+}
 .pk-v { width: 26px; text-align: right; font-variant-numeric: tabular-nums; color: #587e72; font-weight: 600; }
 .pk-row.pk-disabled { opacity: 0.4; pointer-events: none; }
 .pk-row .pk-mode { flex: 1; min-width: 0; font-size: 11px; }
+/* Give the mode dropdown row breathing room from the δ row below it (map knob box). */
+.prio-knobs .pk-row[data-row="mode"] { margin-bottom: 5px; }
 .pk-reroll { border: 1px solid rgba(88,126,114,0.4); background: #fff; border-radius: 5px; cursor: pointer; font-size: 12px; line-height: 1; padding: 2px 5px; }
 .pk-reroll:hover { background: #eef3f1; }
 /* Seed re-roll on the prioritisation page: a right-aligned line below the knob box. */
