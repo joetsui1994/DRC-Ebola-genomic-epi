@@ -206,7 +206,7 @@ body {
 
 /* Summary card for the brushed time window (bottom-left of the histogram) */
 .dist-window-summary {
-  position: absolute; left: 8px; bottom: 6px; z-index: 4; pointer-events: none;
+  position: absolute; left: 42px; top: 36px; z-index: 4; pointer-events: none;
   background: rgba(255, 255, 255, 0.92); border: 1px solid var(--border); border-radius: 6px;
   box-shadow: 0 2px 7px rgba(30, 25, 18, 0.12); padding: 5px 8px;
   font-size: 11px; line-height: 1.5; color: var(--ink); white-space: nowrap;
