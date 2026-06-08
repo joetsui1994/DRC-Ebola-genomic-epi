@@ -155,18 +155,20 @@ export async function createTreePanel(containerId, meta = null) {
 
   // Shaded time-window band overlaid on the canvas. Positioned with the SAME date→x mapping
   // the histogram uses (root → offsetX, mostRecent → offsetX + maxX·scaleX), so it lines up
-  // with the histogram's brush band. Repositioned on every view change; clamped to the tree's
-  // date range so a "beyond" brush stops at the tree edge. pointer-events:none keeps the tree
-  // clickable. Attached to #canvas-wrapper so its x-origin matches the transform.
+  // with the histogram's brush band — extrapolating past the tree's latest tip when the window
+  // runs into the "beyond" region (the freed strip created by compressing the tree). Attached
+  // to #canvas-container (not #canvas-wrapper) so the band can extend into that strip instead
+  // of being clipped at the shrunken wrapper's edge; both share the same left x-origin as the
+  // transform. Repositioned on every view change; pointer-events:none keeps the tree clickable.
   const t0 = meta ? +new Date(meta.rootDate) : 0;
   const t1 = meta ? +new Date(meta.mostRecentDate) : 0;
   let band = null, bandWin = null;     // { d0, d1 } in ms, or null
   function ensureBand() {
     if (band) return band;
-    const wrap = document.getElementById('canvas-wrapper');
-    if (!wrap) return null;
+    const host = document.getElementById('canvas-container');
+    if (!host) return null;
     band = document.createElement('div'); band.className = 'tree-time-band';
-    wrap.appendChild(band);
+    host.appendChild(band);
     return band;
   }
   function positionBand() {
@@ -175,7 +177,9 @@ export async function createTreePanel(containerId, meta = null) {
     const vt = tree.getViewTransform?.();
     if (!bandWin || !vt || !vt.maxX || t1 <= t0) { el.style.display = 'none'; return; }
     const x0 = vt.offsetX, span = vt.maxX * vt.scaleX;
-    const dToX = (ms) => x0 + ((Math.max(t0, Math.min(t1, ms)) - t0) / (t1 - t0)) * span;
+    // No upper clamp: a window edge past t1 extrapolates into the beyond strip, matching the
+    // histogram. Lower-clamped at t0 (the axis/root start) since a window can't precede it.
+    const dToX = (ms) => x0 + ((Math.max(t0, ms) - t0) / (t1 - t0)) * span;
     const xL = dToX(bandWin.d0), xR = dToX(bandWin.d1);
     if (xR - xL < 0.5) { el.style.display = 'none'; return; }
     // Show: must set a concrete display value — the base `.tree-time-band` rule is
