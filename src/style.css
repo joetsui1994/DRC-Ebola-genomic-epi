@@ -468,6 +468,9 @@ body {
 .pk-v { width: 26px; text-align: right; font-variant-numeric: tabular-nums; color: #587e72; font-weight: 600; }
 .pk-row.pk-disabled { opacity: 0.4; pointer-events: none; }
 .pk-row .pk-mode { flex: 1; min-width: 0; font-size: 11px; }
+.pk-row .pk-seed { width: auto; flex: 1; text-align: left; }
+.pk-row .pk-reroll { border: 1px solid rgba(88,126,114,0.4); background: #fff; border-radius: 5px; cursor: pointer; font-size: 12px; line-height: 1; padding: 2px 5px; }
+.pk-row .pk-reroll:hover { background: #eef3f1; }
 
 /* Time-window band overlaid on the tree canvas (positioned by the view transform). */
 .tree-time-band {

@@ -6,7 +6,7 @@ import { buildCells, parseUpload } from './prioritise-data.js';
 import { createHeatmap } from './prio-heatmap.js';
 import { buildKnobs } from './prio-knobs.js';
 
-const DEFAULTS = { delta: 0.5, lam: Infinity, n: 50, ctThreshold: 32, binWidthDays: 1, mode: 'proportional', floorSize: 1, floorBudgetCap: null, stalenessWindow: null };
+const DEFAULTS = { delta: 0.5, lam: Infinity, n: 50, ctThreshold: 32, binWidthDays: 1, mode: 'proportional', floorSize: 1, floorBudgetCap: null, stalenessWindow: null, seed: 1 };
 
 const METHODOLOGY_HTML = `
   <p class="prio-lead">Risk-based sequencing prioritisation</p>
@@ -129,7 +129,8 @@ const COVERAGE_FLOOR_HTML = `
   <p>Uncovered locations are filled in order of their best cell's weight (risk × recency). When
   several are tied — for example under flat risk — the order is broken <em>at random but
   reproducibly</em> (a fixed seed), and any locations not reached within the floor budget carry
-  over and become covered in a later batch.</p>
+  over and become covered in a later batch. Use the <strong>🎲 re-roll</strong> control (by the
+  knobs) to resample the seed: whatever shifts is tie-break luck, whatever holds is structural.</p>
   <table>
     <thead><tr><th>Parameter</th><th>Default</th><th>Meaning</th></tr></thead>
     <tbody>
@@ -192,7 +193,7 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
     });
     const { selection, cellSummary } = prioritise({
       cells: built.cells, locHistory: built.locHistory, n: params.n, delta: params.delta, lam: params.lam,
-      binWidthDays: params.binWidthDays, origin: built.origin, tNow: built.tNow, seed: 1,
+      binWidthDays: params.binWidthDays, origin: built.origin, tNow: built.tNow, seed: params.seed,
       mode: params.mode, floorSize: params.floorSize, floorBudgetCap: params.floorBudgetCap,
       stalenessWindow: params.stalenessWindow,
     });
