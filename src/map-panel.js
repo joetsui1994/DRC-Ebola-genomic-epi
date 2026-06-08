@@ -355,11 +355,11 @@ export function createMapPanel(containerId, tips, { onCtChange = () => {} } = {}
       prioRef = prio;
       const ctl = L.control({ position: 'bottomleft' });
       ctl.onAdd = () => {
-        const d = L.DomUtil.create('div', 'prio-knobs');
+        // Transparent wrapper holding two separate boxes: the seed box, then the knob box.
+        const d = L.DomUtil.create('div', 'prio-knobs-wrap');
         L.DomEvent.disableClickPropagation(d); L.DomEvent.disableScrollPropagation(d);
-        // Separate seed box at the top, then the knob strip below.
         const seedBox = L.DomUtil.create('div', 'prio-seed-map', d);
-        const knobBox = L.DomUtil.create('div', '', d);
+        const knobBox = L.DomUtil.create('div', 'prio-knobs', d);
         const seedRefresh = buildSeedControl(seedBox, { getParams: () => prio.getParams(), onChange: (p) => prio.setParams(p) }).refresh;
         const knobsRefresh = buildKnobs(knobBox, { getParams: () => prio.getParams(), onChange: (p) => prio.setParams(p), getMaxN: () => prio.getMaxN?.() ?? 200 }).refresh;
         mapKnobsRefresh = () => { seedRefresh(); knobsRefresh(); };
