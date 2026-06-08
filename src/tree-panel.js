@@ -46,7 +46,9 @@ export async function createTreePanel(containerId, meta = null) {
       // Visual theme: PearTree's built-in "O'Toole" palette (drives branch/tip/
       // node/axis colours and background).
       theme: "O'Toole",
-      tipLabelShow: 'off',
+      // Show health-zone tip labels by default (annotation key, like tipColourBy → init-set).
+      // Font size is applied post-theme (it's a theme key); a header button toggles on/off.
+      tipLabelShow: 'health_zone',
       // Colour tips by health zone (categorical palette auto-built from the annotation).
       // This is annotation-dependent, so it must be an init-setting (applySettings can't
       // apply it). The built-in legend is left off by default (it reserves canvas width,
@@ -100,11 +102,11 @@ export async function createTreePanel(containerId, meta = null) {
     },
   });
 
-  // Marker sizes: applyTheme("O'Toole") leaves these unset, so set them after the
-  // theme. `nodeSize` = internal-node markers, `tipSize` = tip markers (the
-  // "Node shapes" / "Tip shapes" sliders). applySettings supports both and runs
-  // last. Re-apply on each tree load.
-  const SHAPE_SIZES = { nodeSize: '3', tipSize: '4' };
+  // Marker sizes + tip-label font: applyTheme("O'Toole") drives these, so set them after the
+  // theme. `nodeSize`/`tipSize` = node/tip markers; `fontSize` = the tip-label font (the
+  // applySettings key is `fontSize`, NOT the theme key `tipLabelFontSize`). applySettings
+  // supports them and runs last; re-applied on each tree load.
+  const SHAPE_SIZES = { nodeSize: '3', tipSize: '4', fontSize: '10' };
   tree.applySettings(SHAPE_SIZES);
 
   // Fit the whole tree once loaded (static-alignment baseline; PearTree observes
@@ -152,6 +154,22 @@ export async function createTreePanel(containerId, meta = null) {
   }
   nodeBarsBtn?.classList.toggle('active', nodeBarsOn);   // reflect the default-on state
   nodeBarsBtn?.addEventListener('click', () => setNodeBars(!nodeBarsOn));
+
+  // Tip-labels toggle. Drives PearTree's internal #tip-label-show select between the
+  // health_zone annotation and 'off' (dispatching the change it re-renders on). Starts on to
+  // match the tipLabelShow:'health_zone' init-setting; font size is set via SHAPE_SIZES above.
+  let tipLabelsOn = true;
+  const tipLabelsBtn = document.getElementById('tiplabels-toggle');
+  function setTipLabels(on) {
+    const sel = document.getElementById('tip-label-show');
+    if (!sel) return;
+    sel.value = on ? 'health_zone' : 'off';
+    sel.dispatchEvent(new Event('change', { bubbles: true }));
+    tipLabelsOn = on;
+    tipLabelsBtn?.classList.toggle('active', on);
+  }
+  tipLabelsBtn?.classList.toggle('active', tipLabelsOn);   // reflect the default-on state
+  tipLabelsBtn?.addEventListener('click', () => setTipLabels(!tipLabelsOn));
 
   // Shaded time-window band overlaid on the canvas. Positioned with the SAME date→x mapping
   // the histogram uses (root → offsetX, mostRecent → offsetX + maxX·scaleX), so it lines up

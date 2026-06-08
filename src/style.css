@@ -90,7 +90,7 @@ body {
 #dist-beyond { margin-left: 10px; font-weight: 700; }   /* match the Ct↔CSV gap; arrow glyph */
 .tree-toggle {
   float: right; margin-top: -1px; margin-left: 6px;
-  font-size: 9.5px; font-weight: 600; letter-spacing: 0.03em; text-transform: none;
+  font-size: 9.5px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase;
   color: var(--maroon); background: rgba(124, 29, 29, 0.08);
   border: 1px solid rgba(124, 29, 29, 0.25); border-radius: 5px;
   padding: 1px 8px; cursor: pointer;
