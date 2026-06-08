@@ -1,6 +1,7 @@
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { buildKnobs } from './prio-knobs.js';
+import { tallyZones } from './zone-tally.js';
 
 // Leaflet map. Markers are built from the tips themselves: tips are grouped by
 // health_area when present, else by health_zone, and placed at the tips' lat/lon
@@ -105,8 +106,8 @@ export function createMapPanel(containerId, tips, { onCtChange = () => {} } = {}
     const key = area || realVal(t.health_zone);
     if (!key) continue;
     let g = groups.get(key);
-    if (!g) { g = { key, level: area ? 'area' : 'zone', lat: t.lat, lon: t.lon, tipIds: [] }; groups.set(key, g); }
-    g.tipIds.push(t.id);
+    if (!g) { g = { key, level: area ? 'area' : 'zone', lat: t.lat, lon: t.lon, tipIds: [], dates: [] }; groups.set(key, g); }
+    g.tipIds.push(t.id); g.dates.push(t.date);
   }
 
   const markers = [];                 // { group, marker }
@@ -151,6 +152,9 @@ export function createMapPanel(containerId, tips, { onCtChange = () => {} } = {}
   let choroLegend = null, choroLegendDiv = null;
   let ctThreshold = null;            // Ct filter for the Positive metric (null = off)
   let zonePosCt = new Map();         // upper Nom → positive-sample Ct values (for live re-counting)
+  let zoneCounts = new Map();        // upper Nom → {status counts} (dynamic; windowed by the brush)
+  let linelistRows = [];             // retained for windowed re-tally (set in addZoneLayer)
+  let applyCounts = null;            // recompute breaks + redraw after a re-tally (set in addZoneLayer)
   let applyCtThreshold = null;       // recompute Positive metric + redraw (set in addZoneLayer)
   let toSeqByZone = new Map();       // upper Nom -> to-sequence count (prioritisation)
   let applyToSeq = null;             // recompute "To sequence" metric + redraw (set in addZoneLayer)
@@ -319,6 +323,28 @@ export function createMapPanel(containerId, tips, { onCtChange = () => {} } = {}
     /** Update per-zone to-sequence counts (upper Nom -> count) and redraw if shown. */
     setToSequence(byZone) { toSeqByZone = byZone || new Map(); applyToSeq?.(); },
 
+    /** Filter the choropleth + markers to a time window (inclusive ms bounds), or null = all.
+     *  Re-tallies the line-list rows, reclasses, and shows/resizes markers by in-window count. */
+    setDateWindow(d0, d1) {
+      const win = (d0 != null && d1 != null) ? { d0: +d0, d1: +d1 } : null;
+      const t = tallyZones(linelistRows, win);
+      zoneCounts = t.zoneCounts; zonePosCt = t.zonePosCt;
+      applyCounts?.();
+      for (const { group, marker } of markers) {
+        let n = group.tipIds.length;
+        if (win) {
+          n = 0;
+          for (const ds of group.dates) { const tt = +new Date(ds); if (!isNaN(tt) && tt >= win.d0 && tt <= win.d1) n++; }
+        }
+        if (n === 0) { marker.setStyle({ opacity: 0, fillOpacity: 0 }); marker.options.interactive = false; }
+        else {
+          marker.setStyle({ opacity: 1, fillOpacity: BASE_STYLE.fillOpacity });
+          marker.options.interactive = true;
+          marker.setRadius(6 + 3 * Math.sqrt(n));
+        }
+      }
+    },
+
     /** Register the prioritisation panel and build the on-map knobs (shown only while the
      *  "To sequence" metric is selected). */
     attachPrioKnobs(prio) {
@@ -341,11 +367,11 @@ export function createMapPanel(containerId, tips, { onCtChange = () => {} } = {}
      * @param {GeoJSON.FeatureCollection} geojson  features w/ { Nom, PROVINCE, relative_risk, cx, cy }
      * @param {Map<string,{Positive:number,Negative:number,Invalid:number,Unclassified:number,total:number}>} zoneCounts  by upper-cased Nom
      */
-    addZoneLayer(geojson, zoneCounts = new Map(), posCt = new Map()) {
+    addZoneLayer(geojson, seedCounts = new Map(), posCt = new Map(), rows = []) {
       const ZERO = { Positive: 0, Negative: 0, Invalid: 0, Unclassified: 0, total: 0 };
-      const countsOf = (f) => zoneCounts.get(upper(f.properties.Nom)) || ZERO;
+      const countsOf = (f) => zoneCounts.get(upper(f.properties.Nom)) || ZERO;   // reads scope zoneCounts
       const intFmt = (x) => String(Math.round(x));
-      zonePosCt = posCt;
+      zoneCounts = seedCounts; zonePosCt = posCt; linelistRows = rows;
       // Positives in a zone with Ct below the active threshold.
       const posBelow = (f) => { const a = zonePosCt.get(upper(f.properties.Nom)); if (!a) return 0; let n = 0; for (const v of a) if (v < ctThreshold) n++; return n; };
 
@@ -427,6 +453,11 @@ export function createMapPanel(containerId, tips, { onCtChange = () => {} } = {}
       applyCtThreshold = () => {
         recomputeBreaks(METRICS.Positive);
         if (metric === 'Positive') { restyle(); renderLegend(); }
+      };
+      // After a windowed re-tally: reclass every count metric and redraw.
+      applyCounts = () => {
+        for (const cfg of Object.values(METRICS)) recomputeBreaks(cfg);
+        restyle(); renderLegend();
       };
       choroLegend = L.control({ position: 'bottomright' });
       choroLegend.onAdd = () => { choroLegendDiv = L.DomUtil.create('div', 'map-legend choropleth-legend'); renderLegend(); return choroLegendDiv; };
