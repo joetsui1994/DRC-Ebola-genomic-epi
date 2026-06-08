@@ -14,8 +14,9 @@ function normDate(d) {
 }
 
 /**
- * @returns { cells, origin, tNow, diagnostics }
+ * @returns { cells, origin, tNow, locHistory, diagnostics }
  *   cells: [{ location, timeBin, risk, available, h, ids? }]  (location = upper canonical Nom)
+ *   locHistory: Map<location, number> — total pre-batch sequenced count per location (H_k)
  *   diagnostics: { kept, dropped, byReason: {notPositive, ctIneligible, badDate, unknownZone} }
  */
 export function buildCells({
