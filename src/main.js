@@ -99,7 +99,7 @@ const map = createMapPanel('map-body', tips, { onCtChange: (t) => tsPanel?.setCt
 fetch(`${BASE}data/health-zones.geojson`)
   .then(r => r.json())
   .then(zones => {
-    map.addZoneLayer(zones, zoneCounts, zonePosCt);
+    map.addZoneLayer(zones, zoneCounts, zonePosCt, linelist);
     const risk = new Map(zones.features.map((f) => [(f.properties.Nom || '').toUpperCase().trim(), f.properties.relative_risk]));
     const prio = createPrioritisationPanel(map.prioBody(), {
       risk, canon, tips: seqTips,
@@ -120,9 +120,13 @@ fetch(`${BASE}data/health-zones.geojson`)
   })
   .catch(err => console.warn('risk/mobility layer not loaded:', err));
 let treePanel = null;
-const ts  = createTimeseriesPanel('timeseries-body', linelist, { minDate: meta.rootDate, maxDate: meta.mostRecentDate }, { onCtChange: (t) => map.setCtThreshold(t), tips: seqTips, onExtentChange: (f) => treePanel?.setWidthFraction(f) });
+const ts  = createTimeseriesPanel('timeseries-body', linelist, { minDate: meta.rootDate, maxDate: meta.mostRecentDate }, {
+  onCtChange: (t) => map.setCtThreshold(t), tips: seqTips,
+  onExtentChange: (f) => treePanel?.setWidthFraction(f),
+  onWindowChange: (d0, d1) => { map.setDateWindow(d0, d1); treePanel?.setTimeBand(d0, d1); },
+});
 tsPanel = ts;   // late-bind for the map → distribution Ct sync
-const tree = await createTreePanel('tree-body');
+const tree = await createTreePanel('tree-body', meta);
 treePanel = tree;
 
 // Floating node-info card pinned to the tree panel.
