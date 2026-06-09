@@ -15,7 +15,7 @@ const capFromSlider = (p) => p >= 100 ? null : p / 100;
 const capToSlider = (cap) => cap == null ? 100 : Math.round(cap * 100);
 const capLabel = (cap) => cap == null ? '∞' : `${Math.round(cap * 100)}%`;
 
-const MODES = [['proportional', 'risk-based only'], ['both', 'risk-based + spatial coverage'], ['floor', 'spatial coverage']];
+const MODES = [['proportional', '1. risk-based only'], ['both', '2. risk-based + spatial coverage'], ['floor', '3. spatial coverage']];
 
 function row(label, k, val, min, max, step, disp) {
   return `<div class="pk-row" data-row="${k}"><span class="pk-l">${label}</span>`

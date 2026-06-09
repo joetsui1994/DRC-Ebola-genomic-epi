@@ -517,6 +517,9 @@ body {
 .pk-row .pk-mode:focus-visible { outline: none; border-color: #587e72; box-shadow: 0 0 0 2px rgba(88,126,114,0.18); }
 /* Give the mode dropdown row breathing room from the δ row below it (map knob box). */
 .prio-knobs .pk-row[data-row="mode"] { margin-bottom: 5px; }
+/* Map knob box: pin the mode select to the slider+value width (68 + 6 gap + 26) and truncate
+   the label, so its longest option no longer stretches the whole box. */
+.prio-knobs .pk-mode { flex: none; width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .pk-reroll { border: 1px solid rgba(88,126,114,0.4); background: #fff; border-radius: 5px; cursor: pointer; font-size: 12px; line-height: 1; padding: 2px 5px; }
 .pk-reroll:hover { background: #eef3f1; }
 /* Seed re-roll on the prioritisation page: a right-aligned line below the knob box. */
