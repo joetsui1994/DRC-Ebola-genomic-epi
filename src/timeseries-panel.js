@@ -401,7 +401,7 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
     lines.push(`<div>${pct == null
       ? '<span class="ws-dim">no tests in range</span>'
       : `<b>${pct}%</b> positive <span class="ws-dim">(${pos}/${tested})</span>`}</div>`);
-    lines.push(`<div><b>${seq}</b> existing sequence${seq === 1 ? '' : 's'}</div>`);
+    lines.push(`<div class="ws-seq"><b>${seq}</b> existing sequence${seq === 1 ? '' : 's'}</div>`);
     if (allocation) lines.push(`<div class="ws-alloc"><b>${toSeq}</b> to sequence next</div>`);
     summary.innerHTML = lines.join('');
     summary.style.display = '';

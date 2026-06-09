@@ -13,6 +13,9 @@ const elem = (n, a) => { const e = document.createElementNS(SVNS, n); for (const
 const PAD = { left: 8, right: 12, top: 4, bottom: 22 };
 const TEAL = '#205c4c';
 const AVAIL_FILL = '#dde7e2';   // candidate cell, nothing selected (the "░")
+const EXIST = '#7c1d1d';        // existing-sequences band (maroon), matches the distribution panel's
+                                // sequence circles; intensity ∝ phylogeny sequences in the cell
+const EXIST_EMPTY = '#efece7';  // band placeholder when a cell has no prior sequences
 const DAY = 86400000;
 const ROW_IDEAL = 14, PLOT_MAX = 320;   // grow rows to ~14px, then cap the plot height & compress
 
@@ -35,21 +38,30 @@ export function createHeatmap(host) {
     if (W < 80) return;                          // hidden tab / not laid out yet — ResizeObserver re-fires later
     const { cellSummary, opts } = last;
     const binW = opts.binWidthDays || 1, origin = opts.origin;
-    const zones = (opts.zones && opts.zones.length)
-      ? opts.zones
-      : [...new Set(cellSummary.map((c) => c.location))].sort();
+    // Existing phylogeny sequences per cell — drawn even where there is no candidate this batch,
+    // so a location/date with sequences but nothing to sequence still shows its maroon band.
+    const existing = opts.existing || new Map();
+    const existCells = [];
+    for (const [key, count] of existing) {
+      if (!(count > 0)) continue;
+      const i = key.lastIndexOf('|');
+      existCells.push({ location: key.slice(0, i), timeBin: +key.slice(i + 1), count });
+    }
+
+    const baseZones = (opts.zones && opts.zones.length) ? opts.zones : cellSummary.map((c) => c.location);
+    const zones = [...new Set([...baseZones, ...existCells.map((e) => e.location)])].sort();
     const nZones = zones.length;
 
     const plotH = Math.min(nZones * ROW_IDEAL, PLOT_MAX) || ROW_IDEAL;
     const H = PAD.top + PAD.bottom + plotH;
     const svg = elem('svg', { width: W, height: H }); holder.appendChild(svg);
 
-    if (!cellSummary.length || !nZones) {
+    if ((!cellSummary.length && !existCells.length) || !nZones) {
       const t = elem('text', { x: W / 2, y: H / 2, 'font-size': 11, fill: '#9c968b', 'text-anchor': 'middle' });
       t.textContent = 'No eligible cells for these parameters.'; svg.appendChild(t); return;
     }
 
-    const bins = cellSummary.map((c) => c.timeBin);
+    const bins = [...cellSummary.map((c) => c.timeBin), ...existCells.map((e) => e.timeBin)];
     const minBin = Math.min(...bins), maxBin = Math.max(...bins);
     const nCols = maxBin - minBin + 1;
     const plotW = W - PAD.left - PAD.right;
@@ -57,18 +69,42 @@ export function createHeatmap(host) {
     const rowIndex = new Map(zones.map((z, i) => [z, i]));
     const cellAt = new Map();
     const maxSel = Math.max(1, ...cellSummary.map((c) => c.selected));
+    const maxExist = Math.max(1, ...existCells.map((e) => e.count));
+    const candAt = new Map(cellSummary.map((c) => [`${c.location}|${c.timeBin}`, c]));
+    const drawKeys = new Set([...candAt.keys(), ...existCells.map((e) => `${e.location}|${e.timeBin}`)]);
 
-    // Cells: faint for available-but-unselected, teal (∝ selected) for chosen.
-    for (const c of cellSummary) {
-      const ri = rowIndex.get(c.location); if (ri == null) continue;
-      const ci = c.timeBin - minBin;
-      cellAt.set(`${c.location}|${c.timeBin}`, c);
+    // Each cell stacks two boxes (same width): a shorter TOP band for the number of sequences
+    // already in the phylogeny for that cell (maroon ∝ count) and a taller BOTTOM box for this
+    // batch's allocation (faint if unselected, teal ∝ selected). Existing-only cells (sequences
+    // but no candidate this batch) draw the maroon band alone.
+    for (const key of drawKeys) {
+      const i = key.lastIndexOf('|');
+      const location = key.slice(0, i), timeBin = +key.slice(i + 1);
+      const ri = rowIndex.get(location); if (ri == null) continue;
+      const ci = timeBin - minBin;
       const x = PAD.left + ci * colW, y = PAD.top + ri * rowH;
-      const sel = c.selected > 0;
-      svg.appendChild(elem('rect', {
-        x: x + 0.3, y: y + 0.3, width: Math.max(0.5, colW - 0.6), height: Math.max(0.5, rowH - 0.6),
-        fill: sel ? TEAL : AVAIL_FILL, 'fill-opacity': sel ? (0.3 + 0.7 * c.selected / maxSel) : 1,
-      }));
+      const cw = Math.max(0.5, colW - 0.6);
+      const totalH = Math.max(0.5, rowH - 0.6);
+      const existH = Math.min(totalH * 0.34, 4);             // shorter top band
+      const allocH = Math.max(0.5, totalH - existH - 0.6);   // 0.6 gap between the two
+      const c = candAt.get(key) || null;
+      const ex = existing.get(key) || 0;
+      // top band: maroon ∝ existing sequences; faint placeholder for candidate cells with none.
+      if (ex > 0 || c) {
+        svg.appendChild(elem('rect', {
+          x: x + 0.3, y: y + 0.3, width: cw, height: existH,
+          fill: ex > 0 ? EXIST : EXIST_EMPTY, 'fill-opacity': ex > 0 ? (0.3 + 0.7 * ex / maxExist) : 1,
+        }));
+      }
+      // bottom box: this batch's allocation — only where there is a candidate.
+      if (c) {
+        cellAt.set(key, c);
+        const sel = c.selected > 0;
+        svg.appendChild(elem('rect', {
+          x: x + 0.3, y: y + 0.3 + existH + 0.6, width: cw, height: allocH,
+          fill: sel ? TEAL : AVAIL_FILL, 'fill-opacity': sel ? (0.3 + 0.7 * c.selected / maxSel) : 1,
+        }));
+      }
     }
 
     // x-axis date ticks (~6 across the span).
@@ -103,15 +139,17 @@ export function createHeatmap(host) {
 
   function showTip(ev, zone, bin, c, origin, binW) {
     const when = origin ? fmtDate(origin, bin, binW) : `bin ${bin}`;
+    const ex = last && last.opts && last.opts.existing ? (last.opts.existing.get(`${zone}|${bin}`) || 0) : 0;
     tip.innerHTML = `<div class="ps-tip-h">${titleCase(zone)}</div><div>${when}</div>`
+      + (c ? `<div><b>${c.available}</b> avail · risk <b>${(+c.risk).toFixed(3)}</b></div>`
+           : '<div style="color:#9c968b">no candidates</div>')
+      + `<div><span style="color:${EXIST}"><b>${ex}</b> existing sequence${ex === 1 ? '' : 's'}</span></div>`
       + (c
-        ? `<div>avail <b>${c.available}</b> · risk <b>${(+c.risk).toFixed(3)}</b></div>`
-          + `<div>h(k,τ) <b>${c.h0}</b> · H(k) <b>${c.Hk}</b></div>`
-          + `<div><span style="color:${TEAL}">to sequence <b>${c.selected}</b></span>`
-            + ((c.floorSelected > 0 && c.propSelected > 0)
-              ? ` <span style="color:#9c968b">(floor ${c.floorSelected} + prop ${c.propSelected})</span>` : '')
-            + `</div>`
-        : '<div style="color:#9c968b">no samples</div>');
+        ? `<div><span style="color:${TEAL}"><b>${c.selected}</b> to sequence next</span>`
+          + ((c.floorSelected > 0 && c.propSelected > 0)
+            ? ` <span style="color:#9c968b">(floor ${c.floorSelected} + prop ${c.propSelected})</span>` : '')
+          + `</div>`
+        : '');
     tip.style.display = 'block';
     const rect = host.getBoundingClientRect();
     let left = ev.clientX - rect.left + 12;

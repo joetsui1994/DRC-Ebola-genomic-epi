@@ -199,7 +199,7 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
       subtractHistory: !inUpload, withIds: false,
     });
     const zones = [...new Set(universe.cells.map((c) => c.location))].sort();
-    return { inUpload, selection, cellSummary, origin: built.origin, zones, diagnostics: built.diagnostics };
+    return { inUpload, selection, cellSummary, origin: built.origin, zones, cellHistory: built.cellHistory, diagnostics: built.diagnostics };
   }
 
   // Update the live count readout + the heatmap from an engine result (both paths use this).
@@ -207,7 +207,7 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
     diagEl.textContent = r.inUpload
       ? `${r.diagnostics.kept} eligible, ${r.diagnostics.dropped} dropped · ${r.selection.length} to sequence`
       : `${r.diagnostics.kept} eligible candidates · ${r.selection.length} to sequence`;
-    heat.update(r.cellSummary, params, { origin: r.origin, binWidthDays: params.binWidthDays, zones: r.zones });
+    heat.update(r.cellSummary, params, { origin: r.origin, binWidthDays: params.binWidthDays, zones: r.zones, existing: r.cellHistory });
   }
 
   // Active path: also drive the map + chart.

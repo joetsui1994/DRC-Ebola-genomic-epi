@@ -17,6 +17,7 @@ function normDate(d) {
  * @returns { cells, origin, tNow, locHistory, diagnostics }
  *   cells: [{ location, timeBin, risk, available, h, ids? }]  (location = upper canonical Nom)
  *   locHistory: Map<location, number> — total pre-batch sequenced count per location (H_k)
+ *   cellHistory: Map<`location|timeBin`, number> — pre-batch sequenced (phylogeny) count per cell
  *   diagnostics: { kept, dropped, byReason: {notPositive, ctIneligible, badDate, unknownZone} }
  */
 export function buildCells({
@@ -83,7 +84,7 @@ export function buildCells({
     });
   }
 
-  return { cells, origin: o, tNow: t, locHistory, diagnostics: { kept: eligible.length, dropped: candidateRows.length - eligible.length, byReason: reason } };
+  return { cells, origin: o, tNow: t, locHistory, cellHistory: hMap, diagnostics: { kept: eligible.length, dropped: candidateRows.length - eligible.length, byReason: reason } };
 }
 
 /** Parse an uploaded CSV (naive split; header case-insensitive) into rows. */
