@@ -283,6 +283,7 @@ export function createMapPanel(containerId, tips, { onCtChange = () => {} } = {}
     // (they're never on screen together, so on-show sync is enough).
     if (onMap) { requestAnimationFrame(() => map.invalidateSize()); mapKnobsRefresh?.(); }
     else prioRef?.refreshKnobs?.();
+    prioRef?.setPageActive?.(!onMap);   // chart shows the to-sequence overlay while on the prio tab
     onMapTab = onMap; updateCtVisibility();   // hide the Ct input off the Map tab
   }
   tabMap?.addEventListener('click', () => showTab('map'));

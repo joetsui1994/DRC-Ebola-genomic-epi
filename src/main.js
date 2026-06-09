@@ -103,14 +103,18 @@ fetch(`${BASE}data/health-zones.geojson`)
     const risk = new Map(zones.features.map((f) => [(f.properties.Nom || '').toUpperCase().trim(), f.properties.relative_risk]));
     const prio = createPrioritisationPanel(map.prioBody(), {
       risk, canon, tips: seqTips,
-      onChange: ({ active, cellSummary, origin, binWidthDays }) => {
+      onChange: ({ active, pageActive, cellSummary, origin, binWidthDays }) => {
+        // Map choropleth follows the map's Seq+ metric; the chart overlay follows Seq+ OR the
+        // prioritisation tab being open.
         if (active && cellSummary) {
           const byZone = new Map();
           for (const c of cellSummary) byZone.set(c.location, (byZone.get(c.location) || 0) + c.selected);
           map.setToSequence(byZone);
-          ts.setAllocation(cellSummary, { binWidthDays, origin });
+        } else {
+          map.setToSequence(new Map());
         }
-        if (!active) { map.setToSequence(new Map()); ts.setAllocation(null); }
+        if ((active || pageActive) && cellSummary) ts.setAllocation(cellSummary, { binWidthDays, origin });
+        else ts.setAllocation(null);
       },
     });
     map.attachPrioKnobs?.(prio);   // on-map knobs panel

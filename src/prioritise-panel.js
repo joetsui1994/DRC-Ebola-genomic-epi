@@ -176,6 +176,7 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
   let uploadRows = null;                 // null = public mode
   let params = { ...DEFAULTS };
   let active = false;                    // true while the map's "To sequence" (Seq+) metric is selected
+  let pageActive = false;                // true while the SEQUENCING PRIORITISATION tab is shown
 
   // Run the engine on the current data + params, without touching the map/chart.
   function runEngine() {
@@ -212,29 +213,23 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
     heat.update(r.cellSummary, params, { origin: r.origin, binWidthDays: params.binWidthDays, zones: r.zones, existing: r.cellHistory });
   }
 
-  // Active path: also drive the map + chart.
-  function compute() {
+  // Run the engine, push results out (main.js gates the map choropleth on `active` and the
+  // chart overlay on `active || pageActive`), and keep the methodology heatmap live. Every
+  // path funnels through here.
+  function recompute() {
     const r = runEngine();
-    onChange({ active, cellSummary: r.cellSummary, selection: r.selection, origin: r.origin, binWidthDays: params.binWidthDays, mode: r.inUpload ? 'upload' : 'public' });
+    onChange({ active, pageActive, cellSummary: r.cellSummary, selection: r.selection, origin: r.origin, binWidthDays: params.binWidthDays, mode: r.inUpload ? 'upload' : 'public' });
     render(r);
   }
-
-  // Inactive path: keep the methodology heatmap + count live as the shared knobs change.
-  function refreshHeatmap() { render(runEngine()); }
-
-  // active → drive the map/chart; otherwise just keep the methodology heatmap live.
-  function recompute() { if (active) compute(); else refreshHeatmap(); }
 
   // Single entry point for a parameter change (from the page knobs OR the on-map knobs).
   function applyParams(p) { params = { ...params, ...p }; recompute(); }
 
-  // Toggled by the map's "To sequence" (Seq+) metric: on → compute + drive the map/chart;
-  // off → clear the map/chart (the heatmap keeps its last state).
-  function setActive(on) {
-    active = !!on;
-    if (active) compute();
-    else { onChange({ active: false }); refreshHeatmap(); }
-  }
+  // Toggled by the map's "To sequence" (Seq+) metric — drives the map choropleth + chart.
+  function setActive(on) { active = !!on; recompute(); }
+
+  // Toggled when the SEQUENCING PRIORITISATION tab is shown/hidden — drives the chart overlay.
+  function setPageActive(on) { pageActive = !!on; recompute(); }
 
   function download(name, text) {
     const url = URL.createObjectURL(new Blob([text + '\n'], { type: 'text/csv;charset=utf-8' }));
@@ -276,13 +271,15 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
   const pageKnobs = buildKnobs(container.querySelector('#prio-scatter-knobs'), { getParams: () => ({ ...params }), onChange: applyParams, getMaxN: eligibleCeiling });
   // Seed re-roll — sits below the knob box, shares the same params.
   const pageSeed = buildSeedControl(container.querySelector('#prio-seed'), { getParams: () => ({ ...params }), onChange: applyParams, text: 'Re-roll random tie-breaks &amp; within-cell draws:' });
-  refreshHeatmap();   // initial render (the ResizeObserver paints it once the tab is first shown)
+  recompute();   // initial render (the ResizeObserver paints it once the tab is first shown)
 
   return {
     /** Update knobs (from the on-map panel) and recompute. */
     setParams(p) { applyParams(p); },
     /** Toggle prioritisation — called by the map's "To sequence" (Seq+) metric. */
     setActive,
+    /** Toggle the chart overlay with the prioritisation tab — called by the tab switcher. */
+    setPageActive,
     /** Re-sync the page knob sliders + seed read-out to the shared params (called when the tab is shown). */
     refreshKnobs: () => { pageKnobs.refresh(); pageSeed.refresh(); },
     /** Eligible-candidate ceiling — the on-map knobs use it as the N slider max. */
