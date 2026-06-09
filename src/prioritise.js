@@ -65,7 +65,7 @@ function pickBest(eligIdx, wOf, rng) {
  * `selection`. Uncovered = location with H_k == 0 (from `locHistory`) and ≥1 eligible cell.
  * Locations are floored in best-cell-weight order; within a location, top cells by weight.
  */
-function coverageFloor({ C, tiltC, wOf, rng, locHistory, floorSize, floorBudget, selection }) {
+function coverageFloor({ C, wFloorOf, rng, locHistory, floorSize, floorBudget, selection }) {
   const byLoc = new Map();
   for (let i = 0; i < C.length; i++) {
     if (C[i].available <= 0 || C[i].risk <= 0) continue;
@@ -76,9 +76,9 @@ function coverageFloor({ C, tiltC, wOf, rng, locHistory, floorSize, floorBudget,
   const uncovered = [];
   for (const [loc, idxs] of byLoc) {
     if (((locHistory && locHistory.get(loc)) || 0) !== 0) continue;
-    // At floor time every cell of an uncovered location has h==0, so weight ordering
-    // ≡ risk·tilt ordering (and stays finite even when delta==0).
-    const key = Math.max(...idxs.map((i) => C[i].risk * tiltC[i]));
+    // Order uncovered locations by importance (highest risk) — not by timing. The floor tilt
+    // (in wFloorOf) only governs which time-bin within a location is drawn, not the queue order.
+    const key = Math.max(...idxs.map((i) => C[i].risk));
     uncovered.push({ idxs, key, r: rng() });
   }
   uncovered.sort((a, b) => (b.key - a.key) || (a.r - b.r));
@@ -89,12 +89,12 @@ function coverageFloor({ C, tiltC, wOf, rng, locHistory, floorSize, floorBudget,
     let take = Math.min(floorSize, budget);
     while (take > 0) {
       const elig = u.idxs.filter((i) => C[i].available > 0 && C[i].risk > 0);
-      const idx = pickBest(elig, wOf, rng);
+      const idx = pickBest(elig, wFloorOf, rng);
       if (idx == null) break;
       const c = C[idx];
       selection.push({
         rank: selection.length + 1, location: c.location, timeBin: c.timeBin,
-        weight: wOf(idx), sampleId: c.ids ? c.ids.pop() : null, layer: 'floor',
+        weight: wFloorOf(idx), sampleId: c.ids ? c.ids.pop() : null, layer: 'floor',
       });
       c.available -= 1; c.h += 1; c.selected += 1; c.floorSelected += 1;
       take -= 1; budget -= 1;
@@ -108,7 +108,7 @@ function coverageFloor({ C, tiltC, wOf, rng, locHistory, floorSize, floorBudget,
  * Returns { selection, cellSummary } (selection in rank order; cellSummary per cell).
  */
 export function prioritise({
-  cells, locHistory = null, n, delta = 0.5, tilt = 0, binWidthDays = 7, origin, tNow, seed = 1,
+  cells, locHistory = null, n, delta = 0.5, tilt = 0, floorTilt = 0, binWidthDays = 7, origin, tNow, seed = 1,
   mode = 'proportional', floorSize = 1, floorBudgetCap = null,
   stalenessWindow = null, // reserved for a future "covered within window" rule; unused in v1 (covered = ever sequenced)
 }) {
@@ -123,12 +123,15 @@ export function prioritise({
   for (const c of C) if (c.ids) shuffle(c.ids, rng);
   const tiltC = C.map((c) => temporalTilt(c.timeBin, origin, binWidthDays, tNow, tilt));
   const wOf = (i) => C[i].risk / (C[i].h + delta) * tiltC[i];
+  // Floor pass has its own temporal preference (β_s), independent of the risk-based β_r.
+  const floorTiltC = C.map((c) => temporalTilt(c.timeBin, origin, binWidthDays, tNow, floorTilt));
+  const wFloorOf = (i) => C[i].risk / (C[i].h + delta) * floorTiltC[i];
 
   const selection = [];
 
   if (mode === 'floor' || mode === 'both') {
     coverageFloor({
-      C, tiltC, wOf, rng, locHistory, floorSize,
+      C, wFloorOf, rng, locHistory, floorSize,
       floorBudget: resolveFloorBudget(floorBudgetCap, n), selection,
     });
   }

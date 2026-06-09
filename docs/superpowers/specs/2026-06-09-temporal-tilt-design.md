@@ -118,5 +118,29 @@ overflow risk — so the per-cell function stays clean and independently testabl
 
 - No change to risk, coverage (`h`, δ), Ct eligibility, binning, or the floor budget logic.
 - No backward-compatibility shim for `lam` — it is removed, not deprecated.
-- No widening of the β range or re-introduction of the stability term (YAGNI).
-```
+- No re-introduction of the stability term (YAGNI).
+
+## Extension (2026-06-09): per-pass temporal tilt — β_r / β_s
+
+A single tilt conflated two different temporal objectives: the risk-based (proportional)
+pass wants temporal *representativeness* (often β = 0, or mild recency for nowcasting),
+whereas the coverage-floor pass often wants the *earliest* sample of a newly-covered
+location (to capture introductions / refine TMRCA). Split the single `tilt` into two
+independent parameters, both default 0 (preserving prior behaviour):
+
+- **`tilt` (β_r)** — risk-based / proportional pass. `wOf = risk/(h+δ)·exp(β_r·u)`.
+- **`floorTilt` (β_s)** — coverage-floor pass. `wFloorOf = risk/(h+δ)·exp(β_s·u)`, used for
+  the within-location cell pick and the recorded floor `weight`.
+
+Floor **location ordering** (which uncovered location to cover first under a tight budget)
+is by **risk only** (`max(risk)` over the location's cells) — importance, not timing — so
+β_s governs only *which time-bin within a location* is drawn. At β_s = 0 this is identical
+to the previous default.
+
+- `DEFAULTS.floorTilt = 0`; engine arg `floorTilt = 0`; panel passes it.
+- Knob: risk-based row relabelled `β_r`; new `β_s` row grouped with the floor controls and
+  disabled in "risk-based only" mode (added to `syncFloorEnabled`); both range ±20, step 0.5.
+- Methodology: formula/symbol/pseudo-code use `β_r`; the coverage-floor section documents
+  `β_s` and the risk-only ordering.
+- Tests: floor draws the earliest cell at β_s < 0, the most recent at β_s > 0, and follows
+  β_s independently of β_r.

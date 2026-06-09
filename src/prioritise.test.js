@@ -236,4 +236,29 @@ describe('coverage floor', () => {
     const s2 = prioritise({ ...floorBase, cells: mkCells(), locHistory, n: 5, delta: 0.5, mode: 'both' }).selection;
     expect(s1).toEqual(s2);
   });
+
+  // An uncovered location with a recent and an early cell of equal risk; β_s decides which the
+  // floor draws. Non-degenerate window so the tilt factor varies across bins.
+  const twoBinCells = () => [
+    { location: 'A', timeBin: 6, risk: 1, available: 20, h: 0 },  // recent
+    { location: 'A', timeBin: 0, risk: 1, available: 20, h: 0 },  // early
+  ];
+  const tiltBase = { origin: '2026-04-05', tNow: '2026-06-01', binWidthDays: 7, seed: 1, n: 1, delta: 0.5, mode: 'floor', floorSize: 1, locHistory: null };
+
+  it('floor tilt: β_s < 0 draws the earliest cell of an uncovered location', () => {
+    const floor = prioritise({ ...tiltBase, cells: twoBinCells(), floorTilt: -10 }).selection.filter((s) => s.layer === 'floor');
+    expect(floor.length).toBe(1);
+    expect(floor[0].timeBin).toBe(0);
+  });
+
+  it('floor tilt: β_s > 0 draws the most recent cell', () => {
+    const floor = prioritise({ ...tiltBase, cells: twoBinCells(), floorTilt: 10 }).selection.filter((s) => s.layer === 'floor');
+    expect(floor[0].timeBin).toBe(6);
+  });
+
+  it('floor tilt is independent of the risk-based tilt (β_r)', () => {
+    // β_r favours recent, β_s favours early → the floor pick follows β_s.
+    const floor = prioritise({ ...tiltBase, cells: twoBinCells(), tilt: 10, floorTilt: -10 }).selection.filter((s) => s.layer === 'floor');
+    expect(floor[0].timeBin).toBe(0);
+  });
 });

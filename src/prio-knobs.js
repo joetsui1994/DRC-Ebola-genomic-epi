@@ -31,11 +31,12 @@ export function buildKnobs(root, { getParams, onChange, getMaxN, throttleMs = 15
   root.innerHTML =
     modeRow(P.mode || 'proportional') +
     row('δ', 'delta', P.delta, 0.01, 1, 0.01) +
-    row('β', 'tilt', P.tilt ?? 0, -20, 20, 0.5) +
+    row('β<sub>r</sub>', 'tilt', P.tilt ?? 0, -20, 20, 0.5) +
     row('N', 'n', P.n, 1, nMax, 1) + row('Ct<', 'ctThreshold', P.ctThreshold, 1, 45, 1) +
     row('bin (d)', 'binWidthDays', P.binWidthDays, 1, 30, 1) +
     row('floor', 'floorSize', P.floorSize ?? 1, 1, 5, 1) +
-    row('cap', 'floorBudgetCap', capToSlider(P.floorBudgetCap), 0, 100, 1, capLabel(P.floorBudgetCap));
+    row('cap', 'floorBudgetCap', capToSlider(P.floorBudgetCap), 0, 100, 1, capLabel(P.floorBudgetCap)) +
+    row('β<sub>s</sub>', 'floorTilt', P.floorTilt ?? 0, -20, 20, 0.5);
 
   let pending = null, timer = null, lastRun = 0;
   const applyNow = () => { timer = null; lastRun = Date.now(); const p = pending; pending = null; if (p) onChange(p); };
@@ -49,7 +50,7 @@ export function buildKnobs(root, { getParams, onChange, getMaxN, throttleMs = 15
   // Grey + disable the floor controls when the mode is proportional-only.
   function syncFloorEnabled(mode) {
     const off = mode === 'proportional';
-    ['floorSize', 'floorBudgetCap'].forEach((k) => {
+    ['floorSize', 'floorBudgetCap', 'floorTilt'].forEach((k) => {
       const r = root.querySelector(`[data-row="${k}"]`);
       if (!r) return;
       r.classList.toggle('pk-disabled', off);

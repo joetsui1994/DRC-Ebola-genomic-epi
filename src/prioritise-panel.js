@@ -6,7 +6,7 @@ import { buildCells, parseUpload } from './prioritise-data.js';
 import { createHeatmap } from './prio-heatmap.js';
 import { buildKnobs, buildSeedControl } from './prio-knobs.js';
 
-const DEFAULTS = { delta: 0.5, tilt: 0, n: 50, ctThreshold: 32, binWidthDays: 1, mode: 'proportional', floorSize: 1, floorBudgetCap: null, stalenessWindow: null, seed: 1 };
+const DEFAULTS = { delta: 0.5, tilt: 0, floorTilt: 0, n: 50, ctThreshold: 32, binWidthDays: 1, mode: 'proportional', floorSize: 1, floorBudgetCap: null, stalenessWindow: null, seed: 1 };
 
 const METHODOLOGY_HTML = `
   <p class="prio-lead">Risk-based sequencing prioritisation</p>
@@ -39,9 +39,9 @@ const METHODOLOGY_HTML = `
         <td>0.5 by default; see below for more details</td>
       </tr>
       <tr>
-        <td style="width: 70px;">β</td>
-        <td>Temporal preference</td>
-        <td>β &gt; 0 favours more recent samples, β &lt; 0 favours earlier samples. By default β = 0 (no temporal preference).</td>
+        <td style="width: 70px;">β<sub>r</sub></td>
+        <td>Temporal preference (risk-based pass)</td>
+        <td>β<sub>r</sub> &gt; 0 favours more recent samples, β<sub>r</sub> &lt; 0 favours earlier samples; by default β<sub>r</sub> = 0 (no temporal preference)</td>
       </tr>
       <tr>
         <td style="width: 70px;">bin width</td>
@@ -59,12 +59,12 @@ const METHODOLOGY_HTML = `
   <h4>Priority weight &amp; selection</h4>
   <p>For a given batch, samples are selected iteratively until the sequencing budget <em>N</em> is reached. At each step <em>i</em> = 1…<em>N</em>, every cell (<em>k</em>, τ) with an available sample is assigned a priority weight given by:
 
-  <p class="prio-formula">w(<em>k</em>, τ) = <span class="frac"><span class="frac-n">risk(<em>k</em>, τ)</span><span class="frac-d">h(<em>k</em>, τ) + δ</span></span> · exp<span class="big-paren">(</span>β · <em>u</em>(τ)<span class="big-paren">)</span></p>
-  <p>where <em>δ</em> is a shape / smoothing parameter, <em>β</em> reflects temporal preference (with β &gt; 0 favouring more recent samples (e.g., to better capture recent viral movements) and β &lt; 0 favouring earlier samples (e.g., to refine TMRCA estimates)), and <em>u</em>(τ) ∈ [0, 1] is the normalised position of τ within the sampling window (0 = earliest, 1 = most recent). This formulation has the following properties:</p>
+  <p class="prio-formula">w(<em>k</em>, τ) = <span class="frac"><span class="frac-n">risk(<em>k</em>, τ)</span><span class="frac-d">h(<em>k</em>, τ) + δ</span></span> · exp<span class="big-paren">(</span>β<sub>r</sub> · <em>u</em>(τ)<span class="big-paren">)</span></p>
+  <p>where <em>δ</em> is a shape / smoothing parameter, <em>β<sub>r</sub></em> reflects temporal preference for this risk-based pass (with β<sub>r</sub> &gt; 0 favouring more recent samples, e.g. to better capture recent viral movements, and β<sub>r</sub> &lt; 0 favouring earlier samples), and <em>u</em>(τ) ∈ [0, 1] is the normalised position of τ within the sampling window (0 = earliest, 1 = most recent). This formulation has the following properties:</p>
   <ul>
     <li>Cells corresponding to locations and time periods with high prevalence receive higher weights.</li>
     <li>The factor 1 / ( h(<em>k</em>, τ) + δ ) is an inverse-coverage penalty that down-weights cells already well represented among sequenced samples.</li>
-    <li>The temporal factor exp( β · <em>u</em>(τ) ) favours more recent samples when β &gt; 0 and earlier samples when β &lt; 0; β = 0 means no temporal preference.</li>
+    <li>The temporal factor exp( β<sub>r</sub> · <em>u</em>(τ) ) favours more recent samples when β<sub>r</sub> &gt; 0 and earlier samples when β<sub>r</sub> &lt; 0; β<sub>r</sub> = 0 means no temporal preference.</li>
   </ul>
 
   <p>The parameter δ is a free parameter with the following properties:</p>
@@ -73,7 +73,7 @@ const METHODOLOGY_HTML = `
     <tbody>
       <tr>
         <td style="width: 50px;">→ 0</td>
-        <td>Spreads effort toward thinly-sampled cells; low-prevalence cells may be over-represented. Coverage of never-sequenced locations is now guaranteed by the <em>coverage floor</em> (below) rather than by driving δ to 0, so δ can sit at its gentle-smoother default.</td>
+        <td>Greater preference for locations and time periods with few sequenced samples; cells with low prevalence may be over-represented</td>
       </tr>
       <tr>
         <td style="width: 50px;">≈ 0.5</td>
@@ -89,7 +89,7 @@ const METHODOLOGY_HTML = `
   <p>Pseudo-code for selecting the top-<em>N</em> samples:</p>
   <pre>for i = 1 to N do
     for each cell (k,τ) with an available sample and risk(k,τ) &gt; 0:
-        w(k,τ) ← risk(k,τ) / (h(k,τ) + δ) · exp(β·u(k,τ))
+        w(k,τ) ← risk(k,τ) / (h(k,τ) + δ) · exp(β_r·u(k,τ))
     if no such cell:  stop
     (k*,τ*) ← argmax w(k,τ)        # ties broken at random
     draw one random sample from (k*,τ*); append to ranked list
@@ -125,13 +125,14 @@ const COVERAGE_FLOOR_HTML = `
   highest-weight cell(s) in the location. A budget cap can be specified to ensure that only a certain
   proportion of the total sequencing budget is used for this pass.
   <p>It should be noted that this pass runs <em>before</em> the risk-based selection procedure, using the
-  same priority weight above to determine which cell(s) to draw from given the allocated quota for a given location.
-  Ties between cells with the same weight are broken at random.
+  same priority weight above — but with its <em>own</em> temporal preference specified by β<sub>s</sub> — to
+  determine which cell(s) to draw from given the allocated quota for a given location. Ties between cells with the same weight are broken at random.
   <table>
     <thead><tr><th>Parameter</th><th>Default</th><th>Meaning</th></tr></thead>
     <tbody>
       <tr><td style="width:90px;">floor size</td><td>1</td><td>Maximum number of samples to be drawn from each location with no previously sequenced samples; 1 = "one sample per location, if available".</td></tr>
       <tr><td style="width:90px;">budget cap</td><td>∞</td><td>Maximum total number of samples to be drawn from locations with no previously sequenced samples; ∞ = no guarantee for leftover sequencing budget for risk-based selection.</td></tr>
+      <tr><td style="width:90px;">β<sub>s</sub></td><td>0</td><td>Temporal preference, with β<sub>s</sub> &lt; 0 favouring earlier samples and β<sub>s</sub> &gt; 0 favouring more recent samples.</td></tr>
     </tbody>
   </table>
 `;
@@ -189,7 +190,7 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
       subtractHistory: !inUpload, withIds: inUpload,
     });
     const { selection, cellSummary } = prioritise({
-      cells: built.cells, locHistory: built.locHistory, n: params.n, delta: params.delta, tilt: params.tilt,
+      cells: built.cells, locHistory: built.locHistory, n: params.n, delta: params.delta, tilt: params.tilt, floorTilt: params.floorTilt,
       binWidthDays: params.binWidthDays, origin: built.origin, tNow: built.tNow, seed: params.seed,
       mode: params.mode, floorSize: params.floorSize, floorBudgetCap: params.floorBudgetCap,
       stalenessWindow: params.stalenessWindow,
