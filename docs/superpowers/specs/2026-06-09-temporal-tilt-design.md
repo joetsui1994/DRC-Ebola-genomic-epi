@@ -72,9 +72,8 @@ export function temporalTilt(binIndex, origin, binWidthDays, tNow, tilt) {
 - `prioritise({ … lam = 14 … })` signature param → `tilt = 0`.
 
 **Numerical stability:** the source idea's `subtract β·max(u)` trick is **omitted**. With β
-capped at ±4 and u∈[0,1], the exponent stays in [−4, 4] and `exp` in ~[0.018, 55] — no
-overflow risk — so the per-cell function stays clean and independently testable. Revisit
-only if the β range is widened substantially.
+capped at ±20 and u∈[0,1], the exponent stays in [−20, 20] and `exp` in ~[2e-9, 5e8] — no
+overflow risk — so the per-cell function stays clean and independently testable.
 
 ### 2. Parameter plumbing & defaults
 
@@ -84,7 +83,7 @@ only if the β range is widened substantially.
 ### 3. Knob — `src/prio-knobs.js`
 
 - β is a plain signed-linear slider, built with the generic `row()` helper:
-  `min = -4, max = 4, step = 0.25, value = 0`. No custom slider mapping.
+  `min = -20, max = 20, step = 0.5, value = 0`. No custom slider mapping.
 - Delete `lamFromSlider` / `lamToSlider` / `lamLabel` and the `'lam'` special-cases in the
   `input` handler and `refresh()`. The slider value *is* β.
 - Label `λ (d)` → `tilt`; readout shows the signed value (e.g. `1.25`, `-2`, `0`). Keeps the

@@ -31,7 +31,7 @@ export function buildKnobs(root, { getParams, onChange, getMaxN, throttleMs = 15
   root.innerHTML =
     modeRow(P.mode || 'proportional') +
     row('δ', 'delta', P.delta, 0.01, 1, 0.01) +
-    row('β', 'tilt', P.tilt ?? 0, -4, 4, 0.25) +
+    row('β', 'tilt', P.tilt ?? 0, -20, 20, 0.5) +
     row('N', 'n', P.n, 1, nMax, 1) + row('Ct<', 'ctThreshold', P.ctThreshold, 1, 45, 1) +
     row('bin (d)', 'binWidthDays', P.binWidthDays, 1, 30, 1) +
     row('floor', 'floorSize', P.floorSize ?? 1, 1, 5, 1) +
