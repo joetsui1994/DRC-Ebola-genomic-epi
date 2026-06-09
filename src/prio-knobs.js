@@ -1,14 +1,7 @@
 // src/prio-knobs.js
-// Shared δ/λ/N/Ct/bin + coverage-floor knob strip, used both on the map (inside a Leaflet
-// control) and on the prioritisation page. λ and floorBudgetCap are sliders with an ∞ end stop;
-// the mode is a <select>. Recompute is throttled; numeric readouts update instantly.
-
-const LAM_MAX = 999, LAM_STOPS = 100;
-const lamFromSlider = (p) => p >= LAM_STOPS ? Infinity
-  : Math.round(Math.pow(10, (p / (LAM_STOPS - 1)) * Math.log10(LAM_MAX)));
-const lamToSlider = (lam) => !isFinite(lam) ? LAM_STOPS
-  : Math.round(Math.log10(Math.max(1, lam)) / Math.log10(LAM_MAX) * (LAM_STOPS - 1));
-const lamLabel = (lam) => isFinite(lam) ? String(lam) : '∞';
+// Shared δ/tilt/N/Ct/bin + coverage-floor knob strip, used both on the map (inside a Leaflet
+// control) and on the prioritisation page. tilt (β) is a plain signed-linear slider; floorBudgetCap
+// has an ∞ end stop; the mode is a <select>. Recompute is throttled; numeric readouts update instantly.
 
 // floorBudgetCap: slider 0..100. 100 = uncapped (null); 1..99 = fraction of N; 0 = 0%.
 const capFromSlider = (p) => p >= 100 ? null : p / 100;
@@ -38,7 +31,7 @@ export function buildKnobs(root, { getParams, onChange, getMaxN, throttleMs = 15
   root.innerHTML =
     modeRow(P.mode || 'proportional') +
     row('δ', 'delta', P.delta, 0.01, 1, 0.01) +
-    row('λ (d)', 'lam', lamToSlider(P.lam), 0, LAM_STOPS, 1, lamLabel(P.lam)) +
+    row('β', 'tilt', P.tilt ?? 0, -4, 4, 0.25) +
     row('N', 'n', P.n, 1, nMax, 1) + row('Ct<', 'ctThreshold', P.ctThreshold, 1, 45, 1) +
     row('bin (d)', 'binWidthDays', P.binWidthDays, 1, 30, 1) +
     row('floor', 'floorSize', P.floorSize ?? 1, 1, 5, 1) +
@@ -67,10 +60,8 @@ export function buildKnobs(root, { getParams, onChange, getMaxN, throttleMs = 15
 
   root.querySelectorAll('input[type="range"]').forEach((inp) => inp.addEventListener('input', () => {
     const k = inp.dataset.k;
-    const v = k === 'lam' ? lamFromSlider(parseFloat(inp.value))
-      : k === 'floorBudgetCap' ? capFromSlider(parseFloat(inp.value))
-      : parseFloat(inp.value);
-    const disp = k === 'lam' ? lamLabel(v) : k === 'floorBudgetCap' ? capLabel(v) : inp.value;
+    const v = k === 'floorBudgetCap' ? capFromSlider(parseFloat(inp.value)) : parseFloat(inp.value);
+    const disp = k === 'floorBudgetCap' ? capLabel(v) : inp.value;
     root.querySelector(`[data-v="${k}"]`).textContent = disp;   // instant readout
     queue(k, v);                                                // throttled onChange
   }));
@@ -84,8 +75,8 @@ export function buildKnobs(root, { getParams, onChange, getMaxN, throttleMs = 15
     const P = getParams();
     root.querySelectorAll('input[type="range"]').forEach((inp) => {
       const k = inp.dataset.k;
-      inp.value = k === 'lam' ? lamToSlider(P[k]) : k === 'floorBudgetCap' ? capToSlider(P[k]) : P[k];
-      const disp = k === 'lam' ? lamLabel(P[k]) : k === 'floorBudgetCap' ? capLabel(P[k]) : String(P[k]);
+      inp.value = k === 'floorBudgetCap' ? capToSlider(P[k]) : P[k];
+      const disp = k === 'floorBudgetCap' ? capLabel(P[k]) : String(P[k]);
       root.querySelector(`[data-v="${k}"]`).textContent = disp;
     });
     const m = P.mode || 'proportional';

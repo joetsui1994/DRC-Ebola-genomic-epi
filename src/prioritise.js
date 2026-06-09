@@ -20,12 +20,15 @@ export function assignCell(date, origin, binWidthDays) {
   return Math.floor(days / binWidthDays);
 }
 
-/** exp(-age/lam) at the bin midpoint; 1 when lam is null/∞; age floored at 0. */
-export function decay(binIndex, origin, binWidthDays, tNow, lam) {
-  if (lam == null || !isFinite(lam)) return 1;
-  const cellMid = +new Date(origin) + (binIndex + 0.5) * binWidthDays * MS_PER_DAY;
-  const ageDays = Math.max((+new Date(tNow) - cellMid) / MS_PER_DAY, 0);
-  return Math.exp(-ageDays / lam);
+/** Signed temporal tilt g(τ) = exp(β·u) at the bin midpoint, u∈[0,1] over [origin, tNow].
+ *  β>0 favours recent, β<0 favours early, β=0 → 1 (flat). Degenerate window → 1. */
+export function temporalTilt(binIndex, origin, binWidthDays, tNow, tilt) {
+  if (!tilt) return 1;                          // β = 0 / null → flat
+  const tMin = +new Date(origin), tMax = +new Date(tNow);
+  if (!(tMax > tMin)) return 1;                 // single-bin / degenerate window → flat
+  const cellMid = tMin + (binIndex + 0.5) * binWidthDays * MS_PER_DAY;
+  const u = Math.min(1, Math.max(0, (cellMid - tMin) / (tMax - tMin)));   // 0 = earliest, 1 = recent
+  return Math.exp(tilt * u);
 }
 
 function shuffle(arr, rng) {
@@ -62,7 +65,7 @@ function pickBest(eligIdx, wOf, rng) {
  * `selection`. Uncovered = location with H_k == 0 (from `locHistory`) and ≥1 eligible cell.
  * Locations are floored in best-cell-weight order; within a location, top cells by weight.
  */
-function coverageFloor({ C, decayC, wOf, rng, locHistory, floorSize, floorBudget, selection }) {
+function coverageFloor({ C, tiltC, wOf, rng, locHistory, floorSize, floorBudget, selection }) {
   const byLoc = new Map();
   for (let i = 0; i < C.length; i++) {
     if (C[i].available <= 0 || C[i].risk <= 0) continue;
@@ -74,8 +77,8 @@ function coverageFloor({ C, decayC, wOf, rng, locHistory, floorSize, floorBudget
   for (const [loc, idxs] of byLoc) {
     if (((locHistory && locHistory.get(loc)) || 0) !== 0) continue;
     // At floor time every cell of an uncovered location has h==0, so weight ordering
-    // ≡ risk·decay ordering (and stays finite even when delta==0).
-    const key = Math.max(...idxs.map((i) => C[i].risk * decayC[i]));
+    // ≡ risk·tilt ordering (and stays finite even when delta==0).
+    const key = Math.max(...idxs.map((i) => C[i].risk * tiltC[i]));
     uncovered.push({ idxs, key, r: rng() });
   }
   uncovered.sort((a, b) => (b.key - a.key) || (a.r - b.r));
@@ -105,7 +108,7 @@ function coverageFloor({ C, decayC, wOf, rng, locHistory, floorSize, floorBudget
  * Returns { selection, cellSummary } (selection in rank order; cellSummary per cell).
  */
 export function prioritise({
-  cells, locHistory = null, n, delta = 0.5, lam = 14, binWidthDays = 7, origin, tNow, seed = 1,
+  cells, locHistory = null, n, delta = 0.5, tilt = 0, binWidthDays = 7, origin, tNow, seed = 1,
   mode = 'proportional', floorSize = 1, floorBudgetCap = null,
   stalenessWindow = null, // reserved for a future "covered within window" rule; unused in v1 (covered = ever sequenced)
 }) {
@@ -118,14 +121,14 @@ export function prioritise({
     ids: c.ids ? [...c.ids] : null,
   }));
   for (const c of C) if (c.ids) shuffle(c.ids, rng);
-  const decayC = C.map((c) => decay(c.timeBin, origin, binWidthDays, tNow, lam));
-  const wOf = (i) => C[i].risk / (C[i].h + delta) * decayC[i];
+  const tiltC = C.map((c) => temporalTilt(c.timeBin, origin, binWidthDays, tNow, tilt));
+  const wOf = (i) => C[i].risk / (C[i].h + delta) * tiltC[i];
 
   const selection = [];
 
   if (mode === 'floor' || mode === 'both') {
     coverageFloor({
-      C, decayC, wOf, rng, locHistory, floorSize,
+      C, tiltC, wOf, rng, locHistory, floorSize,
       floorBudget: resolveFloorBudget(floorBudgetCap, n), selection,
     });
   }
@@ -150,7 +153,7 @@ export function prioritise({
 
   const cellSummary = C.map((c, i) => ({
     location: c.location, timeBin: c.timeBin, risk: c.risk,
-    decay: Math.round(decayC[i] * 1000) / 1000,
+    tilt: Math.round(tiltC[i] * 1000) / 1000,
     available: c.available0, selected: c.selected,
     floorSelected: c.floorSelected, propSelected: c.propSelected, hFinal: c.h,
   })).sort((a, b) => (a.location < b.location ? -1 : a.location > b.location ? 1 : a.timeBin - b.timeBin));

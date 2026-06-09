@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { mulberry32, assignCell, decay, resolveFloorBudget } from './prioritise.js';
+import { mulberry32, assignCell, temporalTilt, resolveFloorBudget } from './prioritise.js';
 
 describe('mulberry32', () => {
   it('is deterministic for a given seed and in [0,1)', () => {
@@ -23,34 +23,41 @@ describe('assignCell', () => {
   });
 });
 
-describe('decay', () => {
+describe('temporalTilt', () => {
   const origin = '2026-04-05';
-  it('returns 1 when lam is null or infinite', () => {
-    expect(decay(0, origin, 7, '2026-06-01', null)).toBe(1);
-    expect(decay(0, origin, 7, '2026-06-01', Infinity)).toBe(1);
+  it('returns 1 when tilt is 0 or null (flat)', () => {
+    expect(temporalTilt(0, origin, 7, '2026-06-01', 0)).toBe(1);
+    expect(temporalTilt(0, origin, 7, '2026-06-01', null)).toBe(1);
   });
-  it('decays older bins more (monotone in age)', () => {
+  it('returns 1 for a degenerate window (tMax == tMin)', () => {
+    expect(temporalTilt(0, origin, 7, origin, 4)).toBe(1);
+  });
+  it('β > 0 favours recent bins (monotone increasing in u)', () => {
     const tNow = '2026-06-01';
-    const recent = decay(7, origin, 7, tNow, 14);   // newer bin
-    const old = decay(0, origin, 7, tNow, 14);       // older bin
+    const recent = temporalTilt(7, origin, 7, tNow, 4);   // newer bin
+    const old = temporalTilt(0, origin, 7, tNow, 4);       // older bin
     expect(recent).toBeGreaterThan(old);
-    expect(recent).toBeLessThanOrEqual(1);
-    expect(old).toBeGreaterThan(0);
   });
-  it('exp(-age/lam) at the bin midpoint; age floored at 0', () => {
-    // bin 0 midpoint = origin + 3.5 days; tNow = origin + 3.5 days => age 0 => 1
-    expect(decay(0, origin, 7, '2026-04-08T12:00:00', 14)).toBeCloseTo(1, 6);
+  it('β < 0 favours early bins (reverses the ordering)', () => {
+    const tNow = '2026-06-01';
+    const recent = temporalTilt(7, origin, 7, tNow, -4);
+    const old = temporalTilt(0, origin, 7, tNow, -4);
+    expect(old).toBeGreaterThan(recent);
+  });
+  it('equals exp(β·u) at the bin midpoint', () => {
+    // 10-day window, daily bins → bin 0 midpoint at u = 0.5/10 = 0.05
+    expect(temporalTilt(0, '2026-01-01', 1, '2026-01-11', 2)).toBeCloseTo(Math.exp(2 * 0.05), 6);
   });
 });
 
 import { prioritise } from './prioritise.js';
 
-// helper: one bin (decay=1 with lam=Infinity), plenty available
+// helper: one bin (tilt=1 with β=0), plenty available
 const cell = (location, risk, available, h = 0) => ({ location, timeBin: 0, risk, available, h });
 const selectedByLoc = (sel) => sel.reduce((m, p) => (m[p.location] = (m[p.location] || 0) + 1, m), {});
 
 describe('prioritise', () => {
-  const base = { origin: '2026-04-05', tNow: '2026-04-05', lam: Infinity, binWidthDays: 7, seed: 1 };
+  const base = { origin: '2026-04-05', tNow: '2026-04-05', tilt: 0, binWidthDays: 7, seed: 1 };
 
   it('Webster (delta=0.5) tracks risk ratios (4:2:1 over N=7)', () => {
     const cells = [cell('A', 4, 10), cell('B', 2, 10), cell('C', 1, 10)];
@@ -78,15 +85,26 @@ describe('prioritise', () => {
     expect(selectedByLoc(selection).B).toBeGreaterThan(selectedByLoc(selection).A || 0);
   });
 
-  it('recency: with finite lam, the recent bin gets more of equal-risk budget', () => {
+  it('tilt: β > 0, the recent bin gets more of equal-risk budget', () => {
     const cells = [
       { location: 'A', timeBin: 6, risk: 1, available: 20, h: 0 },  // recent
       { location: 'A', timeBin: 0, risk: 1, available: 20, h: 0 },  // old
     ];
-    const { cellSummary } = prioritise({ origin: '2026-04-05', tNow: '2026-06-01', lam: 14, binWidthDays: 7, seed: 1, cells, n: 10, delta: 0.5 });
+    const { cellSummary } = prioritise({ origin: '2026-04-05', tNow: '2026-06-01', tilt: 4, binWidthDays: 7, seed: 1, cells, n: 10, delta: 0.5 });
     const recent = cellSummary.find(c => c.timeBin === 6).selected;
     const old = cellSummary.find(c => c.timeBin === 0).selected;
     expect(recent).toBeGreaterThan(old);
+  });
+
+  it('tilt: β < 0, the early bin gets more of equal-risk budget', () => {
+    const cells = [
+      { location: 'A', timeBin: 6, risk: 1, available: 20, h: 0 },  // recent
+      { location: 'A', timeBin: 0, risk: 1, available: 20, h: 0 },  // old
+    ];
+    const { cellSummary } = prioritise({ origin: '2026-04-05', tNow: '2026-06-01', tilt: -4, binWidthDays: 7, seed: 1, cells, n: 10, delta: 0.5 });
+    const recent = cellSummary.find(c => c.timeBin === 6).selected;
+    const old = cellSummary.find(c => c.timeBin === 0).selected;
+    expect(old).toBeGreaterThan(recent);
   });
 
   it('early stop: all-zero risk selects nothing', () => {
@@ -137,7 +155,7 @@ describe('resolveFloorBudget', () => {
 });
 
 describe('coverage floor', () => {
-  const floorBase = { origin: '2026-04-05', tNow: '2026-04-05', lam: Infinity, binWidthDays: 7, seed: 1 };
+  const floorBase = { origin: '2026-04-05', tNow: '2026-04-05', tilt: 0, binWidthDays: 7, seed: 1 };
   // A: high risk, already covered (H=3); B,C: low risk, never sequenced (uncovered).
   const mkCells = () => [
     { location: 'A', timeBin: 0, risk: 10, available: 10, h: 0 },

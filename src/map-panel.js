@@ -159,7 +159,7 @@ export function createMapPanel(containerId, tips, { onCtChange = () => {} } = {}
   let applyCtThreshold = null;       // recompute Positive metric + redraw (set in addZoneLayer)
   let toSeqByZone = new Map();       // upper Nom -> to-sequence count (prioritisation)
   let applyToSeq = null;             // recompute "To sequence" metric + redraw (set in addZoneLayer)
-  let prioKnobsCtl = null;           // on-map δ/λ/N/Ct/bin knobs control (prioritisation)
+  let prioKnobsCtl = null;           // on-map δ/β/N/Ct/bin knobs control (prioritisation)
   let mapKnobsRefresh = null;        // re-sync the on-map knob sliders to the shared params
   let prioRef = null;                // the prioritisation panel (set in attachPrioKnobs)
   // Prioritisation is "on" exactly when the chosen choropleth metric is "To sequence":

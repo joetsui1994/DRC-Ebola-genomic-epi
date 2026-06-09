@@ -69,7 +69,7 @@ describe('upload end-to-end', () => {
     const { cells, origin, tNow } = buildCells({
       candidateRows: rows, risk, canon, ctThreshold: 31, binWidthDays: 7, withIds: true,
     });
-    const { selection } = prioritise({ cells, n: 2, delta: 0.5, lam: Infinity, binWidthDays: 7, origin, tNow, seed: 1 });
+    const { selection } = prioritise({ cells, n: 2, delta: 0.5, tilt: 0, binWidthDays: 7, origin, tNow, seed: 1 });
     expect(selection.length).toBe(2);
     expect(selection.every((s) => /^(A1|A2|B1)$/.test(s.sampleId))).toBe(true);
   });

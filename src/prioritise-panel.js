@@ -6,7 +6,7 @@ import { buildCells, parseUpload } from './prioritise-data.js';
 import { createHeatmap } from './prio-heatmap.js';
 import { buildKnobs, buildSeedControl } from './prio-knobs.js';
 
-const DEFAULTS = { delta: 0.5, lam: Infinity, n: 50, ctThreshold: 32, binWidthDays: 1, mode: 'proportional', floorSize: 1, floorBudgetCap: null, stalenessWindow: null, seed: 1 };
+const DEFAULTS = { delta: 0.5, tilt: 0, n: 50, ctThreshold: 32, binWidthDays: 1, mode: 'proportional', floorSize: 1, floorBudgetCap: null, stalenessWindow: null, seed: 1 };
 
 const METHODOLOGY_HTML = `
   <p class="prio-lead">Risk-based sequencing prioritisation</p>
@@ -39,9 +39,9 @@ const METHODOLOGY_HTML = `
         <td>0.5 by default; see below for more details</td>
       </tr>
       <tr>
-        <td style="width: 70px;">λ</td>
-        <td>Recency timescale (days)</td>
-        <td>By default, we set λ = ∞, representing no preference for more recent samples.</td>
+        <td style="width: 70px;">β</td>
+        <td>Temporal preference</td>
+        <td>β &gt; 0 favours more recent samples, β &lt; 0 favours earlier samples. By default β = 0 (no temporal preference).</td>
       </tr>
       <tr>
         <td style="width: 70px;">bin width</td>
@@ -59,12 +59,12 @@ const METHODOLOGY_HTML = `
   <h4>Priority weight &amp; selection</h4>
   <p>For a given batch, samples are selected iteratively until the sequencing budget <em>N</em> is reached. At each step <em>i</em> = 1…<em>N</em>, every cell (<em>k</em>, τ) with an available sample is assigned a priority weight given by:
 
-  <p class="prio-formula">w(<em>k</em>, τ) = <span class="frac"><span class="frac-n">risk(<em>k</em>, τ)</span><span class="frac-d">h(<em>k</em>, τ) + δ</span></span> · exp<span class="big-paren">(</span>−<span class="frac"><span class="frac-n"><em>t</em> − τ</span><span class="frac-d">λ</span></span><span class="big-paren">)</span></p>
-  <p>where <em>t</em> is the current time, <em>δ</em> is a shape / smoothing parameter, and <em>λ</em> is a recency timescale (days). This formulation has the following properties:</p>
+  <p class="prio-formula">w(<em>k</em>, τ) = <span class="frac"><span class="frac-n">risk(<em>k</em>, τ)</span><span class="frac-d">h(<em>k</em>, τ) + δ</span></span> · exp<span class="big-paren">(</span>β · <em>u</em>(τ)<span class="big-paren">)</span></p>
+  <p>where <em>δ</em> is a shape / smoothing parameter, <em>β</em> reflects temporal preference (with β &gt; 0 favouring more recent samples (e.g., to better capture recent viral movements) and β &lt; 0 favouring earlier samples (e.g., to refine TMRCA estimates)), and <em>u</em>(τ) ∈ [0, 1] is the normalised position of τ within the sampling window (0 = earliest, 1 = most recent). This formulation has the following properties:</p>
   <ul>
     <li>Cells corresponding to locations and time periods with high prevalence receive higher weights.</li>
     <li>The factor 1 / ( h(<em>k</em>, τ) + δ ) is an inverse-coverage penalty that down-weights cells already well represented among sequenced samples.</li>
-    <li>The exponential decay term exp( −(<em>t</em> − τ) / λ ) introduces a preference for more recent samples, with a smaller λ favoring more recent samples.</li>
+    <li>The temporal factor exp( β · <em>u</em>(τ) ) favours more recent samples when β &gt; 0 and earlier samples when β &lt; 0; β = 0 means no temporal preference.</li>
   </ul>
 
   <p>The parameter δ is a free parameter with the following properties:</p>
@@ -89,7 +89,7 @@ const METHODOLOGY_HTML = `
   <p>Pseudo-code for selecting the top-<em>N</em> samples:</p>
   <pre>for i = 1 to N do
     for each cell (k,τ) with an available sample and risk(k,τ) &gt; 0:
-        w(k,τ) ← risk(k,τ) / (h(k,τ) + δ) · exp(−(t − τ)/λ)
+        w(k,τ) ← risk(k,τ) / (h(k,τ) + δ) · exp(β·u(k,τ))
     if no such cell:  stop
     (k*,τ*) ← argmax w(k,τ)        # ties broken at random
     draw one random sample from (k*,τ*); append to ranked list
@@ -97,7 +97,7 @@ const METHODOLOGY_HTML = `
 return ranked                     # the top-N list for the lab</pre>
 
   <h4>Example output</h4>
-  <p>With δ = 0.5 and λ ≈ ∞ (no preference for more recent samples):</p>
+  <p>With δ = 0.5 and β = 0 (no temporal preference):</p>
   <div class="prio-tablewrap">
   <table>
     <thead><tr><th>sample_id</th><th>health_zone</th><th>onset</th><th>risk</th><th>status</th><th>ct</th><th>h</th><th>w</th></tr></thead>
@@ -148,7 +148,7 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
     + '<div id="prio-scatter-knobs" class="ps-knobs"></div>'
     + '<div id="prio-seed" class="prio-seed-page"></div>'
     + '<h4>Export the ranking</h4>'
-    + '<p class="ps-cap">Download the prioritisation computed from the current knob values (δ, λ, <em>N</em>, eligibility Ct, bin width). With the public data this is a cell-level ranking; uploads (coming soon) will carry real sample IDs.</p>'
+    + '<p class="ps-cap">Download the prioritisation computed from the current knob values (δ, β, <em>N</em>, eligibility Ct, bin width). With the public data this is a cell-level ranking; uploads (coming soon) will carry real sample IDs.</p>'
     + '<div class="prio-dl"><button class="prio-dl-btn" id="dl-ranked" type="button">⤓ ranked list (CSV)</button>'
       + '<button class="prio-dl-btn" id="dl-counts" type="button">⤓ per-cell counts (CSV)</button></div>'
     + '<div id="prio-diag" class="prio-diag"></div>'
@@ -188,13 +188,13 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
       subtractHistory: !inUpload, withIds: inUpload,
     });
     const { selection, cellSummary } = prioritise({
-      cells: built.cells, locHistory: built.locHistory, n: params.n, delta: params.delta, lam: params.lam,
+      cells: built.cells, locHistory: built.locHistory, n: params.n, delta: params.delta, tilt: params.tilt,
       binWidthDays: params.binWidthDays, origin: built.origin, tNow: built.tNow, seed: params.seed,
       mode: params.mode, floorSize: params.floorSize, floorBudgetCap: params.floorBudgetCap,
       stalenessWindow: params.stalenessWindow,
     });
     // Ct-stable row universe for the heatmap: all candidate zones with the Ct filter OFF, so the
-    // Ct knob only changes cell values, never adds/removes rows. Independent of δ/λ/N.
+    // Ct knob only changes cell values, never adds/removes rows. Independent of δ/β/N.
     const universe = buildCells({
       candidateRows, sequencedRows, risk, canon,
       ctThreshold: Infinity, binWidthDays: params.binWidthDays,
@@ -260,12 +260,12 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
   });
   container.querySelector('#dl-counts').addEventListener('click', () => {
     const r = runEngine();
-    download('prioritisation_counts.csv', ['location,time_bin,risk,decay,available,selected,floor_selected,prop_selected,h_final',
-      ...r.cellSummary.map((c) => [c.location, c.timeBin, c.risk, c.decay, c.available, c.selected, c.floorSelected, c.propSelected, c.hFinal].join(','))].join('\n'));
+    download('prioritisation_counts.csv', ['location,time_bin,risk,tilt,available,selected,floor_selected,prop_selected,h_final',
+      ...r.cellSummary.map((c) => [c.location, c.timeBin, c.risk, c.tilt, c.available, c.selected, c.floorSelected, c.propSelected, c.hFinal].join(','))].join('\n'));
   });
 
   // The N budget can be dialled up to the full eligible-candidate pool. Eligibility maxes
-  // out at a permissive Ct and is independent of bin/δ/λ, so this is a cheap one-shot count.
+  // out at a permissive Ct and is independent of bin/δ/β, so this is a cheap one-shot count.
   function eligibleCeiling() {
     const inUpload = !!uploadRows;
     const candidateRows = inUpload ? uploadRows.filter((r) => !r.sequenced) : window.__PRIO_LINELIST__ || [];
