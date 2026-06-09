@@ -211,7 +211,7 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
     diagEl.textContent = r.inUpload
       ? `${r.diagnostics.kept} eligible, ${r.diagnostics.dropped} dropped · ${r.selection.length} to sequence`
       : `${r.diagnostics.kept} eligible candidates · ${r.selection.length} to sequence`;
-    heat.update(r.cellSummary, params, { origin: r.origin, binWidthDays: params.binWidthDays, zones: r.zones, existing: r.cellHistory });
+    heat.update(r.cellSummary, params, { origin: r.origin, binWidthDays: params.binWidthDays, zones: r.zones, existing: r.cellHistory, risk });
   }
 
   // Run the engine, push results out (main.js gates the map choropleth on `active` and the

@@ -140,16 +140,18 @@ export function createHeatmap(host) {
   function showTip(ev, zone, bin, c, origin, binW) {
     const when = origin ? fmtDate(origin, bin, binW) : `bin ${bin}`;
     const ex = last && last.opts && last.opts.existing ? (last.opts.existing.get(`${zone}|${bin}`) || 0) : 0;
+    // No-candidate cells mirror the candidate layout: 0 avail / 0 to sequence, with the zone's
+    // risk (per-location, constant in time) pulled from the risk map.
+    const riskVal = c ? c.risk : (last && last.opts && last.opts.risk ? last.opts.risk.get(zone) : undefined);
+    const avail = c ? c.available : 0;
+    const sel = c ? c.selected : 0;
     tip.innerHTML = `<div class="ps-tip-h">${titleCase(zone)}</div><div>${when}</div>`
-      + (c ? `<div><b>${c.available}</b> avail · risk <b>${(+c.risk).toFixed(3)}</b></div>`
-           : '<div style="color:#9c968b">no candidates</div>')
+      + `<div><b>${avail}</b> avail · risk <b>${riskVal == null ? '—' : (+riskVal).toFixed(3)}</b></div>`
       + `<div><span style="color:${EXIST}"><b>${ex}</b> existing sequence${ex === 1 ? '' : 's'}</span></div>`
-      + (c
-        ? `<div><span style="color:${TEAL}"><b>${c.selected}</b> to sequence next</span>`
-          + ((c.floorSelected > 0 && c.propSelected > 0)
-            ? ` <span style="color:#9c968b">(floor ${c.floorSelected} + prop ${c.propSelected})</span>` : '')
-          + `</div>`
-        : '');
+      + `<div><span style="color:${TEAL}"><b>${sel}</b> to sequence next</span>`
+        + ((c && c.floorSelected > 0 && c.propSelected > 0)
+          ? ` <span style="color:#9c968b">(floor ${c.floorSelected} + prop ${c.propSelected})</span>` : '')
+        + `</div>`;
     tip.style.display = 'block';
     const rect = host.getBoundingClientRect();
     let left = ev.clientX - rect.left + 12;
