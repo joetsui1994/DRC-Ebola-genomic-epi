@@ -490,7 +490,20 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
     scale = buildScale(W);
     const baseY = H - PAD.bottom;
     const xMin = scale.dateToX(domain.minDate);
-    const xMax = scale.dateToX(new Date(effMaxMs));   // extends past the tree when showBeyond
+    // Beyond mode keeps [t0,t1] anchored to the tree transform (so bars stay aligned with the
+    // tips), but maps the post-tree tail (t1,effMax] linearly onto [x1, right edge] so it always
+    // fills the width. This is robust to PearTree shifting offsetX when it compresses the tree —
+    // anchoring the tail to the tree's slope otherwise leaves a gap. dx() is dateToX with that
+    // remap; every date in the plot is positioned through it.
+    const X_R = W - PAD.right;
+    const x1t = scale.dateToX(new Date(t1));            // tree's latest-tip position
+    const beyondOn = showBeyond && effMaxMs > t1 && X_R > x1t;
+    const beyondSlope = beyondOn ? (X_R - x1t) / (effMaxMs - t1) : 0;
+    const dx = (d) => {
+      const t = +new Date(d);
+      return (beyondOn && t > t1) ? x1t + (t - t1) * beyondSlope : scale.dateToX(d);
+    };
+    const xMax = dx(new Date(effMaxMs));
 
     const byDay = aggregate();
     seqMap = seqByDate();
@@ -521,7 +534,7 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
 
     svg.appendChild(el('line', { x1: xMin, y1: baseY, x2: xMax, y2: baseY, stroke: '#c9c7c2', 'stroke-width': 1 }));
     for (const { date, fmt } of timeTicks(Math.abs(xMax - xMin), t0, effMaxMs)) {
-      const tx = scale.dateToX(date);
+      const tx = dx(date);
       if (tx < PAD.left - 1 || tx > W - 2) continue;        // keep labels inside the plot
       svg.appendChild(el('line', { x1: tx, y1: baseY, x2: tx, y2: baseY + 3, stroke: '#c9c7c2', 'stroke-width': 1 }));
       const lbl = el('text', { x: tx, y: baseY + 13, 'font-size': 9, fill: '#9c968b', 'text-anchor': 'middle' });
@@ -531,13 +544,13 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
 
     // Brushed time-window band (behind the bars; persists across re-renders, tracks the scale).
     if (win) {
-      const bx0 = scale.dateToX(new Date(win.d0)), bx1 = scale.dateToX(new Date(win.d1));
+      const bx0 = dx(new Date(win.d0)), bx1 = dx(new Date(win.d1));
       svg.appendChild(el('rect', { x: Math.min(bx0, bx1), y: PAD.top, width: Math.max(1, Math.abs(bx1 - bx0)),
         height: baseY - PAD.top, fill: 'rgba(124,29,29,0.10)', stroke: 'rgba(124,29,29,0.45)', 'stroke-width': 1, 'pointer-events': 'none' }));
     }
 
     for (const [dateStr, counts] of byDay) {
-      const x = scale.dateToX(dateStr) - barW / 2;
+      const x = dx(dateStr) - barW / 2;
       let top = baseY;
       for (const st of STATUS) {
         const c = counts[st];
@@ -556,7 +569,7 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
         stroke: SEQ_COLOR, 'stroke-width': 1, 'stroke-dasharray': '4 3', 'stroke-opacity': 0.5,
       }));
       for (const [dateStr, n] of seqMap) {
-        const cx = scale.dateToX(dateStr);
+        const cx = dx(dateStr);
         if (cx < PAD.left - 1 || cx > W - 1) continue;
         const r = Math.min(6, 2 + 1.6 * Math.sqrt(n));
         svg.appendChild(el('circle', { cx, cy: trackY, r, fill: SEQ_COLOR, 'fill-opacity': 0.45 }));
@@ -571,7 +584,7 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
         stroke: ALLOC_COLOR, 'stroke-width': 1, 'stroke-dasharray': '4 3', 'stroke-opacity': 0.5,
       }));
       for (const [dateStr, k] of alloc) {
-        const cx = scale.dateToX(dateStr);
+        const cx = dx(dateStr);
         if (cx < PAD.left - 1 || cx > W - 1) continue;
         const r = Math.min(6, 2 + 1.6 * Math.sqrt(k));
         svg.appendChild(el('circle', { cx, cy: allocY, r, fill: ALLOC_COLOR, 'fill-opacity': 0.55 }));
@@ -588,7 +601,7 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
     for (const dateStr of new Set([...byDay.keys(), ...seqMap.keys(), ...allocMap.keys()])) {
       const counts = byDay.get(dateStr) || { Positive: 0, Negative: 0, Invalid: 0, Unclassified: 0 };
       const hit = el('rect', {
-        x: scale.dateToX(dateStr) - dayPx / 2, y: PAD.top,
+        x: dx(dateStr) - dayPx / 2, y: PAD.top,
         width: Math.max(2, dayPx), height: baseY - PAD.top, fill: 'transparent',
       });
       hit.addEventListener('mousemove', (ev) => showTip(ev, dateStr, counts));
