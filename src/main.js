@@ -142,9 +142,10 @@ const ts  = createTimeseriesPanel('timeseries-body', linelist, { minDate: meta.r
   onCtChange: (t) => map.setCtThreshold(t), tips: seqTips,
   onExtentChange: (f) => treePanel?.setWidthFraction(f),
   onWindowChange: (d0, d1) => { map.setDateWindow(d0, d1); treePanel?.setTimeBand(d0, d1); },
-  // Hide the tree while a relayout (tip labels / node-bars / legend) recalibrates the beyond
-  // width-fraction, so its brief re-converge flicker is masked (the chart hides itself).
-  onSettling: (on) => document.getElementById('tree-body')?.classList.toggle('settling-hide', on),
+  // Hide the tree drawing (PearTree's #canvas-container — not its toolbar / status bar / palette)
+  // while a relayout (tip labels / node-bars / legend) recalibrates the beyond width-fraction, so
+  // its brief re-converge flicker is masked (the chart hides itself).
+  onSettling: (on) => document.getElementById('canvas-container')?.classList.toggle('settling-hide', on),
 });
 tsPanel = ts;   // late-bind for the map → distribution Ct sync
 const tree = await createTreePanel('tree-body', meta);
