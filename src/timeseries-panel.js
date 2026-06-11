@@ -177,25 +177,67 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
   let win = null;                    // brushed time window { d0, d1 } in ms, or null
   let effMaxMs = t1;                 // current effective right-edge date (ms); = t1 when off
   let extentRaf = 0;                 // rAF handle, coalesces tree-resize requests
-  let lastF = 1;                     // last tree width-fraction applied (for transform prediction)
+  let lastF = 1;                     // tree width-fraction the tree is currently at (for prediction)
+  let autoCorr = 0;                  // consecutive calibration re-sends since the last user action
 
-  // Recompute the effective max + tree fraction from the current selection/Ct, push the
-  // fraction to the tree (coalesced), and re-render. Render runs synchronously so the chart
-  // updates even when f doesn't change (e.g. toggling off); the tree refit (if any) re-renders
-  // again via setTransform once PearTree reports its new transform.
+  // The naïve fill fraction f = (t1-t0)/(effMax-t0) assumes compressing the tree keeps its left
+  // edge fixed, but PearTree shifts the whole tree (offsetX moves), so the post-tree tail lands
+  // short of the right edge — a gap. We instead learn the tree's φ→geometry response (offsetX and
+  // right-edge x1, both ~linear in φ at a given width) and solve for the φ that makes the uniform
+  // axis fill exactly. Calibration is per-width; ≥2 samples at distinct φ are needed to fit.
+  let calib = { W: 0, samples: [] };   // [{ phi, offsetX, x1 }]
+  function recordCalib(phi, t) {
+    const W = host.clientWidth || 0; if (!W) return;
+    if (W !== calib.W) calib = { W, samples: [] };
+    const s = { phi, offsetX: t.offsetX, x1: t.offsetX + t.maxX * t.scaleX };
+    const i = calib.samples.findIndex((p) => Math.abs(p.phi - phi) < 0.015);
+    if (i >= 0) calib.samples[i] = s; else calib.samples.push(s);
+    if (calib.samples.length > 5) calib.samples.shift();
+  }
+  function fitLine(key) {   // least-squares y = m·phi + b
+    const s = calib.samples, n = s.length;
+    let sx=0, sy=0, sxx=0, sxy=0;
+    for (const p of s) { sx+=p.phi; sy+=p[key]; sxx+=p.phi*p.phi; sxy+=p.phi*p[key]; }
+    const den = n*sxx - sx*sx;
+    if (Math.abs(den) < 1e-9) return null;
+    const m = (n*sxy - sx*sy)/den;
+    return { m, b: (sy - m*sx)/n };
+  }
+  const clampF = (f) => Math.max(0.4, Math.min(1, f));   // F_MIN matches extentFraction
+  // φ to ask the tree for: 1 when not extending; the corrected fill fraction once calibrated;
+  // the naïve f0 meanwhile (which also gathers the second calibration sample).
+  function desiredFraction() {
+    if (!showBeyond || effMaxMs <= t1) return 1;
+    const f0 = clampF((t1 - t0) / (effMaxMs - t0));
+    const W = host.clientWidth || 0;
+    if (calib.W !== W || calib.samples.length < 2) return f0;
+    const fo = fitLine('offsetX'), fx = fitLine('x1');
+    if (!fo || !fx) return f0;
+    const X_R = W - PAD.right, k = (effMaxMs - t1) / (t1 - t0);
+    // want xMax(φ) = x1(φ)·(1+k) − k·offsetX(φ) = X_R
+    const den = fx.m * (1 + k) - k * fo.m;
+    if (Math.abs(den) < 1e-9) return f0;
+    return clampF((X_R - (fx.b * (1 + k) - k * fo.b)) / den);
+  }
+  // Push the desired fraction to the tree if it differs from the current one (coalesced via rAF),
+  // predicting the transform so this synchronous render is already close to the refit result.
+  function syncTreeFraction() {
+    const phi = desiredFraction();
+    if (Math.abs(phi - lastF) <= 0.005) return;
+    if (transform && transform.maxX > 0 && lastF > 0) {
+      transform = { ...transform, scaleX: transform.scaleX * (phi / lastF) };
+    }
+    lastF = phi;
+    if (extentRaf) cancelAnimationFrame(extentRaf);
+    extentRaf = requestAnimationFrame(() => { extentRaf = 0; onExtentChange(phi); });
+  }
+
+  // Recompute the effective max from the current selection/Ct, sync the tree fraction, re-render.
   function applyExtent() {
     const ext = extentFraction(filteredRows(), t0, t1, showBeyond, ctThreshold);
     effMaxMs = ext.effMax;
-    if (extentRaf) cancelAnimationFrame(extentRaf);
-    extentRaf = requestAnimationFrame(() => { extentRaf = 0; onExtentChange(ext.f); });
-    // Predict the tree's about-to-change transform so this synchronous render is already
-    // squashed — otherwise the chart flashes the extended-but-unsquashed view for a frame
-    // until the tree refit reports its new transform. Compressing the tree to fraction f
-    // insets only the right edge, so the root/offsetX stays put and scaleX scales by f.
-    if (transform && transform.maxX > 0 && lastF > 0 && ext.f !== lastF) {
-      transform = { ...transform, scaleX: transform.scaleX * (ext.f / lastF) };
-    }
-    lastF = ext.f;
+    autoCorr = 0;            // user action: allow the calibration loop to re-converge
+    syncTreeFraction();
     render();
   }
 
@@ -490,20 +532,8 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
     scale = buildScale(W);
     const baseY = H - PAD.bottom;
     const xMin = scale.dateToX(domain.minDate);
-    // Beyond mode keeps [t0,t1] anchored to the tree transform (so bars stay aligned with the
-    // tips), but maps the post-tree tail (t1,effMax] linearly onto [x1, right edge] so it always
-    // fills the width. This is robust to PearTree shifting offsetX when it compresses the tree —
-    // anchoring the tail to the tree's slope otherwise leaves a gap. dx() is dateToX with that
-    // remap; every date in the plot is positioned through it.
-    const X_R = W - PAD.right;
-    const x1t = scale.dateToX(new Date(t1));            // tree's latest-tip position
-    const beyondOn = showBeyond && effMaxMs > t1 && X_R > x1t;
-    const beyondSlope = beyondOn ? (X_R - x1t) / (effMaxMs - t1) : 0;
-    const dx = (d) => {
-      const t = +new Date(d);
-      return (beyondOn && t > t1) ? x1t + (t - t1) * beyondSlope : scale.dateToX(d);
-    };
-    const xMax = dx(new Date(effMaxMs));
+    const dx = (d) => scale.dateToX(d);   // uniform scale; beyond-fill is handled by the tree fraction
+    const xMax = dx(new Date(effMaxMs));   // extends past the tree when showBeyond
 
     const byDay = aggregate();
     seqMap = seqByDate();
@@ -643,7 +673,9 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
   });
 
   render();
-  const ro = new ResizeObserver(() => render());
+  // On resize the width changes → calibration resets and the tree refits (→ setTransform), so
+  // re-sync the fraction for the new width rather than just re-rendering at the stale one.
+  const ro = new ResizeObserver(() => applyExtent());
   ro.observe(host);
 
   return {
@@ -656,7 +688,16 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
       applyExtent();
     },
     setMarkers(dates) { markerDates = (dates || []).filter(Boolean); drawMarkers(); },
-    setTransform(t) { transform = (t && t.maxX > 0) ? t : null; render(); },
+    setTransform(t) {
+      transform = (t && t.maxX > 0) ? t : null;
+      // Learn the tree's geometry at the fraction we last asked for, then re-evaluate the desired
+      // fraction (the first beyond toggle sends f0, this second pass solves the corrected φ).
+      if (transform) {
+        recordCalib(lastF, transform);
+        if (autoCorr < 4) { const prev = lastF; syncTreeFraction(); if (lastF !== prev) autoCorr++; }
+      }
+      render();
+    },
     /** Set/clear the to-sequence allocation overlay (cellSummary[] + {binWidthDays, origin}, or null). */
     setAllocation(cs, opts) { allocation = cs; allocOpts = opts || null; render(); },
     /** Filter to a selection's health zones/areas. `{ zones:[], areas:[] }` ([] = all). */
