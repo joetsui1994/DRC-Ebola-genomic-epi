@@ -191,8 +191,18 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
     if (W !== calib.W) calib = { W, samples: [] };
     const s = { phi, offsetX: t.offsetX, x1: t.offsetX + t.maxX * t.scaleX };
     const i = calib.samples.findIndex((p) => Math.abs(p.phi - phi) < 0.015);
-    if (i >= 0) calib.samples[i] = s; else calib.samples.push(s);
-    if (calib.samples.length > 5) calib.samples.shift();
+    if (i >= 0) {
+      // Same fraction but the tree reports a different geometry → its layout changed (tip labels,
+      // node-bars, legend…). The other samples are now stale: drop them and recalibrate from this.
+      const old = calib.samples[i];
+      if (Math.abs(old.offsetX - s.offsetX) > 2 || Math.abs(old.x1 - s.x1) > 2) {
+        calib = { W, samples: [s] }; autoCorr = 0; return;
+      }
+      calib.samples[i] = s;
+    } else {
+      calib.samples.push(s);
+      if (calib.samples.length > 5) calib.samples.shift();
+    }
   }
   function fitLine(key) {   // least-squares y = m·phi + b
     const s = calib.samples, n = s.length;
