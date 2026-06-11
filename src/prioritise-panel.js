@@ -149,7 +149,7 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
     + '<div id="prio-scatter-knobs" class="ps-knobs"></div>'
     + '<div id="prio-seed" class="prio-seed-page"></div>'
     + '<h4>Export the ranking</h4>'
-    + '<p class="ps-cap">Download the prioritisation computed from the current knob values (δ, β, <em>N</em>, eligibility Ct, bin width). With the public data this is a cell-level ranking; uploads (coming soon) will carry real sample IDs.</p>'
+    + '<p class="ps-cap">Download the prioritisation computed from the current knob values (δ, β, <em>N</em>, eligibility Ct, bin width). The ranked list carries the sample IDs drawn from each selected cell.</p>'
     + '<div class="prio-dl"><button class="prio-dl-btn" id="dl-ranked" type="button">⤓ ranked list (CSV)</button>'
       + '<button class="prio-dl-btn" id="dl-counts" type="button">⤓ per-cell counts (CSV)</button></div>'
     + '<div id="prio-diag" class="prio-diag"></div>'
@@ -187,7 +187,7 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
     const built = buildCells({
       candidateRows, sequencedRows, risk, canon,
       ctThreshold: params.ctThreshold, binWidthDays: params.binWidthDays,
-      subtractHistory: !inUpload, withIds: inUpload,
+      subtractHistory: !inUpload, withIds: true,   // public linelist now carries sample_id too
     });
     const { selection, cellSummary } = prioritise({
       cells: built.cells, locHistory: built.locHistory, n: params.n, delta: params.delta, tilt: params.tilt, floorTilt: params.floorTilt,
