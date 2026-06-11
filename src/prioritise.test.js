@@ -125,12 +125,12 @@ describe('prioritise', () => {
   });
 
   it('determinism: same seed + ids → identical selection', () => {
-    const mk = () => [{ location: 'A', timeBin: 0, risk: 4, available: 3, h: 0, ids: ['a1', 'a2', 'a3'] },
-                      { location: 'B', timeBin: 0, risk: 1, available: 3, h: 0, ids: ['b1', 'b2', 'b3'] }];
+    const mk = () => [{ location: 'A', timeBin: 0, risk: 4, available: 3, h: 0, ids: [{ sampleId: 'a1', rowId: '1' }, { sampleId: 'a2', rowId: '2' }, { sampleId: 'a3', rowId: '3' }] },
+                      { location: 'B', timeBin: 0, risk: 1, available: 3, h: 0, ids: [{ sampleId: 'b1', rowId: '4' }, { sampleId: 'b2', rowId: '5' }, { sampleId: 'b3', rowId: '6' }] }];
     const s1 = prioritise({ ...base, cells: mk(), n: 4, delta: 0.5 }).selection;
     const s2 = prioritise({ ...base, cells: mk(), n: 4, delta: 0.5 }).selection;
     expect(s1).toEqual(s2);
-    expect(s1.every(p => p.sampleId)).toBe(true);
+    expect(s1.every(p => p.sampleId && p.rowId)).toBe(true);
   });
 });
 

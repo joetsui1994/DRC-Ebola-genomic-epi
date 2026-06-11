@@ -31,12 +31,13 @@ function parseLinelist(text, canon) {
   const head = lines[0].split(',').map((h) => h.trim());
   const idx = (name) => head.indexOf(name);
   const iId = idx('sample_id'), iZone = idx('health_zone'), iArea = idx('health_area'),
-        iStatus = idx('status'), iDate = idx('date'), iCt = idx('ct');
+        iStatus = idx('status'), iDate = idx('date'), iCt = idx('ct'), iRid = idx('row_id');
   const out = [];
   for (let i = 1; i < lines.length; i++) {
     const c = lines[i].split(',');
     const status = ((iStatus >= 0 ? c[iStatus] : '') || '').trim();
     out.push({
+      row_id: iRid >= 0 ? (c[iRid] || '').trim() : '',
       sample_id: iId >= 0 ? (c[iId] || '').trim() : '',
       health_zone: canon(iZone >= 0 ? c[iZone] : ''),
       health_area: iArea >= 0 ? c[iArea] : '',

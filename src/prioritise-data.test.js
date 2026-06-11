@@ -44,7 +44,7 @@ describe('buildCells', () => {
       { sample_id: 'X2', health_zone: 'Bunia', status: 'Positive', ct: '25', date: '2026-04-05' },
     ];
     const { cells } = buildCells({ candidateRows, risk, canon, ctThreshold: 31, binWidthDays: 7, withIds: true });
-    expect(cells[0].ids.sort()).toEqual(['X1', 'X2']);
+    expect(cells[0].ids.map((o) => o.sampleId).sort()).toEqual(['X1', 'X2']);
     expect(cells[0].available).toBe(2);
   });
 });

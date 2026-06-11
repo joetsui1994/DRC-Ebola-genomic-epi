@@ -251,8 +251,8 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
   const binDate = (bin, origin) => new Date(+new Date(origin) + (bin + 0.5) * params.binWidthDays * 86400000).toISOString().slice(0, 10);
   container.querySelector('#dl-ranked').addEventListener('click', () => {
     const r = runEngine();
-    download('prioritisation_ranked.csv', ['rank,sample_id,location,time_bin,date,weight,layer',
-      ...r.selection.map((s) => [s.rank, s.sampleId ?? '', s.location, s.timeBin, binDate(s.timeBin, r.origin), round(s.weight), s.layer].join(','))].join('\n'));
+    download('prioritisation_ranked.csv', ['rank,row_id,sample_id,location,time_bin,date,weight,layer',
+      ...r.selection.map((s) => [s.rank, s.rowId ?? '', s.sampleId ?? '', s.location, s.timeBin, binDate(s.timeBin, r.origin), round(s.weight), s.layer].join(','))].join('\n'));
   });
   container.querySelector('#dl-counts').addEventListener('click', () => {
     const r = runEngine();

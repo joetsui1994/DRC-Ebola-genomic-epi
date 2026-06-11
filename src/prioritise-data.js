@@ -70,7 +70,7 @@ export function buildCells({
     let p = pool.get(key);
     if (!p) { p = { location: r.loc, timeBin: tb, count: 0, ids: withIds ? [] : null }; pool.set(key, p); }
     p.count++;
-    if (withIds) p.ids.push(r.sample_id);
+    if (withIds) p.ids.push({ sampleId: r.sample_id, rowId: r.row_id || '' });
   }
 
   const cells = [];

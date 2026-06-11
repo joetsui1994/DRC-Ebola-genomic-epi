@@ -92,9 +92,10 @@ function coverageFloor({ C, wFloorOf, rng, locHistory, floorSize, floorBudget, s
       const idx = pickBest(elig, wFloorOf, rng);
       if (idx == null) break;
       const c = C[idx];
+      const drawn = c.ids ? c.ids.pop() : null;
       selection.push({
         rank: selection.length + 1, location: c.location, timeBin: c.timeBin,
-        weight: wFloorOf(idx), sampleId: c.ids ? c.ids.pop() : null, layer: 'floor',
+        weight: wFloorOf(idx), sampleId: drawn ? drawn.sampleId : null, rowId: drawn ? drawn.rowId : null, layer: 'floor',
       });
       c.available -= 1; c.h += 1; c.selected += 1; c.floorSelected += 1;
       take -= 1; budget -= 1;
@@ -146,9 +147,10 @@ export function prioritise({
       const idx = pickBest(elig, wOf, rng);
       if (idx == null) break;
       const c = C[idx];
+      const drawn = c.ids ? c.ids.pop() : null;
       selection.push({
         rank, location: c.location, timeBin: c.timeBin,
-        weight: wOf(idx), sampleId: c.ids ? c.ids.pop() : null, layer: 'proportional',
+        weight: wOf(idx), sampleId: drawn ? drawn.sampleId : null, rowId: drawn ? drawn.rowId : null, layer: 'proportional',
       });
       c.available -= 1; c.h += 1; c.selected += 1; c.propSelected += 1;
     }
