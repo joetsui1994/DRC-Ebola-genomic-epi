@@ -21,15 +21,29 @@ function makeCanon(text) {
   return (name) => map.get((name || '').toUpperCase().trim()) || name;
 }
 
-// Parse the line-list CSV into the rows the distribution panel needs.
-// Columns: 0 province, 1 health_zone, 2 health_area, 3 status, 4 date, 5 ct
-// (ct = RadiOne Ct from the raw ct_used; present only on Positive rows where available).
+// Parse the line-list CSV into the rows the distribution panel needs. Columns are resolved by
+// HEADER NAME (sample_id, province, health_zone, health_area, status, date, ct) so an added or
+// reordered column can't silently shift the data. ct = RadiOne Ct (present only on Positive rows
+// where available). Statuses are normalised to the app's four categories.
+const STATUS_NORM = { 'Not yet run': 'Unclassified', 'Undetermined': 'Invalid' };
 function parseLinelist(text, canon) {
   const lines = text.trim().split(/\r?\n/);
+  const head = lines[0].split(',').map((h) => h.trim());
+  const idx = (name) => head.indexOf(name);
+  const iId = idx('sample_id'), iZone = idx('health_zone'), iArea = idx('health_area'),
+        iStatus = idx('status'), iDate = idx('date'), iCt = idx('ct');
   const out = [];
   for (let i = 1; i < lines.length; i++) {
     const c = lines[i].split(',');
-    out.push({ health_zone: canon(c[1]), health_area: c[2], status: c[3], date: c[4], ct: c[5] });
+    const status = ((iStatus >= 0 ? c[iStatus] : '') || '').trim();
+    out.push({
+      sample_id: iId >= 0 ? (c[iId] || '').trim() : '',
+      health_zone: canon(iZone >= 0 ? c[iZone] : ''),
+      health_area: iArea >= 0 ? c[iArea] : '',
+      status: STATUS_NORM[status] || status,
+      date: iDate >= 0 ? c[iDate] : '',
+      ct: iCt >= 0 ? c[iCt] : '',
+    });
   }
   return out;
 }

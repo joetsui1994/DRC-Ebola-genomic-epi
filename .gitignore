@@ -6,8 +6,12 @@ dist/
 # (built via `npm run data:zones`) is committed instead.
 public/data/shapefiles/
 public/data/health_zone_metadata*.csv
-# Raw line-list export (carries age/sex/date_of_death) — only the de-identified
-# public/data/linelist_data.csv (built via `npm run data:linelist`) is committed.
+# Raw, identifiable line-list exports (age/sex/date_of_death) must never be committed —
+# only the de-identified public/data/linelist_data.csv is tracked.
 public/data/*BD_LABO*.csv
 # (public/data/linelist_data.csv IS tracked — the sample-distribution panel reads it at runtime)
 public/data/*.legacy.csv
+public/data/linelist_data.legacy*.csv
+# Lab line-list processing artifacts — intermediate, some carry identifiable fields
+# (date_of_death/age/sex). Not consumed by the app; must never be published.
+public/lab_linelist_processed/

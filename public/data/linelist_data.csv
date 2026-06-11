@@ -1,1180 +1,1216 @@
-province,health_zone,health_area,status,date,ct
-Ituri,BUNIA,,Negative,2026-05-18,
-Ituri,BUNIA,,Positive,2026-05-18,
-Ituri,BUNIA,,Positive,2026-05-18,
-Ituri,BUNIA,,Positive,2026-05-18,
-Ituri,BUNIA,,Positive,2026-05-18,
-Ituri,Rwampara,,Unclassified,,
-Ituri,ARU,,Unclassified,,
-Ituri,ARU,,Unclassified,,
-Ituri,ARU,,Unclassified,,
-Ituri,ARU,,Unclassified,,
-Ituri,ARU,,Unclassified,,
-Ituri,Rwampara,,Unclassified,,
-Ituri,Rwampara,,Unclassified,,
-Ituri,Rwampara,,Unclassified,,
-Ituri,NYAKUNDE,,Unclassified,,
-Ituri,Rwampara,,Unclassified,,
-Ituri,Rwampara,,Unclassified,,
-Ituri,Rwampara,,Unclassified,,
-Ituri,MONGBWALU,MONGBWALU,Positive,,26.51
-Ituri,MONGBWALU,ABELKOZO,Positive,2026-05-15,24.18
-Ituri,MONGBWALU,NDC,Positive,,28.7
-Ituri,MONGBWALU,MONGBWALU,Positive,,24.14
-Ituri,MONGBWALU,MONGBWALU,Positive,2026-05-13,24.97
-Ituri,MONGBWALU,MONGBWALU,Negative,2026-05-14,
-Ituri,MONGBWALU,MONGBWALU,Positive,2026-05-13,32.47
-Ituri,Rwampara,SHARI,Positive,2026-05-10,23.36
-Ituri,Rwampara,Rwampara,Negative,2026-05-10,
-Ituri,Rwampara,SHARI,Positive,2026-05-11,34.34
-Ituri,BUNIA,NGEZI,Positive,2026-05-13,29.01
-Ituri,BUNIA,BIGO,Positive,2026-05-15,24.0
-Ituri,,,Unclassified,,
-Ituri,,,Positive,,28.72
-Ituri,Rwampara,Rwampara,Negative,2026-05-16,
-Ituri,NYAKUNDE,NYAKUNDE,Positive,2026-05-16,29.72
-Ituri,NYAKUNDE,NYAKUNDE,Positive,2026-05-16,32.77
-Ituri,Rwampara,Rwampara,Negative,2026-05-16,
-Ituri,MANGALA,PASSION,Negative,2026-05-14,
-Ituri,Rwampara,Shari,Positive,2026-05-15,34.48
-Ituri,Rwampara,Shari,Positive,2026-05-16,23.39
-Ituri,Rwampara,TCHUNGA,Positive,2026-05-16,35.26
-Ituri,Rwampara,TCHUNGA,Negative,2026-05-16,
-Ituri,NYAKUNDE,NYAKUNDE,Positive,2026-05-16,34.67
-Ituri,Rwampara,Shari,Positive,2026-05-10,22.05
-Ituri,BUNIA,AERO,Negative,2026-05-17,
-Ituri,BUNIA,AERO,Positive,2026-05-05,25.52
-Ituri,BUNIA,AERO,Positive,2026-05-17,35.61
-Ituri,BUNIA,AERO,Positive,2026-05-07,29.31
-Ituri,,,Unclassified,,
-Ituri,Rwampara,HOHO,Positive,2026-05-08,24.13
-Ituri,MONGBWALU,MONGBWALU,Positive,2026-05-16,
-Ituri,Rwampara,HOHO,Positive,2026-05-07,25.0
-Ituri,BUNIA,HOHO,Negative,2026-05-10,
-Ituri,Rwampara,POLICE DE FRONTIERE,Positive,,
-Ituri,Rwampara,POLICE DE FRONTIERE,Positive,2026-05-14,24.95
-Ituri,Rwampara,HOHO,Negative,2026-05-11,
-Ituri,DRODRO,DRODRO,Negative,2026-05-14,
-Ituri,MABANGA,NGRUKU,Positive,2026-05-10,
-Ituri,Rwampara,HOHO,Invalid,2026-05-17,
-Ituri,Rwampara,HOHO,Negative,2026-05-17,
-Ituri,Rwampara,HOHO,Positive,2026-05-09,
-Ituri,Rwampara,HOHO,Negative,2026-05-15,
-Ituri,Rwampara,HOHO,Invalid,2026-05-17,
-Ituri,NIZI,HERITAGE,Negative,2026-05-16,
-Ituri,LOGO,NGALI,Negative,2026-05-14,
-Ituri,LOGO,MERE APOLLINE,Negative,2026-05-11,
-Ituri,Rwampara,SHARI,Negative,2026-05-17,
-Ituri,Rwampara,SHARI,Negative,2026-05-15,
-Ituri,Rwampara,Rwampara,Positive,2026-05-17,36.23
-Ituri,Rwampara,Rwampara,Positive,2026-05-15,30.5
-Ituri,Rwampara,SHARI,Negative,2026-05-17,
-Ituri,Rwampara,Rwampara,Negative,2026-05-17,
-Ituri,Rwampara,SHARI,Negative,2026-05-16,
-Ituri,Rwampara,TCHUNGA,Negative,2026-05-17,
-Ituri,Rwampara,HOHO,Negative,2026-05-15,
-Ituri,KOMANDA,BWANASURA,Negative,2026-05-17,
-Ituri,KOMANDA,BWANASURA,Negative,2026-05-17,
-Ituri,BUNIA,BIGO,Negative,2026-05-18,
-Ituri,Rwampara,HOHO,Negative,2026-05-18,
-Ituri,Rwampara,HOHO,Negative,2026-05-18,
-Ituri,Rwampara,HOHO,Negative,2026-05-18,
-Ituri,BUNIA,BIGO,Negative,2026-05-17,
-Ituri,NYAKUNDE,NYAKUNDE,Positive,2026-05-18,37.91
-Ituri,Rwampara,HOHO,Positive,2026-05-18,28.3
-Ituri,BUNIA,NGEZI,Positive,2026-05-17,24.87
-Ituri,NYAKUNDE,NYAKUNDE,Positive,2026-05-13,25.9
-Ituri,BUNIA,,Unclassified,,
-Ituri,NYAKUNDE,SOTA,Positive,2026-05-18,
-Ituri,Rwampara,SHARI,Positive,2026-05-18,25.9
-Ituri,BUNIA,,Unclassified,,
-Ituri,BUNIA,BIGO,Positive,2026-05-18,35.41
-Ituri,Rwampara,SHARI,Positive,,21.54
-Ituri,Rwampara,SHARI,Negative,2026-05-18,
-Ituri,Rwampara,SHARI,Positive,2026-05-12,25.35
-Ituri,Rwampara,SHARI,Positive,2026-05-18,25.93
-Ituri,BUNIA,,Negative,2026-05-02,
-Ituri,BUNIA,BIGO,Negative,2026-05-04,
-Ituri,BUNIA,SAYO,Positive,2026-05-17,32.55
-Ituri,MONGBWALU,MONGBWALU,Negative,2026-05-16,
-Ituri,BUNIA,KIGONZE,Negative,2026-05-08,
-Ituri,BUNIA,,Positive,2026-05-18,24.83
-Ituri,Rwampara,,Unclassified,,
-Ituri,Rwampara,NGONA,Positive,2026-05-18,24.52
-Ituri,Rwampara,HOHO,Unclassified,2026-05-11,
-Ituri,BAMBU,KOBU,Negative,2026-05-14,
-Ituri,Rwampara,HOHO,Invalid,2026-05-14,
-Ituri,Rwampara,HOHO,Negative,2026-05-18,
-Ituri,BAMBU,BAMBU,Negative,2026-05-15,
-Ituri,BAMBU,NYARADA,Negative,2026-05-13,
-Ituri,KILO,KILO MISSION,Positive,2026-05-13,24.97
-Ituri,MONGBWALU,SAIO,Invalid,2026-05-12,
-Ituri,Rwampara,,Negative,,
-Ituri,LITA,,Negative,,
-Ituri,Rwampara,SHARI,Unclassified,2026-05-18,
-Ituri,LITA,KATOTO,Unclassified,2026-05-18,
-Ituri,NYAKUNDE,NYAKUNDE,Negative,2026-05-19,
-Ituri,NYAKUNDE,NYAKUNDE,Negative,2026-05-19,
-Ituri,NYAKUNDE,NYAKUNDE,Negative,2026-05-19,
-Ituri,BUNIA,RWAMBUZI,Positive,2026-05-13,28.78
-Ituri,BUNIA,,Unclassified,,
-Ituri,BUNIA,SIMBILYABO,Negative,2026-05-18,
-Ituri,BUNIA,NGEZI,Positive,2026-05-19,33.01
-Ituri,BUNIA,NGEZI,Negative,2026-05-19,
-Ituri,NYAKUNDE,NYAKUNDE,Negative,2026-05-16,
-Ituri,NYAKUNDE,NYAKUNDE,Negative,2026-05-18,
-Ituri,NYAKUNDE,SOTA,Negative,2026-05-19,
-Ituri,NYAKUNDE,NYAKUNDE,Negative,2026-05-18,
-Ituri,NYAKUNDE,NYAKUNDE,Negative,2026-05-18,
-Ituri,NYAKUNDE,NYAKUNDE,Positive,2026-05-19,33.61
-Ituri,NYAKUNDE,NYAKUNDE,Positive,2026-05-18,36.11
-Ituri,NYAKUNDE,NYAKUNDE,Negative,2026-05-18,
-Ituri,NYAKUNDE,NYAKUNDE,Negative,2026-05-18,
-Ituri,NYAKUNDE,NYAKUNDE,Positive,2026-05-19,29.24
-Ituri,Rwampara,SHARI,Invalid,2026-05-16,
-Ituri,NYAKUNDE,NYAKUNDE,Negative,2026-05-19,
-Ituri,Rwampara,Rwampara,Negative,,
-Ituri,Rwampara,Rwampara,Negative,2026-05-19,
-Ituri,NIZI,LUCHAY,Positive,2026-05-19,41.81
-Ituri,Rwampara,Rwampara,Negative,2026-05-19,
-Ituri,Rwampara,SHARI,Negative,2026-05-19,
-Ituri,Rwampara,SHARI,Negative,2026-05-19,
-Ituri,Rwampara,DELE,Negative,2026-05-18,
-Ituri,Bunia,Nzere,Negative,2026-05-14,
-Ituri,BUNIA,BIGO,Positive,2026-05-19,20.75
-Ituri,NYAKUNDE,NYAKUNDE,Positive,2026-05-16,21.43
-Ituri,Rwampara,DELE,Negative,2026-05-16,
-Ituri,Rwampara,HOHO,Negative,2026-05-19,
-Ituri,MANGALA,MBAYA,Negative,2026-05-19,
-Ituri,MONGBWALU,,Unclassified,,
-Ituri,MONGBWALU,MONGBWALU,Negative,2026-05-18,
-Ituri,MONGBWALU,MONGBWALU,Negative,2026-05-15,
-Ituri,MONGBWALU,MONGBWALU,Invalid,2026-05-14,
-Ituri,MONGBWALU,,Unclassified,,
-Ituri,MONGBWALU,MONGBWALU,Invalid,2026-05-17,
-Ituri,MONGBWALU,MONGBWALU,Positive,2026-05-17,27.97
-Ituri,MONGBWALU,CECA20,Negative,2026-05-18,
-Ituri,MONGBWALU,MONGBWALU,Positive,2026-05-17,33.03
-Ituri,MONGBWALU,,Unclassified,,
-Ituri,MONGBWALU,NDCM,Negative,2026-05-19,
-Ituri,MONGBWALU,CECA20,Positive,2026-05-16,9.26
-Ituri,MONGBWALU,ALBEKONZO,Positive,2026-05-17,24.87
-Ituri,MONGBWALU,ALBEKONZO,Negative,2026-05-17,
-Ituri,MONGBWALU,MONGBWALU,Negative,2026-05-18,
-Ituri,MONGBWALU,MONGBWALU,Negative,2026-05-17,
-Ituri,MONGBWALU,PLUTO,Negative,2026-05-19,
-Ituri,MONGBWALU,ABELKOZO,Negative,2026-05-17,
-Ituri,MONGBWALU,MONGBWALU,Positive,2026-05-14,27.85
-Ituri,MONGBWALU,CECA20,Negative,2026-05-19,
-Ituri,MONGBWALU,NDCM,Negative,2026-05-17,
-Ituri,MONGBWALU,MONGBWALU,Negative,2026-05-19,
-Ituri,MONGBWALU,ALBEKONZO,Negative,2026-05-17,
-Ituri,MONGBWALU,MONGBWALU,Negative,2026-05-17,
-Ituri,MONGBWALU,ALBEKONZO,Unclassified,2026-05-17,
-Ituri,MONGBWALU,MONGBWALU,Invalid,2026-05-02,
-Ituri,MONGBWALU,MONGBWALU,Negative,2026-05-17,
-Ituri,MONGBWALU,MONGBWALU,Negative,2026-05-19,
-Ituri,MONGBWALU,MONGBWALU,Positive,2026-05-16,27.34
-Ituri,MONGBWALU,CECA20,Negative,2026-05-16,
-Ituri,MONGBWALU,NDCM,Positive,2026-05-16,21.2
-Ituri,MONGBWALU,MONGBWALU,Negative,2026-05-15,
-Ituri,MONGBWALU,CECA20,Positive,2026-05-17,25.97
-Ituri,MONGBWALU,MONGBWALU,Positive,2026-05-04,24.75
-Ituri,MONGBWALU,ALBEKONZO,Negative,2026-05-17,
-Ituri,MONGBWALU,MONGBWALU,Unclassified,2026-05-18,
-Ituri,MONGBWALU,MONGBWALU,Unclassified,2026-05-15,
-Ituri,MONGBWALU,CECA20,Negative,2026-05-19,
-Ituri,MONGBWALU,ALBEKONZO,Negative,2026-05-17,
-Ituri,TCHOMIA,NYAMUSASI 1,Negative,2026-05-20,
-Ituri,KILO,KILO ETAT,Negative,2026-05-19,
-Ituri,KILO,ITENDEY,Negative,2026-05-20,
-Ituri,KILO,KILO ETAT,Negative,2026-05-19,
-Ituri,KILO,ITENDEY,Negative,2026-05-19,
-Ituri,TCHOMIA,SABO,Negative,2026-05-19,
-Ituri,KILO,KILO ETAT,Negative,2026-05-19,
-Ituri,KILO,ITENDEY,Negative,2026-05-19,
-Ituri,KILO,ITENDEY,Negative,2026-05-18,
-Ituri,KILO,KILO MISSION,Negative,2026-05-17,
-Ituri,NYAKUNDE,NYAKUNDE,Negative,2026-05-19,
-Ituri,MONGBWALU,MONGBWALU,Positive,2026-05-09,26.48
-Ituri,MONGBWALU,NDCM,Positive,2026-05-16,17.56
-Ituri,MONGBWALU,SAIO,Positive,2026-05-18,19.62
-Ituri,MONGBWALU,NDCM,Unclassified,2026-05-17,
-Ituri,MONGBWALU,SAIO,Negative,2026-05-15,
-Ituri,MONGBWALU,MONGBWALU,Negative,2026-05-17,
-Ituri,MONGBWALU,CECA20,Positive,2026-05-16,20.42
-Ituri,MONGBWALU,CECA20,Positive,2026-05-16,21.91
-Ituri,MONGBWALU,ALBEKONZO,Positive,2026-05-02,29.26
-Ituri,MONGBWALU,LODJO,Positive,2026-05-19,21.04
-Ituri,MONGBWALU,MONGBWALU,Positive,2026-05-17,20.97
-Ituri,MONGBWALU,MONGBWALU,Unclassified,2026-05-13,
-Ituri,MONGBWALU,CECA20,Negative,2026-05-16,
-Ituri,MONGBWALU,MONGBWALU,Positive,2026-05-17,23.21
-Ituri,MONGBWALU,SAIO,Positive,2026-05-18,30.45
-Ituri,AUNGBA,DJALASIGA,Positive,2026-05-16,26.9
-Ituri,MONGBWALU,SAIO,Negative,2026-05-17,
-Ituri,NYAKUNDE,NYAKUNDE,Positive,2026-05-19,30.98
-Ituri,NYAKUNDE,NYAKUNDE,Negative,2026-05-16,
-Ituri,BUNIA,SAYO,Negative,2026-05-21,
-Ituri,NYAKUNDE,NYAKUNDE,Negative,2026-05-21,
-Ituri,NYAKUNDE,SOTA,Negative,2026-05-20,
-Ituri,MONGBWALU,MONGBWALU,Negative,2026-05-20,
-Ituri,MANGALA,MANDJE,Negative,2026-05-20,
-Ituri,MAMBASA,SALAMA,Negative,2026-05-10,
-Ituri,NIZI,NIZI,Negative,2026-05-20,
-Ituri,NIZI,HERITAGE,Negative,2026-05-21,
-Ituri,BUNIA,RWAKOLE,Negative,2026-05-19,
-Ituri,Rwampara,HOHO,Negative,2026-05-21,
-Ituri,Rwampara,,Negative,2026-05-17,
-Ituri,Rwampara,HOHO,Positive,2026-05-21,23.98
-Ituri,Rwampara,POLICE DE FRONTIERE,Negative,2026-05-17,
-Ituri,Rwampara,TCHUNGA,Negative,2026-05-19,
-Ituri,Rwampara,TCHUNGA,Negative,2026-05-19,
-Ituri,Rwampara,TCHUNGA,Negative,2026-05-18,
-Ituri,Rwampara,TCHUNGA,Unclassified,2026-05-21,
-Ituri,Rwampara,LENGABO,Negative,2026-05-19,
-Ituri,Rwampara,LENGABO,Negative,2026-05-18,
-Ituri,BUNIA,LEMBABO,Negative,2026-05-20,
-Ituri,Rwampara,OPAS,Negative,2026-05-20,
-Ituri,BUNIA,ADVENTISTE,Negative,2026-05-20,
-Ituri,Rwampara,HOHO,Negative,2026-05-20,
-Ituri,Rwampara,HOHO,Negative,2026-05-20,
-Ituri,Rwampara,Rwampara,Negative,2026-05-19,
-Ituri,BUNIA,KINDIA,Negative,2026-05-20,
-Ituri,Rwampara,HOHO,Negative,,
-Ituri,Rwampara,Rwampara,Negative,2026-05-17,
-Ituri,Rwampara,Rwampara,Positive,2026-05-19,26.69
-Ituri,Rwampara,HOHO,Positive,,20.86
-Ituri,Rwampara,HOHO,Positive,,44.2
-Ituri,Rwampara,KUNDA,Positive,2026-05-20,44.82
-Ituri,Rwampara,KUNDA,Positive,2026-05-20,21.8
-Ituri,Rwampara,HOHO,Positive,2026-05-18,35.38
-Ituri,Rwampara,KUNDA,Negative,2026-05-20,
-Ituri,KOMANDA,KOMANDA,Negative,2026-05-19,
-Ituri,BUNIA,BIGO,Negative,2026-05-18,
-Ituri,BUNIA,RWAMBUZI,Positive,2026-05-19,23.58
-Ituri,BUNIA,NGEZI,Negative,2026-05-19,
-Ituri,MONGBWALU,MONGBWALU,Positive,2026-05-19,24.68
-Ituri,BUNIA,BANKOKO,Positive,2026-05-19,29.51
-Ituri,BUNIA,AEROPORT,Negative,2026-05-20,
-Ituri,BUNIA,AEROPORT,Negative,2026-05-19,
-Ituri,BUNIA,BANKOKO,Negative,2026-05-19,
-Ituri,BUNIA,LEMBABO,Negative,2026-05-20,
-Ituri,BUNIA,NGEZI,Positive,2026-05-19,20.58
-Ituri,BUNIA,AEROPORT,Unclassified,2026-05-19,
-Ituri,BUNIA,AEROPORT,Negative,2026-05-15,
-Ituri,BUNIA,AEROPORT,Negative,2026-05-15,
-Ituri,BUNIA,AEROPORT,Positive,2026-05-12,28.7
-Ituri,BUNIA,RWAMBUZI,Negative,2026-05-19,
-Ituri,BUNIA,MUZIMARIA,Negative,2026-05-16,
-Ituri,KOMANDA,KOMANDA,Positive,2026-05-19,18.82
-Ituri,GETY,SONGOLO,Positive,2026-05-21,16.65
-Ituri,FATAKI,FATAKI,Negative,2026-05-12,
-Ituri,FATAKI,FATAKI,Negative,2026-05-20,
-Ituri,BUNIA,BIGO,Negative,2026-05-21,
-Ituri,Rwampara,Rwampara,Negative,2026-05-20,
-Ituri,NYAKUNDE,MARABO,Negative,2026-05-21,
-Ituri,BUNIA,BIGO,Positive,2026-05-21,14.07
-Ituri,Rwampara,MAKABO,Positive,2026-05-21,14.28
-Ituri,BUNIA,BIGO,Negative,2026-05-20,
-Ituri,BUNIA,BIGO,Negative,2026-05-20,
-Ituri,BUNIA,BIGO,Positive,2026-05-19,21.03
-Ituri,KOMANDA,MANGUSU,Negative,2026-05-18,
-Ituri,Rwampara,SHARI,Positive,2026-05-15,28.34
-Ituri,BUNIA,NYAKASANZA,Negative,2026-05-21,
-Ituri,BUNIA,BIGO,Negative,2026-05-21,
-Ituri,BUNIA,BIGO,Positive,2026-05-20,14.71
-Ituri,NYAKUNDE,NYAKUNDE,Negative,2026-05-14,
-Ituri,BUNIA,NGEZI,Negative,2026-05-21,
-Ituri,Rwampara,HOHO,Positive,2026-05-21,18.36
-Ituri,Rwampara,HOHO,Positive,2026-05-19,18.13
-Ituri,Rwampara,SHARI,Positive,2026-05-21,17.04
-Ituri,,,Unclassified,,
-Ituri,BUNIA,AEROPORT,Negative,2026-05-15,
-Ituri,BUNIA,NYAKASANZA,Positive,2026-05-16,25.18
-Ituri,BUNIA,MUZIMARIA,Negative,2026-05-16,
-Ituri,BUNIA,NGEZI,Positive,2026-05-16,30.23
-Ituri,BUNIA,BIGO,Negative,2026-05-20,
-Ituri,BUNIA,AEROPORT,Positive,2026-05-22,20.37
-Ituri,BUNIA,AEROPORT,Negative,2026-05-14,
-Ituri,BUNIA,RWAMBUZI,Positive,2026-05-16,27.32
-Ituri,BUNIA,BIGO,Negative,2026-05-20,
-Ituri,BUNIA,NGEZI,Positive,2026-05-16,24.75
-Ituri,BUNIA,BIGO,Negative,2026-05-18,
-Ituri,BUNIA,NGEZI,Positive,2026-05-22,30.03
-Ituri,BUNIA,BIGO,Negative,2026-05-18,
-Ituri,BAMBU,BAMBU,Positive,2026-05-22,15.0
-Ituri,NYAKUNDE,BOGA,Negative,2026-05-20,
-Ituri,NYAKUNDE,MARABO,Negative,2026-05-21,
-Ituri,NYAKUNDE,NYAKUNDE,Negative,2026-05-20,
-Ituri,NYAKUNDE,MARABO,Negative,2026-05-22,
-Ituri,Rwampara,HOHO,Negative,2026-05-22,
-Ituri,LITA,,Negative,2026-05-21,
-Ituri,Rwampara,SHARI,Negative,2026-05-21,
-Ituri,BUNIA,BANKOKO,Negative,2026-05-15,
-Ituri,Rwampara,HOHO,Positive,2026-05-22,18.7
-Ituri,Rwampara,HOHO,Negative,2026-05-22,
-Ituri,Rwampara,SHARI,Positive,2026-05-22,18.3
-Ituri,BUNIA,KINDIA,Negative,2026-05-22,
-Ituri,NYAKUNDE,NYAKUNDE,Negative,2026-05-20,
-Ituri,BUNIA,BANKOKO,Positive,2026-05-22,34.14
-Ituri,BUNIA,BIGO,Positive,2026-05-02,18.57
-Ituri,Rwampara,TCHUNGA,Negative,2026-05-20,
-Ituri,BUNIA,BANKOKO,Negative,2026-05-19,
-Ituri,BUNIA,AEROPORT,Positive,2026-05-19,21.63
-Ituri,BUNIA,BANKOKO,Negative,2026-05-17,
-Ituri,BUNIA,RWAMBUZI,Unclassified,2026-05-22,
-Ituri,BUNIA,RWAKOLE,Unclassified,2026-05-15,
-Ituri,Rwampara,OPAS,Unclassified,2026-05-15,
-Ituri,BUNIA,RWAMBUZI,Unclassified,2026-05-21,
-Ituri,BUNIA,BANKOKO,Negative,2026-05-22,
-Ituri,,,Unclassified,2026-05-16,
-Ituri,MONGBWALU,NDCM,Negative,2026-05-22,
-Ituri,MONGBWALU,SAIO,Negative,2026-05-16,
-Ituri,MONGBWALU,NDCM,Unclassified,2026-05-19,
-Ituri,MONGBWALU,SAIO,Unclassified,2026-05-21,
-Ituri,MONGBWALU,MONGBWALU,Negative,2026-05-20,
-Ituri,MONGBWALU,MONGBWALU,Negative,2026-05-11,
-Ituri,MONGBWALU,NDCM,Negative,2026-05-21,
-Ituri,MONGBWALU,MONGBWALU,Negative,2026-05-20,
-Ituri,MONGBWALU,CECA20,Negative,2026-05-21,
-Ituri,MONGBWALU,CECA20,Positive,2026-05-22,45.48
-Ituri,MONGBWALU,CECA20,Negative,2026-05-22,
-Ituri,MONGBWALU,NDCM,Negative,2026-05-21,
-Ituri,MONGBWALU,MONGBWALU,Unclassified,2026-05-15,
-Ituri,MONGBWALU,CECA20,Positive,2026-05-13,18.58
-Ituri,MONGBWALU,NDCM,Positive,2026-05-15,24.66
-Ituri,MONGBWALU,MONGBWALU,Negative,2026-05-20,
-Ituri,MONGBWALU,CECA20,Negative,2026-05-21,
-Ituri,NIZI,HERITAGE,Negative,2026-05-15,
-Ituri,LITA,KATOTO,Invalid,2026-05-23,
-Ituri,BAMBU,KOBU,Invalid,2026-05-22,
-Ituri,BUNIA,BIGO,Invalid,2026-05-23,
-Ituri,Rwampara,RWAMBUZI,Invalid,2026-05-20,
-Ituri,BUNIA,BIGO,Positive,2026-05-22,29.27
-Ituri,BUNIA,NYAKASANZA,Positive,2026-05-17,28.78
-Ituri,BUNIA,NYAKASANZA,Positive,2026-05-12,29.46
-Ituri,BUNIA,NYAKASANZA,Invalid,2026-05-16,
-Ituri,NYAKUNDE,NYAKUNDE,Negative,2026-05-22,
-Ituri,NYAKUNDE,SOTA,Invalid,2026-05-20,
-Ituri,NYAKUNDE,NYAKUNDE,Negative,2026-05-19,
-Ituri,NYAKUNDE,NYAKUNDE,Positive,2026-05-20,24.61
-Ituri,NYAKUNDE,NYAKUNDE,Negative,2026-05-20,
-Ituri,BAMBU,BAMBU,Negative,2026-05-23,
-Ituri,BAMBU,NYANGARAY,Negative,2026-05-23,
-Ituri,Rwampara,DELE,Positive,2026-05-22,26.49
-Ituri,Rwampara,HOHO,Positive,2026-05-20,25.14
-Ituri,Rwampara,HOHO,Negative,2026-05-22,
-Ituri,KILO,KILO ETAT,Negative,2026-05-23,
-Ituri,KILO,KILO ETAT,Negative,2026-05-21,
-Ituri,KILO,KILO ETAT,Negative,2026-05-23,
-Ituri,KILO,KILO ETAT,Negative,2026-05-21,
-Ituri,KILO,ITENDEY,Positive,2026-05-23,28.51
-Ituri,KILO,KILO ETAT,Negative,2026-05-11,
-Ituri,KILO,KILO MISSION,Invalid,2026-05-23,
-Ituri,NYAKUNDE,NYAKUNDE,Invalid,2026-05-22,
-Ituri,BUNIA,BIGO,Negative,2026-05-23,
-Ituri,BUNIA,NYAKASANZA,Invalid,2026-05-17,
-Ituri,Rwampara,DELE,Negative,2026-05-23,
-Ituri,Rwampara,SHARI,Negative,2026-05-23,
-Ituri,Rwampara,SHARI,Negative,2026-05-23,
-Ituri,Rwampara,RWAMBUZI,Positive,2026-05-19,23.56
-Ituri,BAMBU,NYARANDA,Negative,2026-05-20,
-Ituri,NIZI,BAIMANI,Negative,2026-05-24,
-Ituri,BAMBU,MANGAMBO,Negative,2026-05-21,
-Ituri,BAMBU,KOBU,Invalid,2026-05-20,
-Ituri,NYAKUNDE,NYAKUNDE,Positive,2026-05-19,35.73
-Ituri,NYAKUNDE,NYAKUNDE,Positive,2026-05-24,24.29
-Ituri,NYAKUNDE,NYAKUNDE,Negative,2026-05-12,
-Ituri,NYAKUNDE,NYAKUNDE,Negative,2026-05-13,
-Ituri,NYAKUNDE,NYAKUNDE,Unclassified,2026-05-19,
-Ituri,NYAKUNDE,NYAKUNDE,Unclassified,2026-05-21,
-Ituri,NYAKUNDE,NYAKUNDE,Negative,2026-05-16,
-Ituri,NYAKUNDE,NYAKUNDE,Unclassified,2026-05-18,
-Ituri,NYAKUNDE,IRUMU,Unclassified,2026-05-22,
-Ituri,NYAKUNDE,SOTA,Positive,2026-05-20,29.79
-Ituri,Rwampara,HOHO,Positive,2026-05-24,24.92
-Ituri,NIZI,IGA BARRIERE,Negative,2026-05-17,
-Ituri,BUNIA,CITE,Negative,2026-05-19,
-Ituri,Rwampara,POLICE DE FRONTIERE,Negative,2026-05-12,
-Ituri,Rwampara,POLICE DE FRONTIERE,Negative,2026-05-14,
-Ituri,Rwampara,HOHO,Negative,2026-05-24,
-Ituri,Rwampara,TCHUNGA,Positive,2026-05-22,34.21
-Ituri,Rwampara,TCHUNGA,Negative,2026-05-23,
-Ituri,Rwampara,TCHUNGA,Negative,2026-05-22,
-Ituri,Rwampara,HOHO,Positive,2026-05-23,36.69
-Ituri,Rwampara,HOHO,Positive,2026-05-24,26.61
-Ituri,Rwampara,HOHO,Negative,2026-05-24,
-Ituri,MONGBWALU,MONGBWALU,Negative,2026-05-12,
-Ituri,LITA,MUTUMBI,Positive,2026-05-24,21.25
-Ituri,NIZI,HERITAGE,Negative,2026-05-23,
-Ituri,BUNIA,AEROPORT,Positive,2026-05-10,20.16
-Ituri,,,Positive,,24.36
-Ituri,BUNIA,NGEZI,Negative,2026-05-25,
-Ituri,BUNIA,NGEZI,Positive,2026-05-25,32.38
-Ituri,BUNIA,BORA UZIMA,Positive,2026-05-18,22.95
-Ituri,NYAKUNDE,NYAKUNDE,Positive,2026-05-18,25.41
-Ituri,MONGBWALU,NDCM,Positive,2026-05-16,24.23
-Ituri,MONGBWALU,MONGBWALU,Negative,2026-05-13,
-Ituri,BUNIA,KINDIA,Positive,2026-05-19,27.53
-Ituri,BUNIA,KASEGWA,Positive,2026-05-22,37.32
-Ituri,DRODO,BI ETAT,Negative,2026-05-22,
-Ituri,DRODO,MASUMBUKO,Negative,2026-05-23,
-Ituri,BUNIA,NGEZI,Negative,2026-05-25,
-Ituri,BUNIA,AEROPORT,Positive,2026-05-25,24.06
-Ituri,BUNIA,BIGO,Negative,2026-05-24,
-Ituri,BUNIA,BIGO,Positive,2026-05-20,27.18
-Ituri,BUNIA,ADVENTISTE,Unclassified,2026-05-15,
-Ituri,BUNIA,NDIBE,Positive,2026-05-18,23.18
-Ituri,BUNIA,BIGO,Unclassified,2026-05-24,
-Ituri,BUNIA,BORA UZIMA,Unclassified,2026-05-17,
-Ituri,BUNIA,BIGO,Positive,2026-05-23,25.89
-Ituri,BUNIA,AEROPORT,Unclassified,2026-05-25,
-Ituri,BUNIA,,Unclassified,2026-05-17,
-Ituri,BUNIA,BANKOKO,Unclassified,2026-05-13,
-Ituri,BUNIA,NGZI,Unclassified,2026-05-23,
-Ituri,BUNIA,BIGO,Unclassified,2026-05-23,
-Ituri,BUNIA,NGEZI,Negative,2026-05-25,
-Ituri,BUNIA,LEMBABO,Negative,2026-05-16,
-Ituri,BUNIA,BIGO,Positive,2026-05-20,25.18
-Ituri,BUNIA,BIGO,Unclassified,2026-05-18,
-Ituri,BUNIA,BIGO,Unclassified,2026-05-24,
-Ituri,NYAKUNDE,NYAKUNDE,Negative,2026-05-24,
-Ituri,NYAKUNDE,NYAKUNDE,Negative,2026-05-25,
-Ituri,NYAKUNDE,NYAKUNDE,Unclassified,2026-05-23,
-Ituri,NYAKUNDE,MARABO,Unclassified,2026-05-23,
-Ituri,DRODO,BUUKWA ETAT,Unclassified,2026-05-21,
-Ituri,NYAKUNDE,NYAKUNDE,Negative,2026-05-24,
-Ituri,ITENDEY,BUNZENZELE,Unclassified,2026-05-21,
-Ituri,NYAKUNDE,NYAKUNDE,Negative,2026-05-24,
-Ituri,Rwampara,DELE,Unclassified,2026-05-23,
-Ituri,NYAKUNDE,NYAKUNDE,Negative,2026-05-23,
-Ituri,NIZI,LOPA,Unclassified,2026-05-19,
-Ituri,NYAKUNDE,SOTA,Positive,2026-05-20,20.81
-Ituri,NYAKUNDE,NYAKUNDE,Unclassified,2026-05-23,
-Ituri,NYAKUNDE,NYAKUNDE,Positive,2026-05-27,26.34
-Ituri,KOMANDA,BANDIBOLI,Positive,2026-05-25,25.12
-Ituri,KOMANDA,MANGUSU,Negative,2026-05-25,
-Ituri,BUNIA,AEROPORT,Negative,2026-05-25,
-Ituri,Rwampara,HOHO,Negative,2026-05-19,
-Ituri,BUNIA,BANKOKO,Negative,2026-05-26,
-Ituri,Rwampara,SHARI,Positive,2026-05-19,19.55
-Ituri,ARU,,Negative,2026-05-19,
-Ituri,BUNIA,KOLOMANI,Positive,2026-05-25,35.38
-Ituri,BUNIA,AEROPORT,Negative,2026-05-23,
-Ituri,BUNIA,BIGO,Positive,2026-05-20,23.32
-Ituri,BUNIA,ADVENTISTE,Positive,2026-05-25,25.75
-Ituri,BUNIA,BIGO,Unclassified,2026-05-24,
-Ituri,BUNIA,LEMBABO,Unclassified,2026-05-25,
-Ituri,BUNIA,OPAS,Unclassified,2026-05-10,
-Ituri,BUNIA,ADVENTISTE,Unclassified,2026-05-19,
-Ituri,BUNIA,ADVENTISTE,Unclassified,2026-05-15,
-Ituri,BUNIA,OPAS,Unclassified,2026-05-24,
-Ituri,BUNIA,BIGO,Unclassified,2026-05-11,
-Ituri,BUNIA,BIGO,Unclassified,2026-05-25,
-Ituri,BUNIA,BIGO,Unclassified,2026-05-26,
-Ituri,BUNIA,AEROPORT,Unclassified,2026-05-15,
-Ituri,BUNIA,BANKOKO,Negative,2026-05-23,
-Ituri,BUNIA,BANKOKO,Unclassified,2026-05-26,
-Ituri,BUNIA,BIGO,Unclassified,2026-05-24,
-Ituri,BUNIA,OPAS,Positive,2026-05-22,28.21
-Ituri,BUNIA,BIGO,Unclassified,2026-05-08,
-Ituri,BUNIA,BANKOKO,Positive,2026-05-23,26.89
-Ituri,NYAKUNDE,SOTA,Positive,2026-05-12,25.85
-Ituri,NYAKUNDE,TEKELE,Unclassified,2026-05-26,
-Ituri,NYAKUNDE,MARABO,Unclassified,2026-05-22,
-Ituri,NYAKUNDE,NYAKUNDE,Unclassified,2026-05-24,
-Ituri,ARU,,Unclassified,2026-05-29,
-Ituri,ARU,,Unclassified,2026-05-15,
-Ituri,NYAKUNDE,SOTA,Unclassified,2026-05-25,
-Ituri,MANDIMA,MAHU,Unclassified,2026-05-11,
-Ituri,MANDIMA,MANDIMA,Unclassified,2026-05-25,
-Ituri,MANDIMA,MANDIMA,Unclassified,2026-05-25,
-Ituri,LOLWA,PEKELE,Unclassified,2026-05-25,
-Ituri,BAMBU,BAMBU,Unclassified,2026-05-25,
-Ituri,BAMBU,MANGAMBO,Unclassified,2026-05-25,
-Ituri,Rwampara,Rwampara,Unclassified,2026-05-26,
-Ituri,Rwampara,Rwampara,Positive,2026-05-26,28.49
-Ituri,Rwampara,,Unclassified,,
-Ituri,Rwampara,SHARI,Negative,2026-05-16,
-Ituri,Rwampara,Rwampara,Negative,2026-05-23,
-Ituri,Rwampara,NGONA,Positive,,34.82
-Ituri,BUNIA,,Negative,2026-05-25,
-Ituri,Rwampara,Rwampara,Unclassified,2026-05-15,
-Ituri,Rwampara,HOHO,Negative,2026-05-26,
-Ituri,BUNIA,BIGO,Negative,2026-05-26,
-Ituri,Rwampara,SHARI,Unclassified,2026-05-19,
-Ituri,Rwampara,HOHO,Unclassified,2026-05-20,
-Ituri,Rwampara,HOHO,Negative,2026-05-24,
-Ituri,Rwampara,Rwampara,Unclassified,2026-05-25,
-Ituri,Rwampara,SHARI,Positive,2026-05-25,19.12
-Ituri,Rwampara,HOHO,Negative,2026-05-25,
-Ituri,Rwampara,Rwampara,Negative,2026-05-20,
-Ituri,Rwampara,HOHO,Unclassified,2026-05-25,
-Ituri,JIBA,MALO,Unclassified,2026-05-22,
-Ituri,JIBA,MALO,Unclassified,2026-05-22,
-Ituri,BUNIA,CNCA,Negative,2026-05-22,
-Ituri,BUNIA,CNCA,Positive,2026-05-22,28.35
-Ituri,,,Negative,2026-05-25,
-Ituri,BUNIA,CNCA,Unclassified,2026-05-22,
-Ituri,BUNIA,CNCA,Unclassified,2026-05-22,
-Ituri,LITA,,Unclassified,2026-05-27,
-Ituri,DRODO,,Unclassified,2026-05-26,
-Ituri,RIMBA,GAMBA,Positive,2026-05-23,27.23
-Ituri,RIMBA,PANYABIO,Positive,2026-05-17,30.79
-Ituri,KAOBALA,RABU,Unclassified,2026-05-14,
-Ituri,RIMBA,AME,Positive,2026-05-18,34.7
-Ituri,Rwampara,SHARI,Unclassified,2026-05-21,
-Ituri,Rwampara,HOHO,Negative,2026-05-27,
-Ituri,Rwampara,SHARI,Unclassified,2026-05-27,
-Ituri,Rwampara,NGONA,Negative,2026-05-27,
-Ituri,Rwampara,Rwampara,Negative,2026-05-27,
-Ituri,Rwampara,HOHO,Negative,2026-05-27,
-Ituri,Rwampara,HOHO,Unclassified,2026-05-27,
-Ituri,Rwampara,BOGORO,Unclassified,2026-05-22,
-Ituri,Rwampara,Rwampara,Unclassified,2026-05-14,
-Ituri,Rwampara,HOHO,Negative,2026-05-27,
-Ituri,BAMBU,MANGAMBO,Unclassified,2026-05-25,
-Ituri,BAMBU,BAMBU,Unclassified,2026-05-25,
-Ituri,BAMBU,KOBU,Unclassified,2026-05-25,
-Ituri,TCHOMIA,RWAMUSASI,Unclassified,2026-05-20,
-Ituri,TCHOMIA,KASENYI CENTRE,Unclassified,2026-05-26,
-Ituri,KILO,ITENDEY,Negative,2026-05-18,
-Ituri,KILO,AMEMA,Unclassified,2026-05-12,
-Ituri,KILO,AMEMA,Unclassified,2026-05-25,
-Ituri,BUNIA,BIGO,Unclassified,2026-05-13,
-Ituri,BUNIA,BIGO,Unclassified,2026-05-26,
-Ituri,BUNIA,BIGO,Unclassified,2026-05-26,
-Ituri,BUNIA,NGEZI,Unclassified,2026-05-26,
-Ituri,BUNIA,OPAS,Unclassified,2026-05-12,
-Ituri,BUNIA,BIGO,Unclassified,2026-05-26,
-Ituri,NYAKUNDE,MARABO,Unclassified,2026-05-27,
-Ituri,NYAKUNDE,SOTA,Unclassified,2026-05-10,
-Ituri,NYAKUNDE,MARABO,Positive,2026-05-24,28.9
-Ituri,Rwampara,Rwampara,Negative,2026-05-26,
-Ituri,BUNIA,BIGO,Unclassified,2026-05-14,
-Ituri,BUNIA,BIGO,Unclassified,2026-05-26,
-Ituri,BUNIA,BIGO,Unclassified,2026-05-08,
-Ituri,BUNIA,AEROPORT,Negative,2026-05-25,
-Ituri,BUNIA,BIGO,Negative,,
-Ituri,BUNIA,BIGO,Unclassified,2026-05-13,
-Ituri,BUNIA,BIGO,Negative,2026-05-19,
-Ituri,BUNIA,BIGO,Positive,2026-05-25,27.42
-Ituri,Rwampara,SUKISA,Negative,2026-05-27,
-Ituri,Rwampara,TCHUNGA,Positive,2026-05-03,32.52
-Ituri,Rwampara,BOGORO,Positive,2026-05-20,32.21
-Ituri,BAMBU,BAMBU,Unclassified,2026-05-26,
-Ituri,BAMBU,KOBU,Unclassified,2026-05-26,
-Ituri,Rwampara,HOHO,Negative,2026-05-27,
-Ituri,Rwampara,HOHO,Negative,2026-05-28,
-Ituri,Rwampara,HOHO,Negative,2026-05-26,
-Ituri,Rwampara,HOHO,Positive,2026-05-28,33.53
-Ituri,Rwampara,HOHO,Negative,2026-05-28,
-Ituri,Rwampara,HOHO,Negative,2026-05-28,
-Ituri,Rwampara,HOHO,Negative,2026-05-28,
-Ituri,Rwampara,HOHO,Negative,2026-05-28,
-Ituri,Rwampara,HOHO,Negative,2026-05-28,
-Ituri,BUNIA,MUZIMARIA,Positive,2026-05-16,18.83
-Ituri,BUNIA,KASEGWA,Positive,2026-05-24,18.79
-Ituri,,,Positive,2026-05-28,24.94
-Ituri,BUNIA,KINDIA,Negative,2026-05-28,
-Ituri,BUNIA,BANKOKO,Negative,2026-05-22,
-Ituri,BUNIA,NDIBE,Positive,2026-05-24,26.13
-Ituri,BUNIA,BIGO,Positive,2026-05-26,29.08
-Ituri,NIZI,,Negative,2026-05-10,
-Ituri,BUNIA,BIGO,Positive,2026-05-27,21.4
-Ituri,BUNIA,BIGO,Negative,2026-05-23,
-Ituri,BUNIA,BANKOKO,Unclassified,2026-05-27,
-Ituri,BUNIA,BIGO,Positive,2026-05-24,26.47
-Ituri,MONGBWALU,NOTRE DAME,Positive,2026-05-25,20.96
-Ituri,MONGBWALU,CECA 20,Invalid,2026-05-25,
-Ituri,MONGBWALU,CECA 20,Positive,2026-05-25,30.07
-Ituri,,,Negative,2026-05-25,
-Ituri,MONGBWALU,CECA 20,Positive,2026-05-27,21.91
-Ituri,MONGBWALU,CECA 20,Positive,2026-05-25,25.63
-Ituri,MONGBWALU,,Positive,2026-05-26,20.62
-Ituri,MONGBWALU,MONGBWALU,Positive,2026-05-26,21.18
-Ituri,,,Positive,2026-05-13,21.31
-Ituri,Rwampara,HOHO,Positive,2026-05-18,25.33
-Ituri,Rwampara,Rwampara,Positive,2026-05-28,20.09
-Ituri,Rwampara,Rwampara,Negative,2026-05-26,
-Ituri,Rwampara,TCHUNGA,Positive,2026-05-28,24.51
-Ituri,Rwampara,NGONA,Negative,2026-05-28,
-Ituri,Rwampara,SHARI,Negative,2026-05-28,
-Ituri,Rwampara,Rwampara,Negative,2026-05-28,
-Ituri,Rwampara,Rwampara,Negative,2026-05-27,
-Ituri,Rwampara,SHARI,Invalid,2026-05-28,
-Ituri,Rwampara,SHARI,Negative,2026-05-28,
-Ituri,Rwampara,SHARI,Negative,2026-05-22,
-Ituri,Rwampara,Rwampara,Negative,2026-05-28,
-Ituri,BUNIA,BIGO,Negative,2026-05-19,
-Ituri,BUNIA,AEROPORT,Positive,2026-05-27,24.07
-Ituri,BUNIA,NGEZI,Negative,2026-05-28,
-Ituri,BUNIA,AEROPORT,Positive,2026-05-26,30.05
-Ituri,BUNIA,AEROPORT,Negative,2026-05-17,
-Ituri,BUNIA,NIZI,Positive,2026-05-28,25.24
-Ituri,BUNIA,NGEZI,Negative,2026-05-28,
-Ituri,BUNIA,AEROPORT,Negative,2026-05-19,
-Ituri,BUNIA,AEROPORT,Negative,2026-05-25,
-Ituri,BUNIA,NGEZI,Negative,2026-05-28,
-Ituri,BUNIA,NGEZI,Negative,2026-05-28,
-Ituri,BUNIA,NGEZI,Negative,2026-05-28,
-Ituri,BUNIA,NGEZI,Negative,2026-05-28,
-Ituri,BUNIA,AEROPORT,Negative,2026-05-27,
-Ituri,BUNIA,AEROPORT,Negative,2026-05-22,
-Ituri,BUNIA,AEROPORT,Negative,2026-05-13,
-Ituri,BUNIA,NGEZI,Negative,2026-05-28,
-Ituri,BUNIA,BIGO,Positive,2026-05-27,34.68
-Ituri,BUNIA,BIGO,Positive,2026-05-26,28.14
-Ituri,BUNIA,CNCA,Positive,2026-05-28,31.08
-Ituri,BAMBU,BAMBU,Negative,2026-05-28,
-Ituri,BUNIA,BANKOKO,Positive,2026-05-28,32.17
-Ituri,NYAKUNDE,MARABO,Negative,2026-05-21,
-Ituri,NYAKUNDE,BIRINYAMA,Negative,2026-05-20,
-Ituri,NYAKUNDE,KOMBOKABO,Negative,2026-05-23,
-Ituri,NYAKUNDE,MARABO,Negative,2026-05-27,
-Ituri,Rwampara,HOHO,Negative,2026-05-26,
-Ituri,Rwampara,BOGORO,Negative,2026-05-26,
-Ituri,NIZI,HERITAGE,Positive,2026-05-23,24.89
-Ituri,TCHOMIA,TCHOMIA,Negative,2026-05-28,
-Ituri,BUNIA,NYAKASANZA,Negative,2026-05-28,
-Ituri,BUNIA,BORA UZIMA,Negative,2026-05-21,
-Ituri,BUNIA,BIGO,Positive,2026-05-17,26.08
-Ituri,BUNIA,LEMBABO,Negative,2026-05-26,
-Ituri,BUNIA,CNCA,Negative,2026-05-28,
-Ituri,BUNIA,BIGO,Negative,2026-05-27,
-Ituri,BUNIA,NDIBE,Negative,2026-05-28,
-Ituri,BUNIA,BIGO,Negative,2026-05-29,
-Ituri,MONGBWALU,MONGBWALU,Negative,2026-05-16,
-Ituri,BUNIA,BIGO,Positive,2026-05-29,29.96
-Ituri,BUNIA,BIGO,Positive,2026-05-29,29.37
-Ituri,Rwampara,Rwampara,Positive,2026-05-29,22.97
-Ituri,Rwampara,BOGORO,Positive,2026-05-19,29.35
-Ituri,LITA,BAHWERE,Positive,2026-05-29,24.15
-Ituri,LOLWA,TOLY-TOLY,Negative,2026-05-25,
-Ituri,LOLWA,MABANGIFO,Negative,2026-05-27,
-Ituri,NYAKUNDE,MARABO,Negative,2026-05-23,
-Ituri,NYAKUNDE,SOTA,Positive,2026-05-22,28.09
-Ituri,NYAKUNDE,SOTA,Positive,2026-05-25,30.48
-Ituri,NYAKUNDE,SOTA,Positive,2026-05-25,24.92
-Ituri,NYAKUNDE,NYAKUNDE,Positive,2026-05-27,31.33
-Ituri,NYAKUNDE,MARABO,Positive,2026-05-19,28.39
-Ituri,NYAKUNDE,SOTA,Positive,2026-05-24,24.41
-Ituri,Rwampara,HOHO,Positive,2026-05-29,29.49
-Ituri,Rwampara,HOHO,Negative,2026-05-29,
-Ituri,Rwampara,Rwampara,Positive,2026-05-26,29.81
-Ituri,Rwampara,HOHO,Negative,2026-05-29,
-Ituri,Rwampara,HOHO,Negative,2026-05-29,
-Ituri,Rwampara,HOHO,Positive,2026-05-29,31.06
-Ituri,,,Negative,2026-05-20,
-Ituri,Rwampara,HOHO,Negative,2026-05-29,
-Ituri,Rwampara,Rwampara,Negative,2026-05-27,
-Ituri,Rwampara,HOHO,Negative,2026-05-29,
-Ituri,Rwampara,Rwampara,Negative,2026-05-25,
-Ituri,Rwampara,Rwampara,Negative,2026-05-22,
-Ituri,Rwampara,HOHO,Negative,2026-05-29,
-Ituri,TCHOMIA,NANA,Unclassified,2026-05-28,
-Ituri,Rwampara,HOHO,Positive,2026-05-29,30.57
-Ituri,Rwampara,HOHO,Negative,2026-05-29,
-Ituri,Rwampara,DELE,Negative,2026-05-27,
-Ituri,Rwampara,SHARI,Positive,2026-05-26,31.07
-Ituri,Rwampara,SHARI,Positive,2026-05-27,25.58
-Ituri,Rwampara,SHARI,Positive,2026-05-22,25.97
-Ituri,Rwampara,SHARI,Negative,2026-05-20,
-Ituri,Rwampara,Rwampara,Negative,2026-05-10,
-Ituri,Rwampara,SHARI,Positive,2026-05-21,35.25
-Ituri,Rwampara,HOHO,Negative,2026-05-28,
-Ituri,BUNIA,BIGO,Negative,2026-05-28,
-Ituri,Rwampara,TCHUNGA,Positive,2026-05-28,23.27
-Ituri,BUNIA,BIGO,Negative,2026-05-29,
-Ituri,BUNIA,AEROPORT,Negative,2026-05-25,
-Ituri,BUNIA,BIGO,Positive,2026-05-27,27.56
-Ituri,BUNIA,BIGO,Positive,2026-05-29,31.05
-Ituri,BUNIA,BIGO,Negative,2026-05-29,
-Ituri,BUNIA,BORA UZIMA,Negative,2026-05-30,
-Ituri,BUNIA,RWAMBUZI,Positive,2026-05-22,10.43
-Ituri,BUNIA,NDIBE,Negative,2026-05-29,
-Ituri,BUNIA,BIGO,Negative,2026-05-25,
-Ituri,BUNIA,BANKOKO,Negative,2026-05-25,
-Ituri,BUNIA,AEROPORT,Positive,2026-05-26,9.26
-Ituri,BUNIA,NGEZI,Negative,2026-05-29,
-Ituri,Rwampara,SHARI,Negative,2026-05-26,
-Ituri,BUNIA,BIGO,Positive,2026-05-25,19.02
-Ituri,LOGO,NYAA,Positive,2026-05-27,23.81
-Ituri,NIZI,C E 39,Positive,2026-05-22,24.02
-Ituri,Rwampara,HOHO,Positive,2026-05-30,27.21
-Ituri,Rwampara,POLICE DE FRONTIERE,Negative,2026-05-29,
-Ituri,BUNIA,,Positive,2026-05-19,37.25
-Ituri,BUNIA,OPAS,Positive,2026-05-24,22.42
-Ituri,BUNIA,OPAS,Negative,2026-05-21,
-Ituri,BUNIA,BIGO,Negative,2026-05-30,
-Ituri,BUNIA,BIGO,Positive,2026-05-30,26.81
-Ituri,BUNIA,HOHO,Negative,2026-05-22,
-Ituri,NYAKUNDE,NYAKUNDE,Positive,2026-05-26,32.55
-Ituri,NYAKUNDE,NYAKUNDE,Negative,2026-05-28,
-Ituri,NYAKUNDE,IRUMU,Negative,2026-05-30,
-Ituri,NYAKUNDE,NYAKUNDE,Negative,2026-05-28,
-Ituri,NIZI,NIZI,Negative,2026-05-20,
-Ituri,NIZI,HERITAGE,Positive,2026-05-23,28.38
-Ituri,NIZI,NIZI,Negative,2026-05-23,
-Ituri,NIZI,NIZI,Positive,2026-05-21,27.66
-Ituri,BAMBU,TCHUZA,Invalid,2026-05-29,
-Ituri,BAMBU,BAMBU,Negative,2026-05-27,
-Ituri,BAMBU,LIPRI,Positive,2026-05-26,30.19
-Ituri,BAMBU,BAMBU,Negative,2026-05-26,
-Ituri,BAMBU,KOBU,Negative,2026-05-25,
-Ituri,NIZI,NIZI,Positive,2026-05-23,25.56
-Ituri,NIZI,BAIMANI,Positive,2026-05-30,25.66
-Ituri,,,Negative,2026-05-30,
-Ituri,,,Negative,2026-05-30,
-Ituri,Rwampara,HOHO,Negative,2026-05-30,
-Ituri,Rwampara,Hoho,Negative,2026-05-02,
-Ituri,Rwampara,BUNIA,Positive,2026-05-22,22.75
-Ituri,Rwampara,HOHO,Negative,2026-05-28,
-Ituri,Rwampara,HOHO,Negative,2026-05-22,
-Ituri,Rwampara,HOHO,Negative,2026-05-30,
-Ituri,Rwampara,DELE,Negative,2026-05-30,
-Ituri,Rwampara,HOHO,Negative,2026-05-30,
-Ituri,Rwampara,SHARI,Positive,2026-05-25,23.51
-Ituri,BUNIA,AEROPORT,Negative,2026-05-23,
-Ituri,Rwampara,HOHO,Negative,2026-05-02,
-Ituri,Rwampara,Rwankole,Negative,2026-04-09,
-Ituri,Rwampara,HOHO,Negative,2026-05-30,
-Ituri,BUNIA,SAYO,Negative,2026-05-30,
-Ituri,Rwampara,HOHO,Negative,2026-05-30,
-Ituri,Rwampara,Rwampara,Negative,2026-05-30,
-Ituri,Rwampara,HOHO,Negative,2026-05-29,
-Ituri,Rwampara,Rwampara,Positive,2026-05-30,17.45
-Ituri,Rwampara,SHARI,Positive,2026-05-26,24.32
-Ituri,Rwampara,LENGABO,Positive,2026-05-30,24.59
-Ituri,Rwampara,Rwampara,Positive,2026-05-30,36.97
-Ituri,LITA,,Negative,2026-05-21,
-Ituri,BUNIA,SIMBILYABO,Positive,2026-05-31,28.43
-Ituri,BUNIA,PK12,Negative,2026-05-25,
-Ituri,BUNIA,NGEZI,Negative,2026-05-29,
-Ituri,BAMBU,BAMBU,Negative,2026-05-30,
-Ituri,Rwampara,SHARI,Negative,2026-05-31,
-Ituri,Rwampara,SHARI,Positive,2026-05-31,23.25
-Ituri,BUNIA,BKK,Negative,2026-05-26,
-Ituri,BUNIA,BANKOKO,Negative,2026-05-26,
-Ituri,BUNIA,BIGO,Negative,2026-05-16,
-Ituri,BUNIA,BKK,Negative,2026-05-24,
-Ituri,BUNIA,BKK,Negative,2026-05-26,
-Ituri,BUNIA,BANKOKO,,2026-05-31,
-Ituri,BUNIA,BKK,,2026-05-24,
-Ituri,BUNIA,NDIBE,Positive,2026-05-30,24.1
-Ituri,BUNIA,RWAKOLE,,2026-05-16,
-Ituri,BUNIA,NGEZI,,2026-05-29,
-Ituri,BUNIA,NGEZI,Positive,2026-05-29,33.7
-Ituri,Rwampara,HOHO,,2026-05-31,
-Ituri,NIZI,NIZI,Positive,2026-05-24,25.45
-Ituri,BUNIA,AEROPORT,Negative,2026-05-30,
-Ituri,BUNIA,ADVENTISTE,Positive,2026-05-20,38.99
-Ituri,BUNIA,ADVENTISTE,Positive,2026-05-30,28.94
-Ituri,BUNIA,BANKOKO,Positive,2026-05-11,24.61
-Ituri,BUNIA,BIGO,Positive,2026-05-26,22.16
-Ituri,MONGBWALU,PARADISO,Positive,2026-05-15,25.58
-Ituri,MONGBWALU,CECA 20,Positive,2026-05-23,23.59
-Ituri,,,Negative,2026-05-26,
-Ituri,MONGBWALU,MONGBWALU,Positive,2026-05-27,36.59
-Ituri,MONGBWALU,SAIO,Positive,2026-06-01,29.22
-Ituri,MONGBWALU,NOTRE DAME,Negative,2026-05-27,
-Ituri,MONGBWALU,SAIO,Positive,2026-06-01,28.35
-Ituri,MONGBWALU,MONGBWALU,Positive,2026-05-22,26.22
-Ituri,MONGBWALU,PARADISO,Positive,2026-05-21,25.13
-Ituri,BAMBU,NGABULO,Negative,2026-06-01,
-Ituri,MONGBWALU,CECA 20,Positive,2026-06-01,30.24
-Ituri,MONGBWALU,BARU,Negative,2026-05-26,
-Ituri,DAMAS,JIMBU,Negative,2026-05-25,
-Ituri,DAMAS,BIDJO,Positive,2026-05-28,30.21
-Ituri,KOMANDA,MANGIVA,Negative,2026-06-01,
-Ituri,KOMANDA,KOMANDA,Negative,2026-06-01,
-Ituri,KOMANDA,KOMANDA,Positive,2026-06-01,29.69
-Ituri,MONGBWALU,KANDOYI,Positive,2026-06-01,22.52
-Ituri,MONGBWALU,ALIMASI2,Positive,2026-05-24,25.7
-Ituri,MONGBWALU,,Positive,2026-06-01,19.12
-Ituri,MONGBWALU,,Negative,2026-06-01,
-Ituri,MUNGBAWALU,,Positive,2026-05-08,32.07
-Ituri,Rwampara,Rwampara,Negative,2026-06-01,
-Ituri,Rwampara,HOHO,Negative,2026-05-30,
-Ituri,Rwampara,DELE,Negative,2026-06-01,
-Ituri,ARU,,Negative,2026-05-25,
-Ituri,ARU,BAKITA,Invalid,2026-05-22,
-Ituri,Rwampara,HOHO,Negative,2026-05-31,
-Ituri,ARU,ALIVUNYORU,Negative,2026-05-24,
-Ituri,Rwampara,Rwampara,Negative,2026-06-01,
-Ituri,Rwampara,HOHO,Negative,2026-05-31,
-Ituri,Rwampara,TCHUNGA,Negative,2026-06-01,
-Ituri,MAMBASA,MAMBASA,Negative,2026-06-01,
-Ituri,MAMBASA,MAMBASA,Negative,2026-06-01,
-Ituri,MAMBASA,MPUTU,Positive,2026-06-01,25.9
-Ituri,MAMBASA,SALAMA,Positive,2026-06-01,20.08
-Ituri,ARU,,Negative,2026-05-15,
-Ituri,BAMBU,BAMBU,Negative,2026-06-01,
-Ituri,BAMBU,BAMBU,Negative,2026-06-01,
-Ituri,BAMBU,TCHUTA,Negative,2026-05-30,
-Ituri,BAMBU,NYANGARAY,Negative,2026-06-01,
-Ituri,BAMBU,BAMBU,Negative,2026-05-24,
-Ituri,BAMBU,KOBU,Negative,2026-06-01,
-Ituri,BAMBU,BAMBU,Negative,2026-06-01,
-Ituri,BAMBU,BAMBU,Negative,2026-05-26,
-Ituri,Rwampara,HOHO,Positive,2026-06-01,20.24
-Ituri,Rwampara,Rwampara,Negative,2026-06-01,
-Ituri,Rwampara,Rwampara,Negative,2026-06-01,
-Ituri,Rwampara,HOHO,Negative,2026-05-31,
-Ituri,Rwampara,HOHO,Negative,2026-05-28,
-Ituri,Rwampara,HOHO,Negative,2026-05-28,
-Ituri,Rwampara,SHARI,Negative,2026-05-24,
-Ituri,BUNIA,AEROPORT,Negative,2026-05-22,
-Ituri,Rwampara,TCHUNGA,Negative,2026-05-20,
-Ituri,Rwampara,Rwampara,Positive,2026-06-01,23.92
-Ituri,Rwampara,POLICE DE FRONTIERE,Positive,2026-05-18,27.33
-Ituri,Rwampara,HOHO,Negative,2026-06-01,
-Ituri,Rwampara,HOHO,Negative,2026-06-01,
-Ituri,Rwampara,DELE,Negative,2026-06-01,
-Ituri,Rwampara,BEMBEY,Negative,2026-05-30,
-Ituri,Rwampara,Rwampara,Negative,2026-05-29,
-Ituri,BUNIA,BEMBEY,Negative,2026-05-30,
-Ituri,Rwampara,POLICE DE FRONTIERE,Negative,2026-05-29,
-Ituri,BUNIA,,Negative,2026-06-01,
-Ituri,BUNIA,RWAKOLE,Positive,2026-05-28,35.86
-Ituri,BUNIA,KINDIA,Positive,2026-05-26,28.92
-Ituri,BUNIA,SIMBILYABO,Unclassified,2026-05-28,
-Ituri,Rwampara,Rwampara,Negative,2026-06-01,
-Ituri,BUNIA,NGEZI,Negative,2026-06-01,
-Ituri,BUNIA,BORA UZIMA,Positive,2026-05-23,32.97
-Ituri,BUNIA,NGEZI,Unclassified,2026-05-31,
-Ituri,BUNIA,NGEZI,Unclassified,2026-05-31,
-Ituri,BUNIA,MUZIMARIA,Unclassified,2026-05-31,
-Ituri,BUNIA,CNCA,Unclassified,2026-05-08,
-Ituri,BUNIA,KINDIA,Unclassified,2026-05-27,
-Ituri,BUNIA,NGEZI,Unclassified,2026-05-31,
-Ituri,BUNIA,LEMBABO,Unclassified,2026-05-26,
-Ituri,BUNIA,ADVENTISTE,Negative,2026-05-29,
-Ituri,ARU,,Unclassified,2026-05-28,
-Ituri,BUNIA,,Unclassified,2026-05-29,
-Ituri,BUNIA,SOLENYAMA,Unclassified,2026-05-19,
-Ituri,Rwampara,SHARI,Unclassified,2026-05-10,
-Ituri,KOMANDA,BEY,Invalid,2026-06-01,
-Ituri,KOMANDA,KOMANDA,Unclassified,2026-06-01,
-Ituri,BUNIA,LEMBABO,Unclassified,2026-06-01,
-Ituri,TCHOMIA,NANA,Unclassified,2026-06-01,
-Ituri,TCHOMIA,KASENYI CENTRE,Unclassified,2026-06-01,
-Ituri,TCHOMIA,KASENYI CITE,Negative,2026-06-01,
-Ituri,TCHOMIA,NANA,Negative,2026-06-01,
-Ituri,BUNIA,SUKISA,Positive,2026-05-25,24.03
-Ituri,Rwampara,,Positive,2026-05-03,25.78
-Ituri,NYAKUNDE,NYAKUNDE,Positive,2026-05-16,30.25
-Ituri,Rwampara,Hoho,Positive,2026-05-05,24.53
-Ituri,Rwampara,Hoho,Positive,2026-05-02,23.54
-Ituri,NYAKUNDE,NYAKUNDE,Positive,2026-05-14,28.68
-Ituri,Rwampara,Hoho/okapi,Positive,2026-05-02,32.92
-Ituri,Rwampara,Hoho,Positive,2026-04-25,31.74
-Ituri,Rwampara,HOHO,Negative,2026-05-18,
-Ituri,ARU,,Positive,,31.5
-Ituri,Rwampara,,Positive,,25.35
-Ituri,NYAKUNDE,NYAKUNDE,Positive,2026-05-11,27.2
-Ituri,Rwampara,Rwampara,Positive,2026-05-24,23.3
-Ituri,Rwampara,,Positive,2026-05-05,17.27
-Ituri,,,Positive,,28.23
-Ituri,BUNIA,BIGO,Positive,2026-05-08,24.32
-Ituri,Rwampara,Rwampara,Positive,2026-05-19,
-Ituri,Rwampara,HOHO,Positive,2026-05-18,31.53
-Ituri,MONGBWALU,MONGBWALU,Positive,2026-05-17,29.46
-Ituri,Rwampara,,Positive,,25.4
-Ituri,Rwampara,Hoho,Invalid,2026-04-28,
-Ituri,Rwampara,Lumumba,Invalid,2026-05-02,
-Ituri,Rwampara,Hoho,Invalid,2026-04-28,
-Ituri,Rwampara,Hoho,Invalid,2026-05-03,
-Ituri,Rwampara,,Positive,2026-05-03,27.33
-Ituri,MONGBWALU,MONGBWALU,Negative,2026-05-19,
-Ituri,TCHOMIA,TCHOMIA,Negative,2026-06-02,
-Ituri,NYAKUNDE,SOTA,Negative,2026-05-29,
-Ituri,NYAKUNDE,SOTA,Positive,2026-05-25,30.15
-Ituri,NYAKUNDE,SOTA,Negative,2026-05-30,
-Ituri,NYAKUNDE,SOTA,Negative,2026-05-27,
-Ituri,NYAKUNDE,SOTA,Negative,2026-05-31,
-Ituri,NYAKUNDE,SOTA,Negative,2026-05-24,
-Ituri,NYAKUNDE,NYAKUNDE,Negative,2026-05-30,
-Ituri,NYAKUNDE,SOTA,Negative,2026-05-30,
-Ituri,BUNIA,NDIBE,Negative,2026-05-17,
-Ituri,NYAKUNDE,SOTA,Positive,2026-05-30,27.16
-Ituri,NYAKUNDE,SOTA,Positive,2026-05-23,31.65
-Ituri,NYAKUNDE,KOMBOKABO,Negative,2026-06-02,
-Ituri,NYAKUNDE,NYAKUNDE,Negative,2026-06-02,
-Ituri,NYAKUNDE,IRUMU,Negative,2026-05-27,
-Ituri,NYAKUNDE,KOMBOKABO,Negative,2026-05-29,
-Ituri,BUNIA,AEROPORT,Negative,2026-05-26,
-Ituri,BUNIA,AEROPORT,Positive,2026-05-28,27.77
-Ituri,BUNIA,AEROPORT,Negative,2026-05-27,
-Ituri,BUNIA,AEROPORT,Negative,2026-05-20,
-Ituri,BUNA,AEROPORT,Negative,2026-05-25,
-Ituri,BUNIA,BANKOKO,Negative,2026-05-29,
-Ituri,BUNIA,AEROPORT,Negative,2026-05-29,
-Ituri,BUNIA,AEROPORT,Positive,2026-05-29,
-Ituri,BUNIA,NGEZI,Negative,2026-05-29,
-Ituri,BUNIA,BANKOKO,Negative,2026-05-29,
-Ituri,NBAMBU,NYARANDA,Negative,2026-05-26,
-Ituri,BUNIA,AEROPORT,Negative,2026-05-21,
-Ituri,BUNIA,AEROPORT,Negative,2026-05-31,
-Ituri,NYAKUNDE,BIRINYAMA,Negative,2026-05-25,
-Ituri,NYAKUNDE,MARABO,Negative,2026-05-29,
-Ituri,NYAKUNDE,MARABO,Negative,2026-05-18,
-Ituri,NYAKUNDE,IRUMU,Negative,2026-05-30,
-Ituri,KOMANDA,BAHITI,Negative,2026-05-18,
-Ituri,NIZI,NIZI,Negative,2026-05-13,
-Ituri,Rwampara,SHARI,Negative,2026-06-01,
-Ituri,Rwampara,SHARI,Negative,2026-05-29,
-Ituri,Rwampara,SHARI,Negative,2026-06-01,
-Ituri,Rwampara,SHARI,Negative,,
-Ituri,Rwampara,Rwampara,Negative,2026-05-31,
-Ituri,Rwampara,Rwampara,Positive,2026-06-02,28.31
-Ituri,Rwampara,TCHUNGA,Negative,2026-05-28,
-Ituri,Rwampara,HOHO,Negative,2026-05-15,
-Ituri,Rwampara,HOHO,Negative,2026-05-29,
-Ituri,Rwampara,Rwampara,Positive,2026-06-02,30.32
-Ituri,Rwampara,SHARI,Positive,2026-06-02,21.39
-Ituri,Rwampara,HOHO,Positive,2026-06-01,27.99
-Ituri,Rwampara,LEMBABO,Positive,2026-05-30,19.37
-Ituri,BUNIA,MUZIMARIA,Positive,2026-06-02,25.6
-Ituri,Rwampara,HOHO,Negative,2026-06-01,
-Ituri,BUNIA,CNCA,Negative,2026-06-02,
-Ituri,Rwampara,HOHO,Negative,2026-06-01,
-Ituri,BUNIA,BANKOKO,Negative,2026-06-02,
-Ituri,BUNIA,BIGO,Negative,2026-06-02,
-Ituri,Rwampara,Rwampara,Positive,2026-05-25,28.79
-Ituri,Rwampara,Rwampara,Negative,2026-05-20,
-Ituri,Rwampara,HOHO,Negative,2026-05-17,
-Ituri,Rwampara,HOHO,Negative,2026-06-01,
-Ituri,LITA,VILO,Negative,2026-05-30,
-Ituri,Rwampara,SHARI,Positive,2026-06-02,29.04
-Ituri,BUNIA,,Negative,2026-06-02,
-Ituri,BUNIA,,Negative,2026-06-02,
-Ituri,BUNIA,,Negative,2026-06-02,
-Ituri,BUNIA,BORA UZIMA,Positive,2026-06-01,32.08
-Ituri,BUNIA,LEMBABO,Positive,2026-06-02,28.74
-Ituri,BUNIA,BORA UZIMA,Positive,2026-05-30,35.18
-Ituri,BUNIA,CNCA,Negative,2026-05-28,
-Ituri,BUNIA,NGEZI,Positive,2026-06-02,25.37
-Ituri,BUNIA,LEMBABO,Positive,2026-05-31,33.63
-Ituri,BUNIA,ADVENTISTE,Positive,2026-06-02,25.8
-Ituri,BUNIA,,Negative,2026-05-27,
-Ituri,BUNIA,CNCA,Negative,2026-05-31,
-Ituri,BUNIA,CNCA,Negative,2026-05-29,
-Ituri,BUNIA,CNCA,Positive,2026-05-27,32.99
-Ituri,BUNIA,CNCA,Positive,2026-06-02,35.67
-Ituri,BUNIA,BUNIA CITE,Negative,2026-06-01,
-Ituri,BUNIA,ADVENTISTE,Negative,2026-05-31,
-Ituri,BUNIA,RWAMBUZI,Negative,2026-05-22,
-Ituri,BUNIA,NGEZI,Negative,2026-06-01,
-Ituri,DAMAS,PLUTO,Positive,2026-05-25,23.83
-Ituri,DAMAS,MBIDJO,Negative,2026-05-26,
-Ituri,DAMAS,PLUTO,Negative,2026-05-29,
-Ituri,BUNIA,BORA UZIMA,Negative,2026-05-19,
-Ituri,BUNIA,BUNIA CITE,Negative,2026-06-02,
-Ituri,BUNIA,NGEZI,Negative,2026-05-30,
-Ituri,BUNIA,SIMBILYABO,Negative,2026-06-02,
-Ituri,BUNIA,BORA UZIMA,Negative,2026-05-29,
-Ituri,BUNIA,NGEZI,Negative,2026-06-02,
-Ituri,BUNIA,AEROPORT,Positive,2026-05-31,30.26
-Ituri,BUNIA,NGEZI,Positive,2026-05-31,27.29
-Ituri,BUNIA,AEROPORT,Negative,2026-05-25,
-Ituri,BUNIA,AEROPORT,Negative,2026-05-29,
-Ituri,BUNIA,AEROPORT,Negative,2026-06-02,
-Ituri,BUNIA,AEROPORT,Positive,2026-05-29,29.33
-Ituri,BUNIA,RWAMBUZI,Negative,2026-05-28,
-Ituri,BUNIA,AEROPORT,Negative,2026-05-30,
-Ituri,BUNIA,AEROPORT,Negative,2026-05-31,
-Ituri,Rwampara,SHARI,Negative,2026-05-26,
-Ituri,Rwampara,Rwampara,Negative,2026-05-28,
-Ituri,Rwampara,BOGORO,Negative,2026-06-02,
-Ituri,Rwampara,TCHUNGA,Negative,2026-06-01,
-Ituri,Rwampara,SHARI,Negative,2026-05-23,
-Ituri,Rwampara,NGONA,Negative,2026-05-30,
-Ituri,Rwampara,TCHUNGA,Positive,2026-06-01,28.64
-Ituri,Rwampara,Rwampara,Negative,2026-05-06,
-Ituri,Rwampara,HOHO,Negative,2026-06-02,
-Ituri,Rwampara,HOHO,Negative,2026-05-30,
-Ituri,Rwampara,HOHO,Negative,2026-05-30,
-Ituri,Rwampara,NGONA,Negative,2026-05-25,
-Ituri,Rwampara,Rwampara,Negative,2026-06-02,
-Ituri,BUNIA,BUNIA CITE,Negative,2026-05-15,
-Ituri,Rwampara,HOHO,Negative,2026-06-03,
-Ituri,Rwampara,SHARI,Negative,2026-05-10,
-Ituri,Rwampara,Rwampara,Negative,2026-06-01,
-Ituri,Rwampara,BAYHANA,Negative,2026-06-03,
-Ituri,BUNIA,NDIBE,Positive,2026-06-03,24.16
-Ituri,Rwampara,Rwampara,Negative,2026-06-02,
-Ituri,BUNIA,RWAKOLE,Negative,2026-06-03,
-Ituri,Rwampara,Rwampara,Negative,2026-05-29,
-Ituri,Rwampara,HOHO,Negative,2026-06-01,
-Ituri,Rwampara,Rwampara,Negative,2026-06-02,
-Ituri,Rwampara,HOHO,Negative,2026-05-08,
-Ituri,Rwampara,TCHUNGA,Positive,2026-05-31,28.54
-Ituri,Rwampara,HOHO,Negative,2026-06-01,
-Ituri,Rwampara,POLICE DE FRONTIERE,Negative,2026-05-20,
-Ituri,Rwampara,HOHO,Negative,2026-05-29,
-Ituri,Rwampara,NGONA,Negative,2026-05-25,
-Ituri,LITA,BAHWERE,Positive,2026-05-22,30.13
-Ituri,DRODRO,KPAKO,Unclassified,2026-06-03,
-Ituri,NYAKUNDE,NYAKUNDE,Unclassified,2026-05-18,
-Ituri,NYAKUNDE,NYAKUNDE,Unclassified,2026-05-30,
-Ituri,NYAKUNDE,TUMBIAMBO,Unclassified,2026-05-25,
-Ituri,NYAKUNDE,SOTA,Negative,2026-06-03,
-Ituri,NYAKUNDE,SOTA,Positive,2026-06-03,28.43
-Ituri,NYAKUNDE,SOTA,Positive,2026-05-19,28.8
-Ituri,NYAKUNDE,NYAKUNDE,Negative,2026-05-22,
-Ituri,NYAKUNDE,SOTA,Positive,2026-05-25,24.76
-Ituri,BUNIA,HOHO,Negative,2026-05-22,
-Ituri,NYAKUNDE,BIRINYAMA,Invalid,2026-05-29,
-Ituri,MANDIMA,MANDIMA,Negative,2026-06-03,
-Ituri,MONGBWALU,,Unclassified,2026-06-03,
-Ituri,MONGBWALU,,Unclassified,2026-06-03,
-Ituri,MONGBWALU,,Unclassified,2026-06-03,
-Ituri,MONGBWALU,,Unclassified,2026-06-03,
-Ituri,MONGBWALU,,Unclassified,2026-06-03,
-Ituri,MONGBWALU,,Unclassified,2026-06-03,
-Ituri,MONGBWALU,,Unclassified,2026-06-03,
-Ituri,MONGBWALU,,Unclassified,2026-06-03,
-Ituri,MONGBWALU,,Unclassified,2026-06-03,
-Ituri,MONGBWALU,,Unclassified,2026-06-03,
-Ituri,MONGBWALU,,Unclassified,2026-06-03,
-Ituri,MONGBWALU,,Unclassified,2026-06-03,
-Ituri,MONGBWALU,,Unclassified,2026-06-03,
-Ituri,Rwampara,LENGABO,Unclassified,2026-05-31,
-,,,Unclassified,,
-Ituri,Rwampara,HOHO,Unclassified,2026-06-01,
-Ituri,Rwampara,HOHO,Unclassified,2026-06-01,
-Ituri,Rwampara,NGONA,Unclassified,2026-06-01,
-Ituri,Rwampara,HOHO,Unclassified,2026-05-31,
-Ituri,Rwampara,TCHUNGA,Unclassified,2026-06-01,
-Ituri,BUNIA,KINDIA,Unclassified,2026-06-02,
-Ituri,Rwampara,Rwampara,Unclassified,2026-06-03,
-Ituri,,,Unclassified,2026-06-03,
-Ituri,,,Unclassified,2026-06-03,
-Ituri,,,Unclassified,2026-06-03,
-Ituri,,,Unclassified,2026-06-03,
-Ituri,,,Unclassified,2026-06-03,
-Ituri,,,Unclassified,2026-06-03,
-Ituri,,,Unclassified,2026-06-03,
-Ituri,,,Unclassified,2026-06-03,
-Ituri,,,Unclassified,2026-06-03,
-Ituri,,,Unclassified,2026-06-03,
-Ituri,,,Unclassified,2026-06-03,
-,,,Unclassified,2026-06-03,
-,,,Unclassified,2026-06-03,
-,,,Unclassified,2026-06-03,
-,,,Unclassified,2026-06-03,
-,,,Unclassified,2026-06-03,
-,,,Unclassified,2026-06-03,
-,,,Unclassified,2026-06-03,
-,,,Unclassified,2026-06-03,
-,,,Unclassified,2026-06-03,
-,,,Unclassified,2026-06-03,
-Nord-Kivu,MANGUREDJIPA,KAMBAU,Negative,2026-05-12,
-Nord-Kivu,BUTEMBO,KYANGIKE,Positive,2026-05-05,
-Nord-Kivu,LUBERO,HGR LUBERO,Negative,2026-05-10,
-Nord-Kivu,BUTEMBO,VULAMBA,Negative,2026-05-11,
-Nord-Kivu,KATWA,RUGHENDA,Negative,2026-04-14,
-Nord-Kivu,BENI,CS KANZULINZULI,Negative,2026-05-09,
-Nord-Kivu,BENI,KASANGA,Negative,2026-05-07,
-Nord-Kivu,BENI,KASANGA,Negative,2026-05-16,
-Nord-Kivu,KATWA,KAKIVIKA,Negative,2026-05-18,
-Nord-Kivu,KATWA,VUNGI,Negative,2026-05-15,
-Nord-Kivu,KATWA,,Negative,2026-05-17,
-Nord-Kivu,BUTEMBO,,Negative,2026-05-06,
-Nord-Kivu,KATWA,CH SAINT PEREGRIN,Negative,2026-05-18,
-Nord-Kivu,KATWA,KYAGHALA,Positive,2026-05-08,
-Nord-Kivu,KATWA,MATANDA,Positive,2026-04-14,
-Nord-Kivu,KATWA,MUKANGALA,Negative,2026-05-18,
-Nord-Kivu,,,Negative,2026-05-01,
-Nord-Kivu,,,Negative,,
-Nord-Kivu,BUTEMBO,MAHAMBA,Negative,2026-05-19,
-Nord-Kivu,BUTEMBO,KYANGIKE,Negative,2026-05-15,
-Nord-Kivu,KATWA,MASULI,Negative,,
-Nord-Kivu,BUTEMBO,BIENA,Negative,2026-05-16,
-Nord-Kivu,MUSIENENE,NDUKO,Negative,2026-05-15,
-Nord-Kivu,KATWA,KYAGHALA,Negative,2026-05-16,
-Nord-Kivu,KATWA,NGINGI,Negative,,
-Nord-Kivu,KATWA,MUKUNA,Positive,2026-05-11,
-Nord-Kivu,KATWA,WANAMAHA,Negative,,
-Nord-Kivu,BUTEMBO,,Negative,2026-05-13,
-Nord-Kivu,OICHA,,Negative,,
-Nord-Kivu,BUTEMBO,,Negative,,
-Nord-Kivu,,,Negative,2026-05-07,
-Nord-Kivu,KATWA,MAKENGELA,Negative,2026-05-17,
-Nord-Kivu,MUSIENENE,IVATAMA,Negative,2026-05-16,
-Nord-Kivu,MUSIENENE,IVATAMA,Negative,2026-05-09,
-Nord-Kivu,KATWA,MUTSANGA,Negative,2026-05-16,
-Nord-Kivu,MASEREKA,VUSUMBA,Negative,2026-05-19,
-Nord-Kivu,MUSIENENE,IVATAMA,Negative,2026-05-16,
-Nord-Kivu,BUTEMBO,MAKASI,Negative,2026-05-19,
-Nord-Kivu,KATWA,VUNGI,Negative,,
-Nord-Kivu,BUTEMBO,MAKASI,Negative,,
-Nord-Kivu,BUTEMBO,KYANGIKE,Negative,2026-05-23,
-Nord-Kivu,MUSIENENE,BUGHUMIRYA,Negative,2026-05-15,
-Nord-Kivu,KYONDO,VUHASA,Positive,2026-05-21,
-Nord-Kivu,BUTEMBO,KYANGIKE,Negative,2026-04-25,
-Nord-Kivu,KATWA,VUNGI,Negative,2026-05-23,
-Nord-Kivu,KATWA,CS MUCHANGA,Negative,2026-05-22,
-Nord-Kivu,KATWA,VUNGI,Negative,2026-05-20,
-Nord-Kivu,MUSIENENE,KIMBULU,Negative,2026-05-23,
-Nord-Kivu,KATWA,CHIMUTIRI,Negative,2026-05-23,
-Nord-Kivu,LUBERO,LUB-CITE,Negative,2026-05-20,
-Nord-Kivu,BIENA,KIRIMA,Negative,2026-05-23,
-Nord-Kivu,LUBERO,LUB-CITE,Negative,2026-05-21,
-Nord-Kivu,MUSIENENE,BUGHUMIRYA,Negative,2026-05-18,
-Nord-Kivu,BUTEMBO,MAKASI,Negative,2026-05-23,
-Nord-Kivu,KALUNGUTA,CS MWIRA,Positive,2026-05-05,
-Nord-Kivu,OICHA,TENAMBO,Negative,2026-04-28,
-Nord-Kivu,BENI,,Negative,2026-05-19,
-Nord-Kivu,BENI,,Negative,2026-05-19,
-Nord-Kivu,BENI,,Negative,2026-05-19,
-Nord-Kivu,BENI,,Negative,2026-05-18,
-Nord-Kivu,BENI,,Negative,2026-05-19,
-Nord-Kivu,BENI,,Negative,2026-05-19,
-Nord-Kivu,OICHA,TENAMBO,Positive,2026-05-14,
-Nord-Kivu,BENI,SAYO,Negative,2026-05-18,
-Nord-Kivu,BENI,,Negative,2026-05-20,
-Nord-Kivu,BENI,,Negative,2026-05-20,
-Nord-Kivu,BENI,,Negative,2026-05-20,
-Nord-Kivu,BENI,,Negative,2026-05-20,
-Nord-Kivu,BENI,,Negative,2026-05-20,
-Nord-Kivu,BENI,BUTSILI,Negative,2026-05-15,
-Nord-Kivu,BENI,,Negative,2026-05-21,
-Nord-Kivu,BENI,MANGOTHE,Negative,2026-05-20,
-Nord-Kivu,MABALAKO,VISIKI,Negative,2026-05-17,
-Nord-Kivu,MABALAKO,VISIKI,Negative,2026-05-18,
-Nord-Kivu,OICHA,HGR OICHA,Negative,2026-05-07,
-Nord-Kivu,OICHA,,Negative,2026-05-16,
-Nord-Kivu,BENI,KASABINYOLE,Negative,2026-05-13,
-Nord-Kivu,BENI,CS NDINDI,Negative,2026-05-20,
-Nord-Kivu,BENI,,Negative,2026-05-22,
-Nord-Kivu,BENI,,Negative,2026-05-21,
-Nord-Kivu,BENI,,Negative,2026-05-22,
-Nord-Kivu,KALUNGUTA,MBILINGA,Negative,2026-05-21,
-Nord-Kivu,BENI,TUUNGANE,Negative,2026-05-23,
-Nord-Kivu,OICHA,HGR OICHA,Invalid,2026-05-20,
-Nord-Kivu,OICHA,HGR OICHA,Negative,2026-05-22,
-Nord-Kivu,BENI,RWANGOMA,Negative,2026-05-19,
-Nord-Kivu,BENI,NGONGOLIO,Positive,2026-05-20,
-Nord-Kivu,BENI,BOIKENE,Negative,2026-05-03,
-Nord-Kivu,OICHA,TENAMBO,Positive,2026-05-14,
-Nord-Kivu,MUTWANGA,MASAMBO,Negative,2026-05-22,
-Nord-Kivu,OICHA,HGR OICHA,Negative,2026-05-07,
-Nord-Kivu,BENI,MABANGA,Positive,2026-05-23,
-Nord-Kivu,MUSIENENE,NGELEZA,Negative,2026-05-23,
-Nord-Kivu,MUSIENENE,NGELEZA,Negative,2026-05-21,
-Nord-Kivu,MUSIENENE,NGELEZA,Negative,2026-05-20,
-Nord-Kivu,MUSIENENE,NGELEZA,Negative,2026-05-23,
-Nord-Kivu,MUSIENENE,MONGALI,Negative,2026-05-21,
-Nord-Kivu,BUTEMBO,MAMA MUSAYI,Negative,2026-05-22,
-Nord-Kivu,BUTEMBO,KYANGIKE,Negative,2026-05-11,
-Nord-Kivu,KATWA,MAKERERE,Negative,2026-05-22,
-Nord-Kivu,BUTEMBO,KYANGIKE,Negative,2026-05-19,
-Nord-Kivu,KATWA,MATANDA,Negative,2026-05-21,
-Nord-Kivu,KATWA,MATANDA,Negative,2026-05-18,
-Nord-Kivu,BUTEMBO,VUTSUNDO,Negative,2026-05-24,
-Nord-Kivu,KATWA,KAMBULI,Negative,2026-05-24,
-Nord-Kivu,KATWA,VUNGI,Positive,2026-05-25,
-Nord-Kivu,KATWA,RUGHENDA,Positive,2026-05-15,
+sample_id,province,health_zone,health_area,status,date,ct
+26FHV060,Ituri,Bunia,NA,Negative,NA,NA
+26FHV061,Ituri,Bunia,NA,Positive,NA,NA
+26FHV062,Ituri,Bunia,NA,Positive,NA,NA
+26FHV063,Ituri,Bunia,NA,Positive,NA,NA
+26FHV064,Ituri,Bunia,NA,Positive,NA,NA
+BIA001,Ituri,Rwampara,NA,Not yet run,NA,NA
+BIA002,Ituri,Aru,NA,Not yet run,NA,NA
+BIA003,Ituri,Aru,NA,Not yet run,NA,NA
+BIA004,Ituri,Aru,NA,Not yet run,NA,NA
+BIA005,Ituri,Aru,NA,Not yet run,NA,NA
+BIA006,Ituri,Aru,NA,Not yet run,NA,NA
+BIA011,Ituri,Rwampara,NA,Not yet run,NA,NA
+BIA014,Ituri,Rwampara,NA,Not yet run,NA,NA
+BIA015,Ituri,Rwampara,NA,Not yet run,NA,NA
+BIA019,Ituri,Nyakunde,NA,Not yet run,NA,NA
+BIA020,Ituri,Rwampara,NA,Not yet run,NA,NA
+BIA021,Ituri,Rwampara,NA,Not yet run,NA,NA
+BIA023,Ituri,Rwampara,NA,Not yet run,NA,NA
+BIA026,Ituri,Mongbalu,MONGBWALU,Positive,NA,26.51
+BIA027,Ituri,Mongbalu,ABELKOZO,Positive,2026-05-15,24.18
+BIA028,Ituri,Mongbalu,NDC,Positive,NA,28.7
+BIA029,Ituri,Mongbalu,MONGBWALU,Positive,NA,24.14
+BIA030,Ituri,Mongbalu,MONGBWALU,Positive,2026-05-12,24.97
+BIA031,Ituri,Mongbalu,MONGBWALU,Negative,NA,NA
+BIA032,Ituri,Mongbalu,MONGBWALU,Positive,2026-05-13,32.47
+BIA033,Ituri,Rwampara,SHARI,Positive,2026-05-10,23.36
+BIA035,Ituri,Rwampara,Rwampara,Negative,2026-05-10,NA
+BIA036,Ituri,Rwampara,SHARI,Positive,2026-05-11,34.34
+BIA037,Ituri,Bunia,NGEZI,Positive,NA,29.01
+BIA038,Ituri,Bunia,BIGO,Positive,NA,24
+BIA039,Ituri,NA,NA,Not yet run,NA,NA
+BIA040,Ituri,NA,NA,Positive,NA,28.72
+BIA041,Ituri,Rwampara,Rwampara,Negative,NA,NA
+BIA043,Ituri,Nyakunde,NYAKUNDE,Positive,2026-05-15,29.72
+BIA044,Ituri,Nyakunde,NYAKUNDE,Positive,2026-05-15,32.77
+BIA045,Ituri,Rwampara,Rwampara,Negative,NA,NA
+BIA046,Ituri,Mangala,PASSION,Negative,2026-05-14,NA
+BIA049,Ituri,Rwampara,Shari,Positive,2026-05-15,34.48
+BIA050,Ituri,Rwampara,Shari,Positive,2026-05-16,23.39
+BIA052,Ituri,Rwampara,TCHUNGA,Positive,2026-05-16,35.26
+BIA053,Ituri,Rwampara,TCHUNGA,Negative,NA,NA
+BIA055,Ituri,Nyakunde,NYAKUNDE,Negative,2026-05-02,NA
+BIA057,Ituri,Nyakunde,NYAKUNDE,Positive,2026-05-16,34.67
+BIA058,Ituri,Rwampara,Shari,Positive,2026-05-10,22.05
+BIA059,Ituri,Bunia,AERO,Negative,NA,NA
+BIA060,Ituri,Bunia,AERO,Positive,2026-05-05,25.52
+BIA061,Ituri,Bunia,AERO,Positive,NA,35.61
+BIA062,Ituri,Bunia,AERO,Positive,2026-05-07,29.31
+BIA063,Ituri,NA,NA,Not yet run,NA,NA
+BIA065,Ituri,Rwampara,HOHO,Positive,2026-05-08,24.13
+BIA066,Ituri,Mongbalu,MONGBWALU,Positive,2026-05-15,NA
+BIA067,Ituri,Rwampara,HOHO,Positive,2026-05-07,25
+BIA068,Ituri,Bunia,HOHO,Negative,2026-05-10,NA
+BIA070,Ituri,Rwampara,POLICE DE FRONTIERE,Positive,NA,NA
+BIA072,Ituri,Rwampara,POLICE DE FRONTIERE,Positive,2026-05-14,24.95
+BIA073,Ituri,Rwampara,HOHO,Negative,2026-05-11,NA
+BIA075,Ituri,Drodro,DRODRO,Negative,2026-05-14,NA
+BIA076,Ituri,NA,NGRUKU,Positive,2026-05-10,NA
+BIA077,Ituri,Rwampara,HOHO,Invalid,NA,NA
+BIA078,Ituri,Rwampara,HOHO,Negative,NA,NA
+BIA079,Ituri,Rwampara,HOHO,Positive,2026-05-09,NA
+BIA080,Ituri,Rwampara,HOHO,Negative,2026-05-15,NA
+BIA081,Ituri,Rwampara,HOHO,Invalid,NA,NA
+BIA083,Ituri,Nizi,HERITAGE,Negative,2026-05-16,NA
+BIA084,Ituri,Logo,NGALI,Negative,2026-05-14,NA
+BIA086,Ituri,Logo,MERE APOLLINE,Negative,2026-05-11,NA
+BIA087,Ituri,Rwampara,SHARI,Negative,NA,NA
+BIA089,Ituri,Rwampara,SHARI,Negative,2026-05-15,NA
+BIA090,Ituri,Rwampara,Rwampara,Positive,NA,36.23
+BIA091,Ituri,Rwampara,Rwampara,Positive,2026-05-15,30.5
+BIA092,Ituri,Rwampara,SHARI,Negative,NA,NA
+BIA093,Ituri,Rwampara,Rwampara,Negative,NA,NA
+BIA094,Ituri,Rwampara,SHARI,Negative,2026-05-16,NA
+BIA095,Ituri,Rwampara,TCHUNGA,Negative,NA,NA
+BIA096,Ituri,Rwampara,HOHO,Negative,2026-05-15,NA
+BIA097,Ituri,Komanda,BWANASURA,Negative,NA,NA
+BIA098,Ituri,Komanda,BWANASURA,Negative,NA,NA
+BIA099,Ituri,Bunia,BIGO,Negative,NA,NA
+BIA100,Ituri,Rwampara,HOHO,Negative,NA,NA
+BIA101,Ituri,Rwampara,HOHO,Negative,NA,NA
+BIA102,Ituri,Rwampara,HOHO,Negative,NA,NA
+BIA103,Ituri,Bunia,BIGO,Negative,NA,NA
+BIA105,Ituri,Nyakunde,NYAKUNDE,Positive,2026-05-16,37.91
+BIA106,Ituri,Rwampara,HOHO,Positive,2026-05-17,28.3
+BIA107,Ituri,Bunia,NGEZI,Positive,2026-05-16,24.87
+BIA108,Ituri,Nyakunde,NYAKUNDE,Positive,2026-05-13,25.9
+BIA109,Ituri,Bunia,NA,Not yet run,NA,NA
+BIA110,Ituri,Nyakunde,SOTA,Positive,2026-05-17,NA
+BIA111,Ituri,Rwampara,SHARI,Positive,2026-05-17,25.9
+BIA112,Ituri,Bunia,NA,Negative,NA,NA
+BIA113,Ituri,Bunia,BIGO,Positive,2026-05-18,35.41
+BIA114,Ituri,Rwampara,SHARI,Positive,NA,21.54
+BIA115,Ituri,Rwampara,SHARI,Negative,NA,NA
+BIA116,Ituri,Rwampara,SHARI,Positive,2026-05-12,25.35
+BIA117,Ituri,Rwampara,SHARI,Positive,2026-05-17,25.93
+BIA118,Ituri,Rwampara,NA,Negative,NA,NA
+BIA119,Ituri,Bunia,NA,Negative,2026-05-02,NA
+BIA120,Ituri,Bunia,BIGO,Negative,2026-05-04,NA
+BIA121,Ituri,Bunia,SAYO,Invalid,NA,NA
+BIA122,Ituri,Mongbalu,MONGBWALU,Negative,NA,NA
+BIA123,Ituri,Bunia,KIGONZE,Negative,2026-05-08,NA
+BIA124,Ituri,Bunia,NA,Positive,2026-05-17,24.83
+BIA125,Ituri,Rwampara,NA,Not yet run,NA,NA
+BIA126,Ituri,Rwampara,NGONA,Positive,2026-05-16,24.52
+BIA128,Ituri,Rwampara,HOHO,Not yet run,2026-05-11,NA
+BIA130,Ituri,Bambu,KOBU,Invalid,NA,NA
+BIA131,Ituri,Rwampara,HOHO,Invalid,NA,NA
+BIA133,Ituri,Rwampara,HOHO,Negative,NA,NA
+BIA135,Ituri,Bambu,BAMBU,Negative,2026-05-15,NA
+BIA136,Ituri,Bambu,NYARADA,Negative,2026-05-13,NA
+BIA137,Ituri,Kilo,KILO MISSION,Positive,2026-05-13,24.97
+BIA138,Ituri,Mongbalu,SAIO,Invalid,2026-05-12,NA
+BIA139,Ituri,Rwampara,NA,Negative,NA,NA
+BIA142,Ituri,Lita,NA,Negative,NA,NA
+BIA139,Ituri,Rwampara,SHARI,Not yet run,NA,NA
+BIA141,Ituri,Rwampara,HOHO,Not yet run,NA,NA
+BIA142,Ituri,Lita,KATOTO,Not yet run,NA,NA
+BIA143,Ituri,Lita,NA,Negative,NA,NA
+BIA144,Ituri,Rwampara,NA,Negative,NA,NA
+BIA145,Ituri,Nyakunde,NYAKUNDE,Invalid,NA,NA
+BIA146,Ituri,Nyakunde,NYAKUNDE,Negative,NA,NA
+BIA147,Ituri,Nyakunde,NYAKUNDE,Negative,NA,NA
+BIA148,Ituri,Bunia,RWAMBUZI,Positive,2026-05-13,28.78
+BIA149,Ituri,Bunia,NA,Not yet run,NA,NA
+BIA150,Ituri,Bunia,SIMBILYABO,Negative,NA,NA
+BIA151,Ituri,Bunia,NGEZI,Positive,2026-05-18,33.01
+BIA152,Ituri,Bunia,NGEZI,Negative,NA,NA
+BIA153,Ituri,Nyakunde,NYAKUNDE,Invalid,NA,NA
+BIA154,Ituri,Nyakunde,NYAKUNDE,Negative,NA,NA
+BIA155,Ituri,Nyakunde,SOTA,Negative,NA,NA
+BIA156,Ituri,Nyakunde,NYAKUNDE,Negative,NA,NA
+BIA157,Ituri,Nyakunde,NYAKUNDE,Negative,NA,NA
+BIA158,Ituri,Nyakunde,NYAKUNDE,Positive,2026-05-18,33.61
+BIA159,Ituri,Nyakunde,NYAKUNDE,Positive,2026-05-16,36.11
+BIA160,Ituri,Nyakunde,NYAKUNDE,Negative,NA,NA
+BIA161,Ituri,Nyakunde,NYAKUNDE,Negative,NA,NA
+BIA162,Ituri,Nyakunde,NYAKUNDE,Positive,2026-05-17,29.24
+BIA163,Ituri,Rwampara,SHARI,Invalid,NA,NA
+BIA165,Ituri,Nyakunde,NYAKUNDE,Negative,NA,NA
+BIA166,Ituri,Rwampara,Rwampara,Negative,NA,NA
+BIA168,Ituri,Rwampara,Rwampara,Negative,NA,NA
+BIA170,Ituri,Nizi,LUCHAY,Negative,NA,NA
+BIA171,Ituri,Rwampara,Rwampara,Negative,NA,NA
+BIA172,Ituri,Rwampara,SHARI,Negative,NA,NA
+BIA174,Ituri,Rwampara,SHARI,Negative,NA,NA
+BIA176,Ituri,Rwampara,DELE,Negative,2026-05-18,NA
+BIA177,Ituri,Bunia,Nzere,Negative,2026-05-14,NA
+BIA178,Ituri,Bunia,BIGO,Positive,NA,20.75
+BIA179,Ituri,Nyakunde,NYAKUNDE,Positive,2026-05-15,21.43
+BIA180,Ituri,Rwampara,DELE,Negative,2026-05-16,NA
+BIA181,Ituri,Rwampara,HOHO,Negative,NA,NA
+BIA182,Ituri,Mangala,MBAYA,Invalid,NA,NA
+BIA183,Ituri,Mongbalu,NA,Not yet run,NA,NA
+BIA184,Ituri,Mongbalu,MONGBWALU,Negative,NA,NA
+BIA186,Ituri,Mongbalu,MONGBWALU,Negative,NA,NA
+BIA189,Ituri,Mongbalu,MONGBWALU,Invalid,2026-05-14,NA
+BIA190,Ituri,Mongbalu,NA,Not yet run,NA,NA
+BIA191,Ituri,Mongbalu,MONGBWALU,Invalid,NA,NA
+BIA192,Ituri,Mongbalu,MONGBWALU,Positive,2026-05-16,27.97
+BIA193,Ituri,Mongbalu,CECA20,Negative,NA,NA
+BIA194,Ituri,Mongbalu,MONGBWALU,Invalid,NA,NA
+BIA195,Ituri,Mongbalu,NA,Not yet run,NA,NA
+BIA196,Ituri,Mongbalu,NDCM,Negative,NA,NA
+BIA197,Ituri,Mongbalu,CECA20,Invalid,NA,NA
+BIA198,Ituri,Mongbalu,ALBEKONZO,Positive,2026-05-16,24.87
+BIA199,Ituri,Mongbalu,ALBEKONZO,Negative,NA,NA
+BIA200,Ituri,Mongbalu,MONGBWALU,Negative,NA,NA
+BIA201,Ituri,Mongbalu,MONGBWALU,Negative,NA,NA
+BIA202,Ituri,Mongbalu,PLUTO,Invalid,NA,NA
+BIA203,Ituri,Mongbalu,ABELKOZO,Negative,NA,NA
+BIA204,Ituri,Mongbalu,MONGBWALU,Positive,2026-05-14,27.85
+BIA205,Ituri,Mongbalu,CECA20,Negative,NA,NA
+BIA206,Ituri,Mongbalu,NDCM,Negative,NA,NA
+BIA207,Ituri,Mongbalu,MONGBWALU,Negative,NA,NA
+BIA208,Ituri,Mongbalu,ALBEKONZO,Negative,NA,NA
+BIA210,Ituri,Mongbalu,MONGBWALU,Negative,NA,NA
+BIA211,Ituri,Mongbalu,ALBEKONZO,Not yet run,NA,NA
+BIA212,Ituri,Mongbalu,MONGBWALU,Invalid,2026-05-02,NA
+BIA213,Ituri,Mongbalu,SAIO,Negative,2026-05-15,NA
+BIA214,Ituri,Mongbalu,MONGBWALU,Negative,NA,NA
+BIA215,Ituri,Mongbalu,MONGBWALU,Negative,NA,NA
+BIA216,Ituri,Mongbalu,MONGBWALU,Positive,NA,27.34
+BIA217,Ituri,Mongbalu,CECA20,Negative,NA,NA
+BIA218,Ituri,Mongbalu,NDCM,Invalid,NA,NA
+BIA219,Ituri,Mongbalu,MONGBWALU,Negative,2026-05-15,NA
+BIA220,Ituri,Mongbalu,CECA20,Positive,2026-05-16,25.97
+BIA221,Ituri,Mongbalu,MONGBWALU,Positive,2026-05-04,24.75
+BIA222,Ituri,Mongbalu,ALBEKONZO,Negative,NA,NA
+BIA224,Ituri,Mongbalu,MONGBWALU,Not yet run,2026-05-18,NA
+BIA225,Ituri,Mongbalu,MONGBWALU,Not yet run,2026-05-15,NA
+BIA227,Ituri,Mongbalu,CECA20,Negative,NA,NA
+BIA228,Ituri,Mongbalu,ALBEKONZO,Negative,NA,NA
+BIA230,Ituri,Tchomia,NYAMUSASI 1,Negative,NA,NA
+BIA232,Ituri,Kilo,KILO ETAT,Negative,2026-05-19,NA
+BIA233,Ituri,Kilo,ITENDEY,Negative,NA,NA
+BIA234,Ituri,Kilo,KILO ETAT,Negative,NA,NA
+BIA235,Ituri,Kilo,ITENDEY,Negative,2026-05-19,NA
+BIA236,Ituri,Tchomia,SABO,Negative,NA,NA
+BIA237,Ituri,Kilo,KILO ETAT,Negative,2026-05-19,NA
+BIA238,Ituri,Kilo,ITENDEY,Negative,NA,NA
+BIA239,Ituri,Kilo,ITENDEY,Negative,NA,NA
+BIA240,Ituri,Kilo,KILO MISSION,Negative,2026-05-17,NA
+BIA241,Ituri,Nyakunde,NYAKUNDE,Negative,2026-05-19,NA
+BIA242,Ituri,Mongbalu,MONGBWALU,Positive,2026-05-09,26.48
+BIA243,Ituri,Mongbalu,NDCM,Positive,2026-05-14,17.56
+BIA244,Ituri,Mongbalu,SAIO,Positive,2026-05-17,19.62
+BIA245,Ituri,Mongbalu,NDCM,Invalid,NA,NA
+BIA246,Ituri,Mongbalu,SAIO,Negative,2026-05-15,NA
+BIA247,Ituri,Mongbalu,MONGBWALU,Negative,NA,NA
+BIA248,Ituri,Mongbalu,CECA20,Positive,2026-05-15,20.42
+BIA249,Ituri,Mongbalu,CECA20,Positive,2026-05-15,21.91
+BIA250,Ituri,Mongbalu,ALBEKONZO,Positive,2026-05-02,29.26
+BIA251,Ituri,Mongbalu,LODJO,Positive,2026-05-18,21.04
+BIA252,Ituri,Mongbalu,MONGBWALU,Positive,2026-05-16,20.97
+BIA253,Ituri,Mongbalu,MONGBWALU,Invalid,2026-05-13,NA
+BIA254,Ituri,Mongbalu,CECA20,Negative,NA,NA
+BIA255,Ituri,Mongbalu,MONGBWALU,Positive,2026-05-16,23.21
+BIA256,Ituri,Mongbalu,SAIO,Positive,2026-05-17,30.45
+BIA258,Ituri,Aungba,DJALASIGA,Positive,NA,26.9
+BIA259,Ituri,Mongbalu,SAIO,Negative,NA,NA
+BIA264,Ituri,Aru,NA,Negative,2026-05-19,NA
+BIA265,Ituri,Nyakunde,NYAKUNDE,Positive,2026-05-19,30.98
+BIA266,Ituri,Nyakunde,NYAKUNDE,Negative,2026-05-16,NA
+BIA267,Ituri,Bunia,SAYO,Negative,NA,NA
+BIA268,Ituri,Nyakunde,NYAKUNDE,Negative,NA,NA
+BIA271,Ituri,Nyakunde,SOTA,Negative,2026-05-20,NA
+BIA274,Ituri,Mongbalu,MONGBWALU,Negative,NA,NA
+BIA275,Ituri,Mangala,MANDJE,Negative,NA,NA
+BIA276,Ituri,Mambasa,SALAMA,Negative,2026-05-10,NA
+BIA278,Ituri,Nizi,NIZI,Negative,NA,NA
+BIA279,Ituri,Nizi,HERITAGE,Negative,NA,NA
+BIA281,Ituri,Bunia,RWAKOLE,Negative,2026-05-19,NA
+BIA283,Ituri,Rwampara,HOHO,Negative,2026-05-21,NA
+BIA284,Ituri,Rwampara,NA,Negative,2026-05-17,NA
+BIA286,Ituri,Rwampara,HOHO,Positive,2026-05-21,23.98
+BIA287,Ituri,Rwampara,POLICE DE FRONTIERE,Negative,2026-05-17,NA
+BIA290,Ituri,Rwampara,TCHUNGA,Negative,2026-05-19,NA
+BIA291,Ituri,Rwampara,TCHUNGA,Negative,2026-05-19,NA
+BIA292,Ituri,Rwampara,TCHUNGA,Negative,2026-05-18,NA
+BIA293,Ituri,Rwampara,TCHUNGA,Not yet run,NA,NA
+BIA294,Ituri,Rwampara,LENGABO,Negative,2026-05-19,NA
+BIA295,Ituri,Rwampara,LENGABO,Negative,2026-05-18,NA
+BIA296,Ituri,Bunia,LEMBABO,Negative,2026-05-20,NA
+BIA297,Ituri,Rwampara,OPAS,Negative,NA,NA
+BIA299,Ituri,Bunia,ADVENTISTE,Negative,NA,NA
+BIA300,Ituri,Rwampara,HOHO,Negative,NA,NA
+BIA301,Ituri,Rwampara,HOHO,Negative,NA,NA
+BIA302,Ituri,Rwampara,Rwampara,Negative,NA,NA
+BIA303,Ituri,Bunia,KINDIA,Negative,NA,NA
+BIA304,Ituri,Rwampara,HOHO,Negative,NA,NA
+BIA305,Ituri,Rwampara,Rwampara,Negative,2026-05-17,NA
+BIA306,Ituri,Rwampara,Rwampara,Positive,NA,26.69
+BIA307,Ituri,Rwampara,HOHO,Positive,NA,20.86
+BIA308,Ituri,Rwampara,HOHO,Negative,NA,NA
+BIA310,Ituri,Rwampara,KUNDA,Negative,2026-05-20,NA
+BIA311,Ituri,Rwampara,KUNDA,Positive,2026-05-19,21.8
+BIA312,Ituri,Rwampara,HOHO,Positive,2026-05-18,35.38
+BIA313,Ituri,Rwampara,KUNDA,Negative,NA,NA
+BIA314,Ituri,Komanda,KOMANDA,Negative,NA,NA
+BIA315,Ituri,Bunia,BIGO,Negative,NA,NA
+BIA316,Ituri,Bunia,RWAMBUZI,Positive,NA,23.58
+BIA317,Ituri,Bunia,NGEZI,Negative,NA,NA
+BIA318,Ituri,Mongbalu,MONGBWALU,Positive,2026-05-19,24.68
+BIA319,Ituri,Bunia,BANKOKO,Positive,NA,29.51
+BIA320,Ituri,Bunia,AEROPORT,Negative,NA,NA
+BIA321,Ituri,Bunia,AEROPORT,Negative,NA,NA
+BIA322,Ituri,Bunia,BANKOKO,Negative,NA,NA
+BIA323,Ituri,Bunia,LEMBABO,Negative,NA,NA
+BIA324,Ituri,Bunia,NGEZI,Positive,2026-05-18,20.58
+BIA325,Ituri,Bunia,AEROPORT,Invalid,NA,NA
+BIA326,Ituri,Bunia,AEROPORT,Negative,2026-05-15,NA
+BIA327,Ituri,Bunia,AEROPORT,Negative,2026-05-15,NA
+BIA329,Ituri,Bunia,AEROPORT,Positive,2026-05-12,28.7
+BIA330,Ituri,Bunia,RWAMBUZI,Negative,NA,NA
+BIA331,Ituri,Bunia,MUZIMARIA,Negative,2026-05-16,NA
+BIA332,Ituri,Komanda,KOMANDA,Positive,2026-05-19,18.82
+BIA333,Ituri,Gethy,SONGOLO,Positive,2026-05-20,16.65
+BIA334,Ituri,Fataki,FATAKI,Negative,2026-05-12,NA
+BIA335,Ituri,Fataki,FATAKI,Negative,2026-05-20,NA
+BIA336,Ituri,Bunia,BIGO,Negative,2026-05-21,NA
+BIA337,Ituri,Rwampara,Rwampara,Negative,NA,NA
+BIA338,Ituri,Nyakunde,MARABO,Negative,NA,NA
+BIA340,Ituri,Bunia,BIGO,Positive,2026-05-20,14.07
+BIA341,Ituri,Rwampara,MAKABO,Positive,2026-05-20,14.28
+BIA342,Ituri,Bunia,BIGO,Negative,NA,NA
+BIA343,Ituri,Bunia,BIGO,Negative,NA,NA
+BIA344,Ituri,Bunia,BIGO,Positive,2026-05-18,21.03
+BIA345,Ituri,Komanda,MANGUSU,Negative,2026-05-18,NA
+BIA346,Ituri,Rwampara,SHARI,Negative,2026-05-15,NA
+BIA347,Ituri,Bunia,NYAKASANZA,Invalid,2026-05-21,NA
+BIA348,Ituri,Bunia,BIGO,Negative,NA,NA
+BIA349,Ituri,Bunia,BIGO,Positive,2026-05-18,14.71
+BIA350,Ituri,Nyakunde,NYAKUNDE,Negative,2026-05-14,NA
+BIA351,Ituri,Bunia,NGEZI,Negative,NA,NA
+BIA352,Ituri,Rwampara,HOHO,Positive,2026-05-20,18.36
+BIA353,Ituri,Rwampara,HOHO,Positive,2026-05-19,18.13
+BIA354,Ituri,Rwampara,SHARI,Positive,NA,17.04
+BIA356,Ituri,NA,NA,Not yet run,NA,NA
+BIA359,Ituri,Bunia,AEROPORT,Negative,2026-05-15,NA
+BIA360,Ituri,Bunia,NYAKASANZA,Positive,2026-05-16,25.18
+BIA361,Ituri,Bunia,MUZIMARIA,Negative,2026-05-16,NA
+BIA362,Ituri,Bunia,NGEZI,Positive,2026-05-16,30.23
+BIA363,Ituri,Bunia,BIGO,Negative,2026-05-20,NA
+BIA364,Ituri,Bunia,AEROPORT,Positive,2026-05-21,20.37
+BIA365,Ituri,Bunia,AEROPORT,Negative,2026-05-14,NA
+BIA366,Ituri,Bunia,RWAMBUZI,Positive,2026-05-16,27.32
+BIA367,Ituri,Bunia,BIGO,Invalid,2026-05-20,NA
+BIA368,Ituri,Bunia,NGEZI,Positive,2026-05-16,24.75
+BIA369,Ituri,Bunia,BIGO,Negative,2026-05-18,NA
+BIA370,Ituri,Bunia,NGEZI,Positive,2026-05-22,30.03
+BIA372,Ituri,Bunia,BIGO,Negative,2026-05-18,NA
+BIA373,Ituri,Bambu,BAMBU,Positive,2026-05-21,15
+BIA374,Ituri,Nyakunde,BOGA,Negative,NA,NA
+BIA375,Ituri,Nyakunde,MARABO,Negative,2026-05-21,NA
+BIA376,Ituri,Nyakunde,NYAKUNDE,Negative,2026-05-20,NA
+BIA377,Ituri,Nyakunde,MARABO,Negative,NA,NA
+BIA378,Ituri,Rwampara,HOHO,Negative,NA,NA
+BIA379,Ituri,Lita,NA,Negative,NA,NA
+BIA380,Ituri,Rwampara,SHARI,Negative,NA,NA
+BIA381,Ituri,Bunia,BANKOKO,Negative,2026-05-15,NA
+BIA382,Ituri,Rwampara,HOHO,Invalid,NA,NA
+BIA384,Ituri,Rwampara,HOHO,Negative,2026-05-22,NA
+BIA385,Ituri,Rwampara,SHARI,Positive,2026-05-21,18.3
+BIA386,Ituri,Bunia,KINDIA,Negative,NA,NA
+BIA388,Ituri,Nyakunde,NYAKUNDE,Negative,2026-05-20,NA
+BIA390,Ituri,Bunia,BANKOKO,Invalid,NA,NA
+BIA391,Ituri,Bunia,BIGO,Positive,2026-05-02,18.57
+BIA392,Ituri,Bambu,TCHUNDJA,Negative,NA,NA
+BIA393,Ituri,Rwampara,TCHUNGA,Negative,2026-05-20,NA
+BIA397,Ituri,Bunia,BANKOKO,Negative,2026-05-19,NA
+BIA398,Ituri,Bunia,AEROPORT,Negative,2026-05-21,NA
+BIA399,Ituri,Bunia,AEROPORT,Positive,2026-05-19,21.63
+BIA400,Ituri,Bunia,BANKOKO,Negative,NA,NA
+BIA401,Ituri,Bunia,RWAMBUZI,Not yet run,2026-05-22,NA
+BIA402,Ituri,Bunia,RWAKOLE,Not yet run,2026-05-15,NA
+BIA403,Ituri,Rwampara,OPAS,Not yet run,2026-05-15,NA
+BIA404,Ituri,Bunia,RWAMBUZI,Not yet run,2026-05-21,NA
+BIA405,Ituri,Bunia,BANKOKO,Negative,NA,NA
+BIA406,Ituri,NA,NA,Not yet run,2026-05-16,NA
+BIA407,Ituri,Mongbalu,NDCM,Negative,NA,NA
+BIA409,Ituri,Mongbalu,SAIO,Negative,2026-05-16,NA
+BIA410,Ituri,Mongbalu,NDCM,Not yet run,2026-05-19,NA
+BIA411,Ituri,Mongbalu,SAIO,Not yet run,NA,NA
+BIA412,Ituri,Mongbalu,MONGBWALU,Negative,2026-05-20,NA
+BIA413,Ituri,Mongbalu,MONGBWALU,Negative,2026-05-11,NA
+BIA414,Ituri,Mongbalu,NDCM,Negative,NA,NA
+BIA415,Ituri,Mongbalu,MONGBWALU,Negative,NA,NA
+BIA416,Ituri,Mongbalu,CECA20,Negative,NA,NA
+BIA417,Ituri,Mongbalu,CECA20,Negative,NA,NA
+BIA418,Ituri,Mongbalu,CECA20,Negative,NA,NA
+BIA419,Ituri,Mongbalu,NDCM,Negative,2026-05-21,NA
+BIA420,Ituri,Mongbalu,MONGBWALU,Invalid,2026-05-15,NA
+BIA421,Ituri,Mongbalu,CECA20,Positive,2026-05-13,18.58
+BIA422,Ituri,Mongbalu,NDCM,Positive,2026-05-15,24.66
+BIA423,Ituri,Mongbalu,MONGBWALU,Negative,NA,NA
+BIA424,Ituri,Mongbalu,CECA20,Negative,NA,NA
+BIA425,Ituri,Nizi,HERITAGE,Negative,2026-05-15,NA
+BIA426,Ituri,Lita,KATOTO,Invalid,2026-05-23,NA
+BIA427,Ituri,Bambu,KOBU,Invalid,2026-05-22,NA
+BIA428,Ituri,Bunia,BIGO,Invalid,2026-05-23,NA
+BIA429,Ituri,Rwampara,RWAMBUZI,Invalid,2026-05-20,NA
+BIA430,Ituri,Bunia,BIGO,Positive,2026-05-22,29.27
+BIA431,Ituri,Bunia,NYAKASANZA,Positive,2026-05-17,28.78
+BIA432,Ituri,Bunia,NYAKASANZA,Positive,2026-05-12,29.46
+BIA433,Ituri,Bunia,NYAKASANZA,Invalid,2026-05-16,NA
+BIA434,Ituri,Nyakunde,NYAKUNDE,Negative,2026-05-22,NA
+BIA435,Ituri,Nyakunde,SOTA,Invalid,2026-05-20,NA
+BIA436,Ituri,Nyakunde,NYAKUNDE,Negative,2026-05-19,NA
+BIA437,Ituri,Nyakunde,NYAKUNDE,Positive,2026-05-20,24.61
+BIA438,Ituri,Nyakunde,NYAKUNDE,Negative,2026-05-20,NA
+BIA439,Ituri,Bambu,BAMBU,Negative,NA,NA
+BIA440,Ituri,Bambu,NYANGARAY,Negative,NA,NA
+BIA441,Ituri,Rwampara,DELE,Positive,2026-05-22,26.49
+BIA442,Ituri,Rwampara,HOHO,Positive,2026-05-20,25.14
+BIA443,Ituri,Rwampara,HOHO,Negative,2026-05-22,NA
+BIA444,Ituri,Kilo,KILO ETAT,Negative,NA,NA
+BIA445,Ituri,Kilo,KILO ETAT,Negative,2026-05-21,NA
+BIA446,Ituri,Kilo,KILO ETAT,Negative,NA,NA
+BIA447,Ituri,Kilo,KILO ETAT,Negative,2026-05-21,NA
+BIA448,Ituri,Kilo,ITENDEY,Positive,2026-05-23,28.51
+BIA449,Ituri,Kilo,KILO ETAT,Negative,2026-05-11,NA
+BIA450,Ituri,Kilo,KILO MISSION,Invalid,2026-05-23,NA
+BIA451,Ituri,Nyakunde,NYAKUNDE,Invalid,2026-05-22,NA
+BIA452,Ituri,Bunia,BIGO,Negative,2026-05-23,NA
+BIA453,Ituri,Bunia,NYAKASANZA,Invalid,2026-05-17,NA
+BIA454,Ituri,Rwampara,DELE,Negative,NA,NA
+BIA455,Ituri,Rwampara,SHARI,Negative,NA,NA
+BIA456,Ituri,Rwampara,SHARI,Negative,NA,NA
+BIA457,Ituri,Rwampara,RWAMBUZI,Positive,2026-05-19,23.56
+BIA458,Ituri,Bambu,NYARANDA,Negative,2026-05-20,NA
+BIA460,Ituri,Nizi,BAIMANI,Negative,NA,NA
+BIA461,Ituri,Bambu,MANGAMBO,Negative,2026-05-21,NA
+BIA462,Ituri,Bambu,KOBU,Invalid,2026-05-20,NA
+BIA467,Ituri,Nyakunde,NYAKUNDE,Positive,2026-05-19,35.73
+BIA469,Ituri,Nyakunde,NYAKUNDE,Positive,NA,24.29
+BIA470,Ituri,Nyakunde,NYAKUNDE,Negative,2026-05-12,NA
+BIA471,Ituri,Nyakunde,NYAKUNDE,Negative,2026-05-13,NA
+BIA472,Ituri,Nyakunde,NYAKUNDE,Not yet run,2026-05-19,NA
+BIA473,Ituri,Nyakunde,NYAKUNDE,Not yet run,NA,NA
+BIA474,Ituri,Nyakunde,NYAKUNDE,Negative,2026-05-16,NA
+BIA475,Ituri,Nyakunde,NYAKUNDE,Not yet run,2026-05-18,NA
+BIA476,Ituri,Nyakunde,IRUMU,Not yet run,2026-05-22,NA
+BIA477,Ituri,Nyakunde,SOTA,Positive,2026-05-20,29.79
+BIA478,Ituri,Rwampara,HOHO,Positive,2026-05-24,24.92
+BIA479,Ituri,Nizi,IGA BARRIERE,Negative,2026-05-17,NA
+BIA480,Ituri,Bunia,CITE,Negative,2026-05-19,NA
+BIA481,Ituri,Rwampara,POLICE DE FRONTIERE,Negative,2026-05-12,NA
+BIA482,Ituri,Rwampara,POLICE DE FRONTIERE,Undetermined,2026-05-14,NA
+BIA483,Ituri,Rwampara,HOHO,Undetermined,NA,NA
+BIA485,Ituri,Rwampara,TCHUNGA,Positive,2026-05-22,34.21
+BIA486,Ituri,Rwampara,TCHUNGA,Negative,2026-05-23,NA
+BIA487,Ituri,Rwampara,TCHUNGA,Negative,2026-05-22,NA
+BIA488,Ituri,Rwampara,HOHO,Positive,2026-05-23,36.69
+BIA489,Ituri,Rwampara,HOHO,Positive,2026-05-23,26.61
+BIA490,Ituri,Rwampara,HOHO,Undetermined,NA,NA
+BIA491,Ituri,Mongbalu,MONGBWALU,Negative,2026-05-12,NA
+BIA492,Ituri,Lita,MUTUMBI,Positive,2026-05-24,21.25
+BIA493,Ituri,Nizi,HERITAGE,Negative,NA,NA
+BIA494,Ituri,Bunia,AEROPORT,Positive,2026-05-10,20.16
+BIA504,Ituri,NA,NA,Positive,NA,24.36
+BIA510,Ituri,Bunia,NGEZI,Negative,2026-05-25,NA
+BIA511,Ituri,Bunia,NGEZI,Positive,2026-05-25,32.38
+BIA512,Ituri,Bunia,BORA UZIMA,Positive,2026-05-18,22.95
+BIA513,Ituri,Nyakunde,NYAKUNDE,Positive,2026-05-18,25.41
+BIA514,Ituri,Mongbalu,NDCM,Positive,NA,24.23
+BIA515,Ituri,Mongbalu,MONGBWALU,Negative,2026-05-13,NA
+BIA516,Ituri,Bunia,KINDIA,Positive,2026-05-19,27.53
+BIA518,Ituri,Bunia,KASEGWA,Positive,NA,37.32
+BIA519,Ituri,NA,BI ETAT,Negative,2026-05-22,NA
+BIA520,Ituri,NA,MASUMBUKO,Negative,NA,NA
+BIA521,Ituri,Bunia,NGEZI,Negative,2026-05-25,NA
+BIA522,Ituri,Bunia,AEROPORT,Positive,2026-05-25,24.06
+BIA523,Ituri,Bunia,BIGO,Undetermined,2026-05-24,NA
+BIA524,Ituri,Bunia,BIGO,Positive,2026-05-20,27.18
+BIA525,Ituri,Bunia,ADVENTISTE,Not yet run,2026-05-15,NA
+BIA526,Ituri,Bunia,NDIBE,Positive,2026-05-18,23.18
+BIA527,Ituri,Bunia,BIGO,Not yet run,2026-05-24,NA
+BIA528,Ituri,Bunia,BORA UZIMA,Not yet run,2026-05-17,NA
+BIA529,Ituri,Bunia,BIGO,Positive,2026-05-23,25.89
+BIA530,Ituri,Bunia,AEROPORT,Not yet run,2026-05-25,NA
+BIA532,Ituri,Bunia,NA,Not yet run,2026-05-17,NA
+BIA533,Ituri,Bunia,BANKOKO,Not yet run,2026-05-13,NA
+BIA534,Ituri,Bunia,NGZI,Not yet run,2026-05-23,NA
+BIA535,Ituri,Bunia,BIGO,Not yet run,2026-05-23,NA
+BIA536,Ituri,Bunia,NGEZI,Negative,2026-05-25,NA
+BIA537,Ituri,Bunia,LEMBABO,Negative,2026-05-16,NA
+BIA538,Ituri,Bunia,BIGO,Positive,2026-05-20,25.18
+BIA539,Ituri,Bunia,BIGO,Not yet run,2026-05-18,NA
+BIA540,Ituri,Bunia,BIGO,Not yet run,2026-05-24,NA
+BIA541,Ituri,Nyakunde,NYAKUNDE,Negative,2026-05-24,NA
+BIA542,Ituri,Nyakunde,NYAKUNDE,Negative,2026-05-25,NA
+BIA543,Ituri,Nyakunde,NYAKUNDE,Not yet run,2026-05-23,NA
+BIA544,Ituri,Nyakunde,MARABO,Not yet run,NA,NA
+BIA545,Ituri,NA,BUUKWA ETAT,Not yet run,2026-05-21,NA
+BIA546,Ituri,Nyakunde,NYAKUNDE,Negative,2026-05-24,NA
+BIA547,Ituri,NA,BUNZENZELE,Not yet run,2026-05-21,NA
+BIA548,Ituri,Nyakunde,NYAKUNDE,Negative,2026-05-24,NA
+BIA549,Ituri,Rwampara,DELE,Not yet run,2026-05-23,NA
+BIA550,Ituri,Nyakunde,NYAKUNDE,Negative,2026-05-23,NA
+BIA551,Ituri,Nizi,LOPA,Not yet run,2026-05-19,NA
+BIA552,Ituri,Nyakunde,SOTA,Positive,2026-05-20,20.81
+BIA553,Ituri,Nyakunde,NYAKUNDE,Not yet run,2026-05-23,NA
+BIA554,Ituri,Nyakunde,NYAKUNDE,Positive,2026-05-27,26.34
+BIA555,Ituri,Komanda,BANDIBOLI,Positive,2026-05-24,25.12
+BIA556,Ituri,Komanda,MANGUSU,Negative,NA,NA
+BIA557,Ituri,Bunia,AEROPORT,Negative,NA,NA
+BIA558,Ituri,Rwampara,HOHO,Negative,2026-05-19,NA
+BIA559,Ituri,Bunia,BANKOKO,Negative,2026-05-26,NA
+BIA560,Ituri,Rwampara,SHARI,Positive,2026-05-19,19.55
+BIA562,Ituri,Aru,NA,Negative,2026-05-19,NA
+BIA563,Ituri,Bunia,KOLOMANI,Positive,2026-05-24,35.38
+BIA564,Ituri,Bunia,AEROPORT,Negative,2026-05-23,NA
+BIA565,Ituri,Bunia,BIGO,Positive,2026-05-20,23.32
+BIA566,Ituri,Bunia,ADVENTISTE,Positive,2026-05-24,25.75
+BIA567,Ituri,Bunia,BIGO,Not yet run,2026-05-24,NA
+BIA568,Ituri,Bunia,LEMBABO,Not yet run,NA,NA
+BIA569,Ituri,Bunia,OPAS,Not yet run,2026-05-10,NA
+BIA570,Ituri,Bunia,ADVENTISTE,Not yet run,2026-05-19,NA
+BIA571,Ituri,Bunia,ADVENTISTE,Not yet run,2026-05-15,NA
+BIA572,Ituri,Bunia,OPAS,Not yet run,2026-05-24,NA
+BIA573,Ituri,Bunia,BIGO,Not yet run,2026-05-11,NA
+BIA574,Ituri,Bunia,BIGO,Not yet run,2026-05-25,NA
+BIA575,Ituri,Bunia,BIGO,Not yet run,NA,NA
+BIA576,Ituri,Bunia,AEROPORT,Not yet run,2026-05-15,NA
+BIA577,Ituri,Bunia,BANKOKO,Negative,2026-05-23,NA
+BIA578,Ituri,Bunia,BANKOKO,Not yet run,2026-05-26,NA
+BIA579,Ituri,Bunia,BIGO,Not yet run,2026-05-24,NA
+BIA580,Ituri,Bunia,OPAS,Positive,2026-05-22,28.21
+BIA581,Ituri,Bunia,BIGO,Not yet run,2026-05-08,NA
+BIA582,Ituri,Bunia,BANKOKO,Positive,2026-05-23,26.89
+BIA583,Ituri,Nyakunde,SOTA,Positive,2026-05-12,25.85
+BIA584,Ituri,Nyakunde,TEKELE,Not yet run,NA,NA
+BIA585,Ituri,Nyakunde,MARABO,Not yet run,2026-05-22,NA
+BIA586,Ituri,Nyakunde,NYAKUNDE,Not yet run,2026-05-24,NA
+BIA588,Ituri,Aru,NA,Not yet run,2026-05-15,NA
+BIA589,Ituri,Nyakunde,SOTA,Not yet run,2026-05-25,NA
+BIA590,Ituri,Mandima,MAHU,Not yet run,2026-05-11,NA
+BIA591,Ituri,Mandima,MANDIMA,Not yet run,NA,NA
+BIA592,Ituri,Mandima,MANDIMA,Not yet run,NA,NA
+BIA593,Ituri,Lolwa,PEKELE,Not yet run,NA,NA
+BIA594,Ituri,Bambu,BAMBU,Not yet run,2026-05-25,NA
+BIA595,Ituri,Bambu,MANGAMBO,Not yet run,2026-05-25,NA
+BIA596,Ituri,Rwampara,Rwampara,Not yet run,2026-05-26,NA
+BIA597,Ituri,Rwampara,Rwampara,Positive,2026-05-25,28.49
+BIA599,Ituri,Rwampara,NA,Not yet run,NA,NA
+BIA603,Ituri,Rwampara,SHARI,Negative,NA,NA
+BIA604,Ituri,Rwampara,Rwampara,Negative,2026-05-23,NA
+BIA606,Ituri,Rwampara,NGONA,Positive,NA,34.82
+BIA607,Ituri,Bunia,NA,Negative,NA,NA
+BIA608,Ituri,Rwampara,Rwampara,Not yet run,NA,NA
+BIA609,Ituri,Rwampara,HOHO,Negative,2026-05-26,NA
+BIA610,Ituri,Bunia,BIGO,Negative,NA,NA
+BIA611,Ituri,Rwampara,SHARI,Not yet run,2026-05-19,NA
+BIA612,Ituri,Rwampara,HOHO,Not yet run,2026-05-20,NA
+BIA613,Ituri,Rwampara,HOHO,Negative,2026-05-24,NA
+BIA614,Ituri,Rwampara,Rwampara,Not yet run,NA,NA
+BIA615,Ituri,Rwampara,SHARI,Positive,NA,19.12
+BIA616,Ituri,Rwampara,HOHO,Negative,2026-05-25,NA
+BIA617,Ituri,Rwampara,Rwampara,Negative,2026-05-20,NA
+BIA618,Ituri,Rwampara,HOHO,Not yet run,NA,NA
+BIA620,Ituri,Jiba,MALO,Not yet run,2026-05-22,NA
+BIA621,Ituri,Jiba,MALO,Not yet run,2026-05-22,NA
+BIA622,Ituri,Bunia,CNCA,Negative,2026-05-22,NA
+BIA623,Ituri,Bunia,CNCA,Positive,2026-05-22,28.35
+BIA624,Ituri,NA,NA,Negative,NA,NA
+BIA626,Ituri,Bunia,CNCA,Not yet run,2026-05-22,NA
+BIA627,Ituri,Bunia,CNCA,Not yet run,2026-05-22,NA
+BIA628,Ituri,Lita,NA,Not yet run,NA,NA
+BIA629,Ituri,NA,NA,Not yet run,NA,NA
+BIA630,Ituri,Rimba,GAMBA,Positive,2026-05-22,27.23
+BIA631,Ituri,Rimba,PANYABIO,Positive,2026-05-17,30.79
+BIA632,Ituri,NA,RABU,Not yet run,2026-05-14,NA
+BIA633,Ituri,Rimba,AME,Positive,2026-05-18,34.7
+BIA634,Ituri,Rwampara,SHARI,Not yet run,2026-05-21,NA
+BIA636,Ituri,Rwampara,HOHO,Negative,2026-05-27,NA
+BIA637,Ituri,Rwampara,SHARI,Not yet run,NA,NA
+BIA639,Ituri,Rwampara,NGONA,Negative,NA,NA
+BIA640,Ituri,Rwampara,Rwampara,Negative,2026-05-27,NA
+BIA641,Ituri,Rwampara,HOHO,Negative,2026-05-27,NA
+BIA642,Ituri,Rwampara,HOHO,Not yet run,NA,NA
+BIA643,Ituri,Rwampara,BOGORO,Not yet run,2026-05-22,NA
+BIA644,Ituri,Rwampara,Rwampara,Not yet run,2026-05-14,NA
+BIA645,Ituri,Rwampara,HOHO,Negative,2026-05-27,NA
+BIA647,Ituri,Bambu,MANGAMBO,Not yet run,2026-05-25,NA
+BIA648,Ituri,Bambu,BAMBU,Not yet run,2026-05-25,NA
+BIA649,Ituri,Bambu,KOBU,Not yet run,2026-05-25,NA
+BIA650,Ituri,Tchomia,RWAMUSASI,Not yet run,NA,NA
+BIA651,Ituri,Tchomia,KASENYI CENTRE,Not yet run,2026-05-26,NA
+BIA652,Ituri,Kilo,ITENDEY,Negative,2026-05-18,NA
+BIA653,Ituri,Kilo,AMEMA,Not yet run,2026-05-12,NA
+BIA654,Ituri,Kilo,AMEMA,Not yet run,2026-05-25,NA
+BIA655,Ituri,Bunia,BIGO,Not yet run,2026-05-13,NA
+BIA656,Ituri,Bunia,BIGO,Not yet run,2026-05-26,NA
+BIA657,Ituri,Bunia,BIGO,Not yet run,2026-05-26,NA
+BIA658,Ituri,Bunia,NGEZI,Not yet run,2026-05-26,NA
+BIA659,Ituri,Bunia,OPAS,Not yet run,2026-05-12,NA
+BIA660,Ituri,Bunia,BIGO,Not yet run,2026-05-26,NA
+BIA661,Ituri,Nyakunde,MARABO,Not yet run,2026-05-27,NA
+BIA662,Ituri,Nyakunde,SOTA,Not yet run,2026-05-10,NA
+BIA663,Ituri,Nyakunde,MARABO,Positive,2026-05-24,28.9
+BIA664,Ituri,Rwampara,Rwampara,Undetermined,NA,NA
+BIA665,Ituri,Bunia,BIGO,Not yet run,2026-05-14,NA
+BIA666,Ituri,Bunia,BIGO,Not yet run,2026-05-26,NA
+BIA667,Ituri,Bunia,BIGO,Not yet run,2026-05-08,NA
+BIA668,Ituri,Bunia,AEROPORT,Negative,NA,NA
+BIA669,Ituri,Bunia,BIGO,Negative,2026-05-27,NA
+BIA670,Ituri,Bunia,BIGO,Not yet run,2026-05-13,NA
+BIA671,Ituri,Bunia,BIGO,Negative,2026-05-19,NA
+BIA672,Ituri,Bunia,BIGO,Positive,2026-05-25,27.42
+BIA673,Ituri,Rwampara,SUKISA,Negative,NA,NA
+BIA674,Ituri,Rwampara,TCHUNGA,Positive,2026-05-03,32.52
+BIA675,Ituri,Rwampara,BOGORO,Positive,2026-05-20,32.21
+BIA676,Ituri,Bambu,BAMBU,Not yet run,2026-05-26,NA
+BIA677,Ituri,Bambu,KOBU,Not yet run,2026-05-26,NA
+BIA678,Ituri,Rwampara,HOHO,Negative,2026-05-27,NA
+BIA679,Ituri,Rwampara,HOHO,Negative,NA,NA
+BIA680,Ituri,Rwampara,HOHO,Negative,2026-05-26,NA
+BIA681,Ituri,Rwampara,HOHO,Positive,2026-05-28,33.53
+BIA682,Ituri,Rwampara,HOHO,Negative,2026-05-28,NA
+BIA683,Ituri,Rwampara,HOHO,Negative,NA,NA
+BIA684,Ituri,Rwampara,HOHO,Negative,2026-05-28,NA
+BIA685,Ituri,Rwampara,HOHO,Negative,2026-05-28,NA
+BIA686,Ituri,Rwampara,HOHO,Negative,NA,NA
+BIA687,Ituri,Bunia,MUZIMARIA,Positive,2026-05-16,18.83
+BIA688,Ituri,Bunia,KASEGWA,Positive,2026-05-24,18.79
+BIA689,Ituri,NA,NA,Positive,2026-05-27,24.94
+BIA690,Ituri,Bunia,KINDIA,Negative,NA,NA
+BIA691,Ituri,Bunia,BANKOKO,Undetermined,2026-05-22,NA
+BIA692,Ituri,Bunia,NDIBE,Positive,2026-05-24,26.13
+BIA693,Ituri,Bunia,BIGO,Positive,2026-05-26,29.08
+BIA694,Ituri,Nizi,NA,Undetermined,2026-05-10,NA
+BIA695,Ituri,Bunia,BIGO,Positive,2026-05-27,21.4
+BIA696,Ituri,Bunia,BIGO,Undetermined,2026-05-23,NA
+BIA697,Ituri,Bunia,BANKOKO,Not yet run,2026-05-27,NA
+BIA698,Ituri,Bunia,BIGO,Positive,2026-05-24,26.47
+BIA699,Ituri,Mongbalu,NOTRE DAME,Positive,NA,20.96
+BIA700,Ituri,Mongbalu,CECA 20,Invalid,NA,NA
+BIA701,Ituri,Mongbalu,CECA 20,Positive,2026-05-25,30.07
+BIA703,Ituri,NA,NA,Negative,NA,NA
+BIA704,Ituri,Mongbalu,CECA 20,Positive,NA,21.91
+BIA705,Ituri,Mongbalu,CECA 20,Positive,NA,25.63
+BIA706,Ituri,Mongbalu,NA,Positive,2026-05-25,20.62
+BIA707,Ituri,Mongbalu,MONGBWALU,Positive,2026-05-25,21.18
+BIA708,Ituri,NA,NA,Positive,2026-05-13,21.31
+BIA709,Ituri,Rwampara,HOHO,Positive,2026-05-18,25.33
+BIA710,Ituri,Rwampara,Rwampara,Positive,2026-05-27,20.09
+BIA711,Ituri,Rwampara,Rwampara,Negative,2026-05-26,NA
+BIA712,Ituri,Rwampara,TCHUNGA,Positive,2026-05-27,24.51
+BIA713,Ituri,Rwampara,NGONA,Negative,NA,NA
+BIA714,Ituri,Rwampara,SHARI,Negative,NA,NA
+BIA715,Ituri,Rwampara,Rwampara,Negative,NA,NA
+BIA716,Ituri,Rwampara,Rwampara,Negative,2026-05-27,NA
+BIA717,Ituri,Rwampara,SHARI,Invalid,NA,NA
+BIA718,Ituri,Rwampara,SHARI,Negative,NA,NA
+BIA719,Ituri,Rwampara,SHARI,Negative,2026-05-22,NA
+BIA720,Ituri,Rwampara,Rwampara,Negative,NA,NA
+BIA721,Ituri,Bunia,BIGO,Undetermined,2026-05-19,NA
+BIA722,Ituri,Bunia,AEROPORT,Positive,2026-05-26,24.07
+BIA723,Ituri,Bunia,NGEZI,Negative,2026-05-28,NA
+BIA724,Ituri,Bunia,AEROPORT,Positive,2026-05-26,30.05
+BIA725,Ituri,Bunia,AEROPORT,Negative,2026-05-17,NA
+BIA726,Ituri,Bunia,NIZI,Positive,2026-05-28,28.48
+BIA727,Ituri,Bunia,NGEZI,Negative,2026-05-28,NA
+BIA728,Ituri,Bunia,AEROPORT,Negative,2026-05-19,NA
+BIA729,Ituri,Bunia,AEROPORT,Negative,2026-05-25,NA
+BIA730,Ituri,Bunia,NGEZI,Negative,2026-05-28,NA
+BIA731,Ituri,Bunia,NGEZI,Negative,2026-05-28,NA
+BIA732,Ituri,Bunia,NGEZI,Negative,2026-05-28,NA
+BIA733,Ituri,Bunia,NGEZI,Negative,2026-05-28,NA
+BIA734,Ituri,Bunia,AEROPORT,Negative,NA,NA
+BIA735,Ituri,Bunia,AEROPORT,Negative,2026-05-22,NA
+BIA736,Ituri,Bunia,AEROPORT,Negative,2026-05-13,NA
+BIA737,Ituri,Bunia,NGEZI,Negative,2026-05-28,NA
+BIA738,NA,Bunia,BIGO,Positive,2026-05-26,34.68
+BIA739,Ituri,Bunia,BIGO,Positive,2026-05-26,28.14
+BIA740,Ituri,Bunia,CNCA,Positive,2026-05-28,31.08
+BIA741,Ituri,Bambu,BAMBU,Negative,2026-05-28,NA
+BIA742,Ituri,Bunia,BANKOKO,Positive,2026-05-28,32.17
+BIA743,Ituri,Nyakunde,MARABO,Negative,2026-05-21,NA
+BIA744,Ituri,Nyakunde,BIRINYAMA,Negative,2026-05-20,NA
+BIA745,Ituri,Nyakunde,KOMBOKABO,Negative,2026-05-23,NA
+BIA746,Ituri,Nyakunde,MARABO,Negative,2026-05-27,NA
+BIA747,Ituri,Rwampara,HOHO,Negative,2026-05-26,NA
+BIA748,Ituri,Rwampara,BOGORO,Negative,NA,NA
+BIA749,Ituri,Nizi,HERITAGE,Positive,2026-05-23,24.89
+BIA750,Ituri,Tchomia,TCHOMIA,Negative,2026-05-28,NA
+BIA751,Ituri,Bunia,NYAKASANZA,Negative,2026-05-28,NA
+BIA752,Ituri,Bunia,BORA UZIMA,Negative,2026-05-21,NA
+BIA753,Ituri,Bunia,BIGO,Positive,2026-05-17,26.08
+BIA754,Ituri,Bunia,LEMBABO,Negative,2026-05-26,NA
+BIA755,Ituri,Bunia,CNCA,Negative,2026-05-28,NA
+BIA756,Ituri,Bunia,BIGO,Negative,2026-05-27,NA
+BIA757,Ituri,Bunia,NDIBE,Negative,2026-05-28,NA
+BIA758,Ituri,Bunia,BIGO,Negative,2026-05-29,NA
+BIA759,Ituri,Mongbalu,MONGBWALU,Negative,2026-05-16,NA
+BIA760,Ituri,Bunia,BIGO,Positive,2026-05-29,29.96
+BIA761,Ituri,Bunia,BIGO,Positive,2026-05-29,29.37
+BIA762,Ituri,Rwampara,Rwampara,Positive,2026-05-29,22.97
+BIA763,Ituri,Rwampara,BOGORO,Positive,2026-05-19,29.35
+BIA764,Ituri,Lita,BAHWERE,Positive,2026-05-29,24.15
+BIA765,Ituri,Lolwa,TOLY-TOLY,Negative,2026-05-25,NA
+BIA766,Ituri,Lolwa,MABANGIFO,Negative,2026-05-27,NA
+BIA767,Ituri,Nyakunde,MARABO,Negative,2026-05-23,NA
+BIA768,Ituri,Nyakunde,SOTA,Positive,2026-05-22,28.09
+BIA769,Ituri,Nyakunde,SOTA,Positive,2026-05-25,30.48
+BIA770,Ituri,Nyakunde,SOTA,Positive,2026-05-25,24.92
+BIA771,Ituri,Nyakunde,NYAKUNDE,Positive,2026-05-27,31.33
+BIA772,Ituri,Nyakunde,MARABO,Positive,2026-05-19,28.39
+BIA773,Ituri,Nyakunde,SOTA,Positive,2026-05-24,24.41
+BIA774,Ituri,Rwampara,HOHO,Positive,2026-05-28,29.49
+BIA775,Ituri,Rwampara,HOHO,Negative,NA,NA
+BIA776,Ituri,Rwampara,Rwampara,Positive,2026-05-26,29.81
+BIA777,Ituri,Rwampara,HOHO,Negative,2026-05-29,NA
+BIA778,Ituri,Rwampara,HOHO,Negative,NA,NA
+BIA779,Ituri,Rwampara,HOHO,Positive,2026-05-29,31.06
+BIA780,Ituri,NA,NA,Negative,2026-05-20,NA
+BIA781,Ituri,Rwampara,HOHO,Negative,NA,NA
+BIA782,Ituri,Rwampara,Rwampara,Negative,2026-05-27,NA
+BIA783,Ituri,Rwampara,HOHO,Negative,NA,NA
+BIA784,Ituri,Rwampara,Rwampara,Negative,2026-05-25,NA
+BIA785,Ituri,Rwampara,Rwampara,Negative,2026-05-22,NA
+BIA786,Ituri,Rwampara,HOHO,Negative,2026-05-29,NA
+BIA787,Ituri,Tchomia,NANA,Not yet run,NA,NA
+BIA788,Ituri,Rwampara,HOHO,Positive,2026-05-28,30.57
+BIA789,Ituri,Rwampara,HOHO,Negative,2026-05-29,NA
+BIA791,Ituri,Rwampara,DELE,Negative,2026-05-27,NA
+BIA793,Ituri,Rwampara,SHARI,Positive,2026-05-26,31.07
+BIA794,Ituri,Rwampara,SHARI,Positive,2026-05-27,25.58
+BIA795,Ituri,Rwampara,SHARI,Positive,2026-05-22,25.97
+BIA796,Ituri,Rwampara,SHARI,Undetermined,2026-05-20,NA
+BIA799,Ituri,Rwampara,Rwampara,Undetermined,2026-05-10,NA
+BIA800,Ituri,Rwampara,SHARI,Positive,2026-05-21,35.25
+BIA801,Ituri,Rwampara,HOHO,Negative,NA,NA
+BIA802,Ituri,Rwampara,HOHO,Negative,NA,NA
+BIA803,Ituri,Bunia,BIGO,Negative,2026-05-28,NA
+BIA804,Ituri,Rwampara,TCHUNGA,Positive,2026-05-28,23.27
+BIA805,Ituri,Bunia,BIGO,Negative,2026-05-29,NA
+BIA806,Ituri,Bunia,AEROPORT,Negative,2026-05-25,NA
+BIA807,Ituri,Bunia,BIGO,Positive,2026-05-27,27.56
+BIA808,Ituri,Bunia,BIGO,Positive,2026-05-29,31.05
+BIA809,Ituri,Bunia,BIGO,Negative,NA,NA
+BIA810,Ituri,Bunia,BORA UZIMA,Negative,2026-05-30,NA
+BIA811,Ituri,Bunia,RWAMBUZI,Positive,2026-05-22,10.43
+BIA812,Ituri,Bunia,NDIBE,Negative,NA,NA
+BIA813,Ituri,Bunia,BIGO,Negative,2026-05-25,NA
+BIA814,Ituri,Bunia,BANKOKO,Negative,2026-05-25,NA
+BIA815,Ituri,Bunia,AEROPORT,Positive,2026-05-26,9.26
+BIA816,Ituri,Bunia,NGEZI,Negative,2026-05-29,NA
+BIA817,Ituri,Rwampara,SHARI,Negative,2026-05-26,NA
+BIA818,Ituri,Bunia,BIGO,Positive,2026-05-25,19.02
+BIA819,Ituri,Logo,NYAA,Positive,2026-05-26,23.81
+BIA820,Ituri,Nizi,C E 39,Positive,2026-05-22,24.02
+BIA821,Ituri,Rwampara,HOHO,Positive,2026-05-30,27.21
+BIA822,Ituri,Rwampara,POLICE DE FRONTIERE,Negative,NA,NA
+BIA823,Ituri,Bunia,NA,Positive,2026-05-18,37.25
+BIA824,Ituri,Bunia,OPAS,Positive,2026-05-24,22.42
+BIA825,Ituri,Bunia,OPAS,Negative,2026-05-21,NA
+BIA826,Ituri,Bunia,BIGO,Negative,NA,NA
+BIA827,Ituri,Bunia,BIGO,Positive,2026-05-29,26.81
+BIA828,Ituri,Bunia,HOHO,Negative,2026-05-22,NA
+BIA829,Ituri,Nyakunde,NYAKUNDE,Positive,2026-05-26,32.55
+BIA830,Ituri,Nyakunde,NYAKUNDE,Negative,2026-05-28,NA
+BIA831,Ituri,Nyakunde,IRUMU,Negative,2026-05-30,NA
+BIA832,Ituri,Nyakunde,NYAKUNDE,Negative,2026-05-28,NA
+BIA833,Ituri,Nizi,NIZI,Negative,2026-05-20,NA
+BIA834,Ituri,Nizi,HERITAGE,Positive,2026-05-23,28.38
+BIA835,Ituri,Nizi,NIZI,Negative,2026-05-23,NA
+BIA836,Ituri,Nizi,NIZI,Positive,2026-05-21,27.66
+BIA837,Ituri,Bambu,TCHUZA,Invalid,2026-05-29,NA
+BIA838,Ituri,Bambu,BAMBU,Negative,2026-05-27,NA
+BIA839,Ituri,Bambu,LIPRI,Positive,2026-05-26,30.19
+BIA840,Ituri,Bambu,BAMBU,Negative,2026-05-26,NA
+BIA841,Ituri,Bambu,KOBU,Negative,2026-05-25,NA
+BIA842,Ituri,Nizi,NIZI,Positive,2026-05-23,25.56
+BIA843,Ituri,Nizi,BAIMANI,Positive,2026-05-29,25.66
+BIA844,Ituri,NA,NA,Negative,2026-05-30,NA
+BIA845,Ituri,NA,NA,Negative,NA,NA
+BIA846,Ituri,Rwampara,HOHO,Undetermined,NA,NA
+BIA847,Ituri,Rwampara,Hoho,Negative,2026-05-02,NA
+BIA848,Ituri,Rwampara,BUNIA,Positive,2026-05-22,22.75
+BIA850,Ituri,Rwampara,HOHO,Undetermined,2026-05-22,NA
+BIA851,Ituri,Rwampara,HOHO,Negative,NA,NA
+BIA852,Ituri,Rwampara,DELE,Negative,NA,NA
+BIA853,Ituri,Rwampara,HOHO,Negative,NA,NA
+BIA854,Ituri,Rwampara,SHARI,Positive,2026-05-25,23.51
+BIA855,Ituri,Bunia,AEROPORT,Negative,2026-05-23,NA
+BIA856,Ituri,Rwampara,HOHO,Negative,2026-05-02,NA
+BIA857,Ituri,Rwampara,Rwankole,Negative,2026-04-09,NA
+BIA858,Ituri,Rwampara,HOHO,Negative,NA,NA
+BIA859,Ituri,Bunia,SAYO,Negative,NA,NA
+BIA860,Ituri,Rwampara,HOHO,Negative,2026-05-30,NA
+BIA861,Ituri,Rwampara,Rwampara,Negative,2026-05-30,NA
+BIA862,Ituri,Rwampara,HOHO,Negative,2026-05-29,NA
+BIA863,Ituri,Rwampara,Rwampara,Positive,2026-05-29,17.45
+BIA864,Ituri,Rwampara,SHARI,Positive,2026-05-26,24.32
+BIA865,Ituri,Rwampara,LENGABO,Positive,2026-05-29,24.59
+BIA866,Ituri,Rwampara,Rwampara,Positive,2026-05-30,36.97
+BIA867,Ituri,Lita,NA,Negative,2026-05-21,NA
+BIA868,Ituri,Bunia,SIMBILYABO,Positive,NA,28.43
+BIA869,Ituri,Bunia,PK12,Negative,2026-05-25,NA
+BIA870,Ituri,Bunia,NGEZI,Negative,2026-05-29,NA
+BIA871,Ituri,Bambu,BAMBU,Negative,NA,NA
+BIA872,Ituri,Rwampara,SHARI,Negative,NA,NA
+BIA873,Ituri,Rwampara,SHARI,Positive,2026-05-29,23.25
+BIA874,Ituri,Bunia,BKK,Negative,2026-05-26,NA
+BIA875,Ituri,Bunia,BANKOKO,Negative,2026-05-26,NA
+BIA876,Ituri,Bunia,BIGO,Negative,2026-05-16,NA
+BIA877,Ituri,Bunia,BKK,Negative,2026-05-24,NA
+BIA878,Ituri,Bunia,BKK,Negative,2026-05-26,NA
+BIA879,Ituri,Bunia,BANKOKO,Positive,2026-05-30,NA
+BIA880,Ituri,Bunia,BKK,Positive,2026-05-24,NA
+BIA881,Ituri,Bunia,NDIBE,Positive,2026-05-30,NA
+BIA882,Ituri,Bunia,RWAKOLE,Positive,2026-05-16,NA
+BIA883,Ituri,Bunia,NGEZI,Positive,2026-05-29,NA
+BIA884,Ituri,Bunia,NGEZI,Positive,2026-05-29,NA
+BIA886,Ituri,Nizi,NIZI,Positive,2026-05-24,NA
+BIA887,Ituri,Bunia,AEROPORT,Negative,2026-05-30,NA
+BIA888,Ituri,Bunia,ADVENTISTE,Positive,2026-05-20,38.99
+BIA889,Ituri,Bunia,ADVENTISTE,Positive,2026-05-30,28.94
+BIA891,Ituri,Bunia,BANKOKO,Positive,2026-05-11,24.61
+BIA892,Ituri,Bunia,BIGO,Positive,2026-05-26,22.16
+BIA893,Ituri,Mongbalu,PARADISO,Positive,2026-05-15,25.58
+BIA894,Ituri,Mongbalu,CECA 20,Positive,2026-05-23,23.59
+BIA895,Ituri,NA,NA,Negative,2026-05-26,NA
+BIA896,Ituri,Mongbalu,MONGBWALU,Positive,2026-05-27,36.59
+BIA897,Ituri,Mongbalu,SAIO,Positive,2026-05-29,29.22
+BIA898,Ituri,Mongbalu,NOTRE DAME,Negative,2026-05-27,NA
+BIA899,Ituri,Mongbalu,SAIO,Positive,NA,28.35
+BIA900,Ituri,Mongbalu,MONGBWALU,Positive,2026-05-22,26.22
+BIA901,Ituri,Mongbalu,PARADISO,Positive,2026-05-21,25.13
+BIA902,Ituri,Bambu,NGABULO,Negative,NA,NA
+BIA903,Ituri,Mongbalu,CECA 20,Positive,2026-05-28,30.24
+BIA904,Ituri,Mongbalu,BARU,Negative,2026-05-26,NA
+BIA905,Ituri,Damas,JIMBU,Negative,2026-05-25,NA
+BIA906,Ituri,Damas,BIDJO,Undetermined,2026-05-28,NA
+BIA907,Ituri,Komanda,MANGIVA,Negative,NA,NA
+BIA908,Ituri,Komanda,KOMANDA,Negative,NA,NA
+BIA909,Ituri,Komanda,KOMANDA,Positive,NA,29.69
+BIA910,Ituri,Mongbalu,KANDOYI,Positive,2026-05-27,22.52
+BIA911,Ituri,Mongbalu,ALIMASI2,Positive,2026-05-24,25.7
+BIA912,Ituri,Mongbalu,NA,Positive,2026-05-27,19.12
+BIA913,Ituri,Mongbalu,NA,Negative,NA,NA
+BIA914,Ituri,NA,NA,Positive,2026-05-08,32.07
+BIA915,Ituri,Rwampara,Rwampara,Negative,NA,NA
+BIA916,Ituri,Rwampara,HOHO,Negative,2026-05-30,NA
+BIA917,Ituri,Rwampara,DELE,Negative,NA,NA
+BIA918,Ituri,Aru,NA,Negative,2026-05-25,NA
+BIA919,Ituri,Aru,BAKITA,Invalid,2026-05-22,NA
+BIA920,Ituri,Rwampara,HOHO,Negative,2026-05-31,NA
+BIA921,Ituri,Aru,ALIVUNYORU,Negative,2026-05-24,NA
+BIA922,Ituri,Rwampara,Rwampara,Negative,NA,NA
+BIA923,Ituri,Rwampara,HOHO,Negative,2026-05-31,NA
+BIA924,Ituri,Rwampara,TCHUNGA,Negative,NA,NA
+BIA925,Ituri,Mambasa,MAMBASA,Negative,NA,NA
+BIA926,Ituri,Mambasa,MAMBASA,Negative,NA,NA
+BIA927,Ituri,Mambasa,MPUTU,Positive,2026-05-27,25.9
+BIA928,Ituri,Mambasa,SALAMA,Positive,2026-05-24,20.08
+BIA929,Ituri,Aru,NA,Negative,2026-05-15,NA
+BIA931,Ituri,Bambu,BAMBU,Negative,NA,NA
+BIA932,Ituri,Bambu,BAMBU,Negative,NA,NA
+BIA933,Ituri,Bambu,TCHUTA,Negative,2026-05-30,NA
+BIA934,Ituri,Bambu,NYANGARAY,Negative,NA,NA
+BIA936,Ituri,Bambu,BAMBU,Negative,2026-05-24,NA
+BIA937,Ituri,Bambu,KOBU,Negative,NA,NA
+BIA928,Ituri,Bambu,BAMBU,Negative,NA,NA
+BIA939,Ituri,Bambu,BAMBU,Negative,2026-05-26,NA
+BIA940,Ituri,Rwampara,HOHO,Positive,2026-05-30,20.24
+BIA941,Ituri,Rwampara,Rwampara,Negative,NA,NA
+BIA942,Ituri,Rwampara,Rwampara,Negative,NA,NA
+BIA943,Ituri,Rwampara,HOHO,Negative,2026-05-31,NA
+BIA944,Ituri,Rwampara,HOHO,Negative,2026-05-28,NA
+BIA945,Ituri,Rwampara,HOHO,Negative,2026-05-28,NA
+BIA946,Ituri,Rwampara,SHARI,Negative,2026-05-24,NA
+BIA947,Ituri,Bunia,AEROPORT,Negative,2026-05-22,NA
+BIA948,Ituri,Rwampara,TCHUNGA,Negative,2026-05-20,NA
+BIA949,Ituri,Rwampara,Rwampara,Positive,2026-05-30,23.92
+BIA950,Ituri,Rwampara,POLICE DE FRONTIERE,Positive,2026-05-18,27.33
+BIA951,Ituri,Rwampara,HOHO,Negative,NA,NA
+BIA952,Ituri,Rwampara,HOHO,Negative,NA,NA
+BIA953,Ituri,Rwampara,DELE,Negative,NA,NA
+BIA954,Ituri,Rwampara,BEMBEY,Negative,2026-05-30,NA
+BIA955,Ituri,Rwampara,Rwampara,Negative,2026-05-29,NA
+BIA956,Ituri,Bunia,BEMBEY,Negative,2026-05-30,NA
+BIA957,Ituri,Rwampara,POLICE DE FRONTIERE,Negative,2026-05-29,NA
+BIA958,Ituri,Bunia,NA,Negative,NA,NA
+BIA959,Ituri,Bunia,RWAKOLE,Positive,2026-05-28,35.86
+BIA960,Ituri,Bunia,KINDIA,Positive,2026-05-26,28.92
+BIA961,Ituri,Bunia,SIMBILYABO,Not yet run,2026-05-28,NA
+BIA962,Ituri,Rwampara,Rwampara,Negative,NA,NA
+BIA963,Ituri,Bunia,NGEZI,Negative,NA,NA
+BIA964,Ituri,Bunia,BORA UZIMA,Positive,2026-05-23,32.97
+BIA965,Ituri,Bunia,NGEZI,Not yet run,2026-05-31,NA
+BIA966,Ituri,Bunia,NGEZI,Not yet run,2026-05-31,NA
+BIA967,Ituri,Bunia,MUZIMARIA,Not yet run,2026-05-31,NA
+BIA968,Ituri,Bunia,CNCA,Not yet run,2026-05-08,NA
+BIA969,Ituri,Bunia,KINDIA,Not yet run,2026-05-27,NA
+BIA970,Ituri,Bunia,NGEZI,Not yet run,2026-05-31,NA
+BIA971,Ituri,Bunia,LEMBABO,Not yet run,2026-05-26,NA
+BIA972,Ituri,Bunia,ADVENTISTE,Negative,2026-05-29,NA
+BIA973,Ituri,Aru,NA,Negative,2026-05-28,NA
+BIA974,Ituri,Bunia,NA,Positive,2026-05-29,37.55
+BIA975,Ituri,Bunia,SOLENYAMA,Not yet run,2026-05-19,NA
+BIA976,Ituri,Rwampara,SHARI,Not yet run,2026-05-10,NA
+BIA977,Ituri,Komanda,BEY,Invalid,NA,NA
+BIA978,Ituri,Komanda,KOMANDA,Not yet run,NA,NA
+BIA979,Ituri,Bunia,LEMBABO,Not yet run,NA,NA
+BIA980,Ituri,Tchomia,NANA,Not yet run,NA,NA
+BIA981,Ituri,Tchomia,KASENYI CENTRE,Not yet run,NA,NA
+BIA982,Ituri,Tchomia,KASENYI CITE,Negative,NA,NA
+BIA983,Ituri,Tchomia,NANA,Negative,NA,NA
+BIA561,Ituri,Bunia,SUKISA,Positive,NA,24.03
+26FHV045,Ituri,Rwampara,NA,Positive,2026-05-03,25.78
+BIA054,Ituri,Nyakunde,NYAKUNDE,Positive,2026-05-15,30.25
+26FHV053,Ituri,Rwampara,Hoho,Positive,2026-05-05,24.53
+26FHV049,Ituri,Rwampara,Hoho,Positive,2026-05-02,23.54
+BIA468,Ituri,Nyakunde,NYAKUNDE,Positive,2026-05-14,28.68
+26FHV050,Ituri,Rwampara,Hoho/okapi,Positive,2026-05-02,32.92
+26FHV046,Ituri,Rwampara,Hoho,Positive,2026-04-25,31.74
+BIA389,Ituri,Rwampara,HOHO,Negative,2026-05-18,NA
+BIA263,Ituri,Aru,NA,Positive,NA,31.5
+BIA088,Ituri,Rwampara,NA,Positive,NA,25.35
+BIA127,Ituri,Nyakunde,NYAKUNDE,Positive,2026-05-11,27.2
+BIA484,Ituri,Rwampara,Rwampara,Positive,2026-05-23,23.3
+26FHV054,Ituri,Rwampara,NA,Positive,2026-05-05,17.27
+BIA506,Ituri,NA,NA,Positive,NA,28.23
+BIA371,Ituri,Bunia,BIGO,Positive,2026-05-08,24.32
+BIA134,Ituri,Rwampara,Rwampara,Invalid,NA,NA
+BIA129,Ituri,Rwampara,HOHO,Positive,2026-05-17,31.53
+BIA408,Ituri,Mongbalu,MONGBWALU,Positive,2026-05-17,29.46
+BIA140,Ituri,Rwampara,NA,Positive,NA,25.4
+26FHV044,Ituri,Rwampara,Hoho,Invalid,2026-04-28,NA
+26FHV047,Ituri,Rwampara,Lumumba,Invalid,2026-05-02,NA
+26FHV051,Ituri,Rwampara,Hoho,Invalid,2026-04-28,NA
+26FHV052,Ituri,Rwampara,Hoho,Invalid,2026-05-03,NA
+26FHV048,Ituri,Rwampara,Rwankole,Invalid,2026-04-09,NA
+26FHV056,Ituri,Rwampara,NA,Positive,2026-05-03,27.33
+BIA169,Ituri,Mongbalu,MONGBWALU,Negative,NA,NA
+BIA984,Ituri,Tchomia,TCHOMIA,Negative,NA,NA
+BIA985,Ituri,Nyakunde,SOTA,Negative,2026-05-29,NA
+BIA986,Ituri,Nyakunde,SOTA,Positive,2026-05-25,30.15
+BIA987,Ituri,Nyakunde,SOTA,Negative,2026-05-30,NA
+BIA988,Ituri,Nyakunde,SOTA,Negative,2026-05-27,NA
+BIA989,Ituri,Nyakunde,SOTA,Negative,2026-05-31,NA
+BIA990,Ituri,Nyakunde,SOTA,Negative,2026-05-24,NA
+BIA991,Ituri,Nyakunde,NYAKUNDE,Negative,2026-05-30,NA
+BIA992,Ituri,Nyakunde,SOTA,Negative,2026-05-30,NA
+BIA993,Ituri,Bunia,NDIBE,Negative,2026-05-17,NA
+BIA994,Ituri,Nyakunde,SOTA,Positive,2026-05-30,27.16
+BIA995,Ituri,Nyakunde,SOTA,Positive,2026-05-23,31.65
+BIA996,Ituri,Nyakunde,KOMBOKABO,Negative,NA,NA
+BIA997,Ituri,Nyakunde,NYAKUNDE,Negative,NA,NA
+BIA998,Ituri,Nyakunde,IRUMU,Negative,2026-05-27,NA
+BIA999,Ituri,Nyakunde,KOMBOKABO,Negative,2026-05-29,NA
+BIA1000,Ituri,Bunia,AEROPORT,Negative,2026-05-26,NA
+BIA1001,Ituri,Bunia,AEROPORT,Positive,2026-05-28,27.77
+BIA1002,Ituri,Bunia,AEROPORT,Negative,2026-05-27,NA
+BIA1003,Ituri,Bunia,AEROPORT,Negative,2026-05-20,NA
+BIA1004,Ituri,NA,AEROPORT,Negative,2026-05-25,NA
+BIA1005,Ituri,Bunia,BANKOKO,Negative,2026-05-29,NA
+BIA1006,Ituri,Bunia,AEROPORT,Negative,2026-05-29,NA
+BIA1007,Ituri,Bunia,AEROPORT,Positive,2026-05-29,NA
+BIA1008,Ituri,Bunia,NGEZI,Negative,2026-05-29,NA
+BIA1009,Ituri,Bunia,BANKOKO,Negative,2026-05-29,NA
+BIA1010,Ituri,NA,NYARANDA,Negative,2026-05-26,NA
+BIA1011,Ituri,Bunia,AEROPORT,Negative,2026-05-21,NA
+BIA1012,Ituri,Bunia,AEROPORT,Negative,2026-05-31,NA
+BIA1013,Ituri,Nyakunde,BIRINYAMA,Negative,2026-05-25,NA
+BIA1014,Ituri,Nyakunde,MARABO,Negative,2026-05-29,NA
+BIA1015,Ituri,Nyakunde,MARABO,Negative,2026-05-18,NA
+BIA1016,Ituri,Nyakunde,IRUMU,Negative,2026-05-30,NA
+BIA1017,Ituri,Komanda,BAHITI,Negative,2026-05-18,NA
+BIA1019,Ituri,Nizi,NIZI,Negative,2026-05-13,NA
+BIA1020,Ituri,Rwampara,SHARI,Negative,2026-06-01,NA
+BIA1021,Ituri,Rwampara,SHARI,Negative,2026-05-29,NA
+BIA1022,Ituri,Rwampara,SHARI,Negative,2026-06-01,NA
+BIA1023,Ituri,Rwampara,SHARI,Negative,NA,NA
+BIA1024,Ituri,Rwampara,Rwampara,Negative,2026-05-31,NA
+BIA1025,Ituri,Rwampara,Rwampara,Positive,2026-05-29,28.31
+BIA1027,Ituri,Rwampara,TCHUNGA,Negative,2026-05-28,NA
+BIA1028,Ituri,Rwampara,HOHO,Negative,2026-05-15,NA
+BIA1029,Ituri,Rwampara,HOHO,Negative,2026-05-29,NA
+BIA1030,Ituri,Rwampara,Rwampara,Positive,NA,30.32
+BIA1031,Ituri,Rwampara,SHARI,Positive,2026-05-31,21.39
+BIA1032,Ituri,Rwampara,HOHO,Positive,2026-06-01,27.99
+BIA1033,Ituri,Rwampara,LEMBABO,Positive,2026-05-30,19.37
+BIA1034,Ituri,Bunia,MUZIMARIA,Positive,2026-05-30,25.6
+BIA1035,Ituri,Rwampara,HOHO,Negative,2026-06-01,NA
+BIA1036,Ituri,Bunia,CNCA,Negative,NA,NA
+BIA1037,Ituri,Rwampara,HOHO,Negative,2026-06-01,NA
+BIA1038,Ituri,Bunia,BANKOKO,Negative,NA,NA
+BIA1040,Ituri,Bunia,BIGO,Negative,NA,NA
+BIA1041,Ituri,Rwampara,Rwampara,Positive,2026-05-25,28.79
+BIA1042,Ituri,Rwampara,Rwampara,Negative,2026-05-20,NA
+BIA1043,Ituri,Rwampara,HOHO,Negative,2026-05-17,NA
+BIA1044,Ituri,Rwampara,HOHO,Negative,2026-06-01,NA
+BIA1045,Ituri,Lita,VILO,Negative,2026-05-30,NA
+BIA1046,Ituri,Rwampara,SHARI,Positive,NA,29.04
+BIA1047,Ituri,Bunia,NA,Negative,NA,NA
+BIA1048,Ituri,Bunia,NA,Negative,NA,NA
+BIA1049,Ituri,Bunia,NA,Negative,NA,NA
+BIA1051,Ituri,Bunia,BORA UZIMA,Positive,2026-06-01,32.08
+BIA1053,Ituri,Bunia,LEMBABO,Positive,2026-05-30,28.74
+BIA1056,Ituri,Bunia,BORA UZIMA,Positive,2026-05-30,35.18
+BIA1057,Ituri,Bunia,CNCA,Negative,2026-05-28,NA
+BIA1059,Ituri,Bunia,NGEZI,Positive,2026-06-02,25.37
+BIA1060,Ituri,Bunia,LEMBABO,Positive,2026-05-31,33.63
+BIA1061,Ituri,Bunia,ADVENTISTE,Positive,2026-05-31,25.8
+BIA1062,Ituri,Bunia,NA,Negative,2026-05-27,NA
+BIA1063,Ituri,Bunia,CNCA,Negative,2026-05-31,NA
+BIA1064,Ituri,Bunia,CNCA,Negative,2026-05-29,NA
+BIA1065,Ituri,Bunia,CNCA,Positive,2026-05-27,32.99
+BIA1066,Ituri,Bunia,CNCA,Positive,2026-05-31,35.67
+BIA1067,Ituri,Bunia,BUNIA CITE,Negative,2026-06-01,NA
+BIA1068,Ituri,Bunia,ADVENTISTE,Negative,2026-05-31,NA
+BIA1069,Ituri,Bunia,RWAMBUZI,Negative,2026-05-22,NA
+BIA1070,Ituri,Bunia,NGEZI,Undetermined,2026-06-01,NA
+BIA1071,Ituri,Damas,PLUTO,Positive,2026-05-25,23.83
+BIA1072,Ituri,Damas,MBIDJO,Negative,2026-05-26,NA
+BIA1073,Ituri,Damas,PLUTO,Negative,2026-05-29,NA
+BIA1074,Ituri,Bunia,BORA UZIMA,Negative,2026-05-19,NA
+BIA1075,Ituri,Bunia,BUNIA CITE,Negative,2026-06-02,NA
+BIA1076,Ituri,Bunia,NGEZI,Negative,2026-05-30,NA
+BIA1077,Ituri,Bunia,SIMBILYABO,Negative,2026-06-02,NA
+BIA1078,Ituri,Bunia,BORA UZIMA,Negative,2026-05-29,NA
+BIA1079,Ituri,Bunia,NGEZI,Negative,2026-06-02,NA
+BIA1080,Ituri,Bunia,AEROPORT,Positive,2026-05-31,30.26
+BIA1081,Ituri,Bunia,NGEZI,Positive,2026-05-31,27.29
+BIA1082,Ituri,Bunia,AEROPORT,Negative,2026-05-25,NA
+BIA1083,Ituri,Bunia,AEROPORT,Negative,2026-05-29,NA
+BIA1084,Ituri,Bunia,AEROPORT,Negative,2026-06-02,NA
+BIA1085,Ituri,Bunia,AEROPORT,Positive,2026-05-29,29.33
+BIA1086,Ituri,Bunia,RWAMBUZI,Negative,2026-05-28,NA
+BIA1087,Ituri,Bunia,AEROPORT,Negative,2026-05-30,NA
+BIA1088,Ituri,Bunia,AEROPORT,Negative,2026-05-31,NA
+BIA1089,Ituri,Rwampara,SHARI,Negative,2026-05-26,NA
+BIA1090,Ituri,Rwampara,Rwampara,Negative,2026-05-28,NA
+BIA1091,Ituri,Rwampara,BOGORO,Negative,2026-06-02,NA
+BIA1092,Ituri,Rwampara,TCHUNGA,Negative,2026-06-01,NA
+BIA1093,Ituri,Rwampara,SHARI,Negative,2026-05-23,NA
+BIA1095,Ituri,Rwampara,NGONA,Negative,2026-05-30,NA
+BIA1096,Ituri,Rwampara,TCHUNGA,Positive,2026-06-01,28.64
+BIA1097,Ituri,Rwampara,Rwampara,Negative,2026-05-06,NA
+BIA1098,Ituri,Rwampara,HOHO,Negative,2026-06-02,NA
+BIA1100,Ituri,Rwampara,HOHO,Negative,2026-05-30,NA
+BIA1103,Ituri,Rwampara,HOHO,Negative,2026-05-30,NA
+BIA1104,Ituri,Rwampara,NGONA,Negative,2026-05-25,NA
+BIA1105,Ituri,Rwampara,Rwampara,Negative,2026-06-02,NA
+BIA1107,Ituri,Bunia,BUNIA CITE,Negative,2026-05-15,NA
+BIA1109,Ituri,Rwampara,HOHO,Negative,NA,NA
+BIA1110,Ituri,Rwampara,SHARI,Negative,2026-05-10,NA
+BIA1112,Ituri,Rwampara,Rwampara,Negative,2026-06-01,NA
+BIA1113,Ituri,Rwampara,BAYHANA,Negative,NA,NA
+BIA1114,Ituri,Bunia,NDIBE,Positive,NA,24.16
+BIA1115,Ituri,Rwampara,Rwampara,Negative,2026-06-02,NA
+BIA1116,Ituri,Bunia,RWAKOLE,Negative,NA,NA
+BIA1117,Ituri,Rwampara,Rwampara,Negative,2026-05-29,NA
+BIA1119,Ituri,Rwampara,HOHO,Negative,2026-06-01,NA
+BIA1120,Ituri,Rwampara,Rwampara,Negative,2026-06-02,NA
+BIA1121,Ituri,Rwampara,HOHO,Negative,2026-05-08,NA
+BIA1122,Ituri,Rwampara,TCHUNGA,Positive,2026-05-31,28.54
+BIA1123,Ituri,Rwampara,HOHO,Negative,2026-06-01,NA
+BIA1124,Ituri,Rwampara,POLICE DE FRONTIERE,Negative,2026-05-20,NA
+BIA1125,Ituri,Rwampara,HOHO,Negative,2026-05-29,NA
+BIA1126,Ituri,Rwampara,NGONA,Negative,2026-05-25,NA
+BIA1127,Ituri,Lita,BAHWERE,Positive,2026-05-22,30.13
+BIA1128,Ituri,Drodro,KPAKO,Not yet run,NA,NA
+BIA1129,Ituri,Nyakunde,NYAKUNDE,Not yet run,2026-05-18,NA
+BIA1131,Ituri,Nyakunde,NYAKUNDE,Negative,2026-05-30,NA
+BIA1132,Ituri,Nyakunde,TUMBIAMBO,Not yet run,2026-05-25,NA
+BIA1133,Ituri,Nyakunde,SOTA,Negative,NA,NA
+BIA1134,Ituri,Nyakunde,SOTA,Positive,NA,28.43
+BIA1135,Ituri,Nyakunde,SOTA,Positive,2026-05-19,28.8
+BIA1136,Ituri,Nyakunde,NYAKUNDE,Negative,2026-05-22,NA
+BIA1139,Ituri,Nyakunde,SOTA,Positive,2026-05-25,24.76
+BIA1140,Ituri,Bunia,HOHO,Negative,2026-05-22,NA
+BIA1149,Ituri,Nyakunde,BIRINYAMA,Invalid,2026-05-29,NA
+BIA1151,Ituri,Mandima,MANDIMA,Negative,NA,NA
+BIA1152,Ituri,Mongbalu,NA,Positive,NA,29.7
+BIA1153,Ituri,Mongbalu,NA,Positive,NA,29.04
+BIA1155,Ituri,Mongbalu,NA,Negative,NA,NA
+BIA1156,Ituri,Mongbalu,NA,Negative,NA,NA
+BIA1157,Ituri,Mongbalu,NA,Positive,NA,NA
+BIA1158,Ituri,Mongbalu,NA,Negative,NA,NA
+BIA1159,Ituri,Mongbalu,NA,Positive,NA,25.94
+BIA1160,Ituri,Mongbalu,NA,Negative,NA,NA
+BIA1161,Ituri,Mongbalu,NA,Positive,NA,18.53
+BIA1162,Ituri,Mongbalu,NA,Positive,NA,24.85
+BIA1163,Ituri,Mongbalu,NA,Positive,NA,20.31
+BIA1164,Ituri,Mongbalu,NA,Positive,NA,32.87
+BIA1165,Ituri,Mongbalu,NA,Positive,NA,31.44
+BIA1166,Ituri,Rwampara,LENGABO,Positive,2026-05-31,27.97
+BIA1167,Ituri,Rwampara,LENGABO,Negative,NA,NA
+BIA1168,Ituri,Rwampara,HOHO,Positive,2026-06-01,27.08
+BIA1169,Ituri,Rwampara,HOHO,Positive,2026-06-01,28.32
+BIA1170,Ituri,Rwampara,NGONA,Negative,2026-06-01,NA
+BIA1172,Ituri,Rwampara,HOHO,Negative,2026-05-31,NA
+BIA1173,Ituri,Rwampara,TCHUNGA,Positive,2026-06-01,21.26
+BIA1175,Ituri,Bunia,KINDIA,Positive,2026-06-02,29.98
+BIA1178,Ituri,Rwampara,Rwampara,Negative,2026-06-03,NA
+BIA1179,Ituri,Rwampara,Rwampara,Positive,NA,24.88
+BIA1180,Ituri,Rwampara,HOHO,Negative,2026-05-31,NA
+BIA1182,Ituri,Rwampara,POLICE DE FRONTIERE,Positive,2026-05-29,22.97
+BIA1183,Ituri,Rwampara,BAYHANA,Negative,NA,NA
+BIA1186,Ituri,Rwampara,HOHO,Negative,2026-06-03,NA
+BIA1187,Ituri,Rwampara,Rwampara,Negative,2026-06-02,NA
+BIA1188,Ituri,Rwampara,NGONA,Negative,2026-06-02,NA
+BIA1189,Ituri,Rwampara,TCHUNGA,Positive,2026-06-02,17.62
+BIA1190,Ituri,Rwampara,SHARI,Invalid,2026-05-07,NA
+BIA1191,Ituri,Rwampara,SHARI,Negative,2026-05-30,NA
+BIA1192,Ituri,Nyakunde,NYAKUNDE,Undetermined,NA,NA
+BIA1193,Ituri,Nyakunde,SOTA,Negative,2026-06-01,NA
+BIA1194,Ituri,Nyakunde,SOTA,Positive,2026-06-03,34.34
+BIA1195,Ituri,Nyakunde,SOTA,Negative,2026-05-20,NA
+BIA1196,Ituri,Nyakunde,MARABO,Positive,2026-05-27,20.75
+BIA1197,Ituri,Nyakunde,MARABO,Negative,2026-05-31,NA
+BIA1198,Ituri,Nyakunde,KOMBOKABO,Negative,2026-05-31,NA
+BIA1199,Ituri,Nyakunde,NYAKUNDE,Positive,2026-06-02,28.16
+BIA1200,Ituri,Bambu,BAMBU,Negative,2026-05-31,NA
+BIA1201,Ituri,Bambu,KOBU,Positive,2026-06-03,30.04
+BIA1202,Ituri,Bambu,BAMBU,Negative,2026-06-01,NA
+BIA1203,Ituri,Mangala,MANDJE,Negative,2026-06-02,NA
+BIA1204,Ituri,Mangala,MANDJE,Negative,2026-06-03,NA
+BIA1205,Ituri,Rwampara,HOHO,Positive,2026-05-25,18.06
+BIA1206,Ituri,Bambu,ZENGO,Positive,NA,34.66
+BIA1207,Ituri,Bunia,BANKOKO,Positive,2026-06-01,31.01
+BIA1208,Ituri,Bunia,BANKOKO,Positive,2026-06-01,36.89
+BIA1209,Ituri,Bunia,BIGO,Positive,2026-05-31,30.99
+BIA1210,Ituri,Bunia,BANKOKO,Positive,2026-05-24,30.25
+BIA1211,Ituri,Bunia,BIGO,Negative,2026-05-30,NA
+BIA1212,Ituri,Bunia,NDIBE,Positive,2026-06-02,26.84
+BIA1214,Ituri,Bunia,BIGO,Negative,NA,NA
+BIA1215,Ituri,Bunia,BANKOKO,Negative,NA,NA
+BIA1216,Ituri,Bunia,SIMBILYABO,Positive,2026-06-02,28.63
+BIA1217,Ituri,Bunia,BIGO,Positive,2026-05-23,29.08
+BIA1218,Ituri,Bunia,BIGO,Positive,2026-06-02,20.72
+BIA1219,Ituri,Rwampara,SHARI,Negative,2026-05-20,NA
+BIA1220,Ituri,Mangala,NA,Positive,NA,29.91
+BIA1221,Ituri,Bunia,NGEZI,Negative,2026-06-04,NA
+BIA1222,Ituri,Nizi,NIZI,Positive,2026-06-02,22.09
+BIA1223,Ituri,Komanda,BEY,Positive,2026-05-31,20.38
+BIA1224,Ituri,Komanda,BAMANDE,Negative,NA,NA
+BIA1225,Ituri,Komanda,KOMANDA,Negative,2026-06-01,NA
+BIA1226,Ituri,Komanda,BEY,Positive,2026-05-31,18.1
+BIA1227,Ituri,Komanda,BEY,Negative,NA,NA
+BIA1228,Ituri,Nizi,NIZI,Positive,2026-05-23,29.91
+BIA1229,Ituri,Nizi,HERITAGE,Positive,2026-05-31,18.54
+BIA1230,Ituri,Bunia,AEROPORT,Positive,2026-05-31,21.67
+BIA1231,Ituri,Bunia,NA,Positive,2026-05-30,22.51
+BIA1232,Ituri,Bunia,AEROPORT,Positive,2026-05-31,20.61
+BIA1233,Ituri,Bunia,AEROPORT,Positive,2026-05-31,29.71
+BIA1234,Ituri,Bunia,AEROPORT,Negative,2026-06-03,NA
+BIA1235,Ituri,Bunia,AEROPORT,Negative,2026-06-02,NA
+BIA1236,Ituri,Bunia,AEROPORT,Negative,2026-06-02,NA
+BIA1237,Ituri,Bunia,AEROPORT,Positive,2026-05-31,26.41
+BIA1238,Ituri,Bunia,BANKOKO,Negative,NA,NA
+BIA1239,Ituri,Bunia,NA,Invalid,2026-05-15,NA
+BIA1240,Ituri,Bunia,BIGO,Negative,2026-05-23,NA
+BIA1241,Ituri,Bunia,AEROPORT,Invalid,2026-05-01,NA
+BIA1242,Ituri,Bunia,AEROPORT,Negative,2026-05-31,NA
+BIA1243,Ituri,Bunia,AEROPORT,Positive,2026-06-01,27.34
+BIA1244,Ituri,Bunia,AEROPORT,Negative,2026-05-30,NA
+BIA1245,Ituri,Bunia,AEROPORT,Positive,2026-05-30,25.44
+BIA1246,Ituri,Nizi,NIZI,Negative,NA,NA
+BIA1247,Ituri,Nizi,NIZI,Positive,2026-05-24,21.56
+BIA1248,Ituri,Nizi,NIZI,Negative,2026-06-01,NA
+BIA1249,Ituri,NA,NA,Negative,NA,NA
+BIA1250,Ituri,NA,NA,Negative,NA,NA
+BIA1251,Ituri,NA,NA,Positive,2026-06-03,20.63
+BIA1255,Ituri,NA,NA,Positive,NA,26.04
+BIA1261,Ituri,Boga,RUBONGO,Negative,NA,NA
+BIA1262,Ituri,Gethy,SONGOLO,Negative,NA,NA
+BIA1263,Ituri,Gethy,SONGOLO,Negative,NA,NA
+BIA1264,Ituri,Logo,WALII,Negative,2026-05-25,NA
+BIA1265,Ituri,Logo,THEDEJA,Positive,2026-05-18,24.8
+BIA1267,Ituri,Aungba,NA,Negative,NA,NA
+BIA1270,Ituri,Aru,ANIA,Negative,2026-06-01,NA
+BIA1272,Ituri,Aru,NA,Positive,2026-05-23,29.27
+BIA1273,Ituri,Aru,ONDOLEA,Negative,2026-05-29,NA
+BIA1274,Ituri,Kilo,AMEMA,Negative,2026-05-25,NA
+BIA1275,Ituri,Kilo,KILO MISSION,Positive,2026-05-30,37.63
+BIA1277,Ituri,Lolwa,LOLWA,Negative,2026-05-27,NA
+BIA1278,Ituri,Lolwa,LOLWA,Negative,2026-05-26,NA
+BIA1279,Ituri,Bunia,NGEZI,Negative,NA,NA
+BIA1280,Ituri,NA,HGR GETY,Negative,NA,NA
+BIA1282,Ituri,Bunia,NA,Positive,NA,32.79
+BIA1283,Ituri,Bunia,NA,Negative,NA,NA
+BIA1285,Ituri,Rwampara,SHARI,Positive,NA,25.05
+BIA1287,Ituri,Rwampara,NA,Positive,2026-06-01,30.89
+BIA1288,Ituri,Rwampara,TCHUNGA,Positive,2026-06-03,28.49
+BIA1289,Ituri,NA,Rwampara,Negative,NA,NA
+BIA1291,Ituri,Rwampara,POLICE DE FRONTIERE,Positive,NA,37.14
+BIA1292,Ituri,Bunia,NA,Negative,NA,NA
+BIA1294,Ituri,Rwampara,NA,Negative,2026-06-03,NA
+BIA1295,Ituri,Rwampara,POLICE DE FRONTIERE,Negative,2026-05-31,NA
+BIA1296,Ituri,Bunia,BANKOKO,Negative,2026-06-02,NA
+BIA1297,Ituri,Rwampara,HOHO,Positive,2026-05-30,23.37
+BIA1299,Ituri,Rwampara,LENGABO,Positive,2026-06-04,23.18
+BIA1301,Ituri,Rwampara,LENGABO,Negative,2026-05-31,NA
+BIA1302,Ituri,Rwampara,HOHO,Negative,2026-06-01,NA
+BIA1303,Ituri,Rwampara,HOHO,Invalid,2026-06-03,NA
+BIA1304,Ituri,Rwampara,NYAKERU,Negative,2026-06-03,NA
+BIA1305,Ituri,Rwampara,TCHUNGA,Negative,2026-05-24,NA
+BIA1306,Ituri,Bunia,BIGO,Negative,2026-05-25,NA
+BIA1307,Ituri,Rwampara,TCHUNGA,Negative,2026-06-04,NA
+BIA1308,Ituri,Rwampara,SHARI,Positive,2026-06-03,28.3
+BIA1309,Ituri,Rwampara,NYAKERU,Negative,2026-06-04,NA
+BIA1310,Ituri,Nyakunde,NYAKUNDE,Negative,2026-06-02,NA
+BIA1311,Ituri,Nyakunde,SOTA,Negative,2026-05-25,NA
+BIA1312,Ituri,Nyakunde,SOTA,Positive,2026-06-03,23.63
+BIA1313,Ituri,Bunia,LENGABO,Negative,2026-06-04,NA
+BIA1314,Ituri,Bambu,ZENGO,Negative,2026-06-01,NA
+BIA1315,Ituri,Bambu,SENGO,Negative,2026-06-01,NA
+BIA1316,Ituri,Bambu,KOBU,Negative,2026-06-04,NA
+BIA1317,Ituri,Bunia,MUZIMARIA,Positive,NA,24.5
+BIA1318,Ituri,Bunia,ADVENTISTE,Positive,2026-05-31,22.8
+BIA1319,Ituri,Bunia,BIGO,Positive,2026-06-01,21.51
+BIA1320,Ituri,Bunia,BIGO,Positive,2026-06-03,23.56
+BIA1321,Ituri,Bunia,RWAMBUZI,Positive,2026-06-01,24.79
+BIA1322,Ituri,Bunia,BUNIA CITE,Positive,2026-05-30,18.78
+BIA1323,Ituri,Bunia,MUZIMARIA,Negative,2026-05-20,NA
+BIA1324,Ituri,Bunia,BIGO,Negative,2026-05-28,NA
+BIA1325,Ituri,Lita,KATOTO,Positive,2026-05-24,28.66
+BIA1326,Ituri,Bunia,BANKOKO,Negative,2026-06-02,NA
+BIA1327,Ituri,Lita,LOGA,Negative,2026-05-15,NA
+BIA1328,Ituri,Bunia,BORA UZIMA,Negative,2026-06-04,NA
+BIA1329,Ituri,Bunia,CNCA,Positive,2026-05-30,22.45
+BIA1330,Ituri,Bunia,BORA UZIMA,Negative,2026-06-04,NA
+BIA1331,Ituri,Bunia,LEMBABO,Negative,2026-05-26,NA
+BIA1332,Ituri,Bunia,CNCA,Positive,2026-06-01,34.88
+BIA1333,Ituri,Bunia,BORA UZIMA,Negative,2026-06-04,NA
+BIA1334,Ituri,Bunia,BORA UZIMA,Negative,2026-06-04,NA
+BIA1335,Ituri,Bunia,BORA UZIMA,Negative,2026-06-04,NA
+BIA1336,Ituri,Bunia,AEROPORT,Negative,2026-06-03,NA
+BIA1337,Ituri,Bunia,AEROPORT,Negative,2026-06-04,NA
+BIA1338,Ituri,Bunia,AEROPORT,Negative,2026-06-03,NA
+BIA1339,Ituri,Bunia,AEROPORT,Negative,2026-06-04,NA
+BIA1340,Ituri,Bunia,CNCA,Negative,2026-06-03,NA
+BIA1341,Ituri,Bunia,BIGO,Negative,2026-05-28,NA
+BIA1342,Ituri,Bunia,BIGO,Negative,2026-05-16,NA
+BIA1343,Ituri,Bunia,LEMBABO,Negative,2026-05-29,NA
+BIA1344,Ituri,Bunia,BIGO,Positive,2026-06-01,30.17
+BIA1345,Ituri,Bunia,BORA UZIMA,Positive,2026-06-04,25
+BIA1346,Ituri,Bunia,CNCA,Negative,2026-06-02,NA
+BIA1347,Ituri,Bunia,NGEZI,Negative,2026-05-24,NA
+BIA1348,Ituri,Bunia,ADVENTISTE,Positive,2026-06-02,25.36
+BIA1349,Ituri,Bunia,BIGO,Negative,2026-05-17,NA
+BIA1350,Ituri,Bunia,BIGO,Positive,2026-06-01,23.08
+BIA1352,Ituri,Bunia,NGEZI,Negative,2026-06-05,NA
+BIA1353,Ituri,Bunia,BUNIA CITE,Negative,NA,NA
+BIA1356,Ituri,Bunia,CNCA,Negative,2026-06-04,NA
+BIA1359,Ituri,Bunia,BIGO,Not yet run,NA,NA
+BIA1361,Ituri,Rwampara,SHARI,Not yet run,NA,NA
+BIA1362,Ituri,Rwampara,TCHUNGA,Not yet run,NA,NA
+BIA1363,NA,NA,NA,Not yet run,NA,NA
+BIA1364,NA,NA,NA,Not yet run,NA,NA
