@@ -234,8 +234,18 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
   function syncTreeFraction() {
     const phi = desiredFraction();
     if (Math.abs(phi - lastF) <= 0.005) return;
-    if (transform && transform.maxX > 0 && lastF > 0) {
-      transform = { ...transform, scaleX: transform.scaleX * (phi / lastF) };
+    // Predict the tree's transform at the new fraction so this synchronous render already matches
+    // the upcoming refit — otherwise the beyond region flashes un-squashed for a frame. When
+    // calibrated, predict both offsetX and the right edge (the tree shifts left, not just scales).
+    if (transform && transform.maxX > 0) {
+      const fo = (calib.W === (host.clientWidth || 0) && calib.samples.length >= 2) ? fitLine('offsetX') : null;
+      const fx = fo ? fitLine('x1') : null;
+      if (fo && fx) {
+        const offsetX = fo.m * phi + fo.b, x1 = fx.m * phi + fx.b;
+        transform = { ...transform, offsetX, scaleX: (x1 - offsetX) / transform.maxX };
+      } else if (lastF > 0) {
+        transform = { ...transform, scaleX: transform.scaleX * (phi / lastF) };
+      }
     }
     lastF = phi;
     if (extentRaf) cancelAnimationFrame(extentRaf);
