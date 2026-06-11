@@ -88,7 +88,7 @@ function timeTicks(pxWidth, t0, t1) {
  * @param {{minDate:string,maxDate:string}} domain  tree time domain (root → most-recent)
  * @param {{onCtChange?:(t:?number)=>void}} [opts]  notified when the Ct filter changes
  */
-export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = () => {}, tips = [], onExtentChange = () => {}, onWindowChange = () => {} } = {}) {
+export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = () => {}, tips = [], onExtentChange = () => {}, onWindowChange = () => {}, onSettling = () => {} } = {}) {
   const host = document.getElementById(containerId);
   host.replaceChildren();
 
@@ -179,6 +179,28 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
   let extentRaf = 0;                 // rAF handle, coalesces tree-resize requests
   let lastF = 1;                     // tree width-fraction the tree is currently at (for prediction)
   let autoCorr = 0;                  // consecutive calibration re-sends since the last user action
+  let settling = false, settleTimer = 0;   // hide tree+chart while a relayout recalibration settles
+
+  // A tree relayout (tip labels / node-bars / legend) invalidates the width-fraction calibration,
+  // so beyond mode briefly re-probes and re-converges — visibly flickering. Mask it: hide the
+  // chart + tree on the first recalibration step and fade them back once no fraction has been sent
+  // for a short, quiet window (i.e. it has settled).
+  const armReveal = () => {
+    clearTimeout(settleTimer);
+    settleTimer = setTimeout(() => {
+      settling = false;
+      holder.style.transition = 'opacity 0.18s ease'; holder.style.opacity = '';   // fade back in
+      onSettling(false);
+    }, 200);
+  };
+  function beginSettle() {   // called only when a relayout actually invalidates the calibration
+    if (!settling) {
+      settling = true;
+      holder.style.transition = 'none'; holder.style.opacity = '0';   // hide instantly (no fade through the flicker)
+      onSettling(true);
+    }
+    armReveal();
+  }
 
   // The naïve fill fraction f = (t1-t0)/(effMax-t0) assumes compressing the tree keeps its left
   // edge fixed, but PearTree shifts the whole tree (offsetX moves), so the post-tree tail lands
@@ -196,7 +218,7 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
       // node-bars, legend…). The other samples are now stale: drop them and recalibrate from this.
       const old = calib.samples[i];
       if (Math.abs(old.offsetX - s.offsetX) > 2 || Math.abs(old.x1 - s.x1) > 2) {
-        calib = { W, samples: [s] }; autoCorr = 0; return;
+        calib = { W, samples: [s] }; autoCorr = 0; beginSettle(); return;
       }
       calib.samples[i] = s;
     } else {
@@ -248,6 +270,7 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
       }
     }
     lastF = phi;
+    if (settling) armReveal();   // still converging → keep it hidden until things go quiet
     if (extentRaf) cancelAnimationFrame(extentRaf);
     extentRaf = requestAnimationFrame(() => { extentRaf = 0; onExtentChange(phi); });
   }
