@@ -411,6 +411,7 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
     beyondEl.textContent = showBeyond ? '←' : '→';   // → extend right · ← collapse back
     beyondEl.title = showBeyond ? 'Hide samples beyond the tree’s latest date'
                                 : 'Show samples dated after the tree’s latest tip';
+    beginSettle();   // mask the squash/unsquash transition (fades back once the refit settles)
     applyExtent();
   };
 
