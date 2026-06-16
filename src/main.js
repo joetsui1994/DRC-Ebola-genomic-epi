@@ -7,6 +7,7 @@ import { createNodeInfo } from './node-info.js';
 import { makeSplitter } from './splitter.js';
 import { createPrioritisationPanel } from './prioritise-panel.js';
 import { tallyZones } from './zone-tally.js';
+import { LINELIST_SOURCES, resolveLinelistSource } from './linelist-source.js';
 
 // Parse the health-zone alias crosswalk (observed_name → canonical_nom) into a
 // normaliser. Health-zone names in the line-list / mobility / tree are mapped onto
@@ -53,6 +54,23 @@ function parseLinelist(text, canon) {
   return out;
 }
 
+// Populate the header line-list selector from the known sources, mark the active
+// one, and reload (full page) with an updated ?linelist= param on change.
+function setupLinelistSelector(currentKey) {
+  const sel = document.getElementById('linelist-select');
+  if (!sel) return;
+  sel.replaceChildren(...Object.entries(LINELIST_SOURCES).map(([key, s]) => {
+    const o = document.createElement('option');
+    o.value = key; o.textContent = s.label; o.selected = key === currentKey;
+    return o;
+  }));
+  sel.addEventListener('change', () => {
+    const url = new URL(location.href);
+    url.searchParams.set('linelist', sel.value);
+    location.assign(url);   // navigation → full reload, as required
+  });
+}
+
 // Parse the FlowMinder origin→destination matrix into per-zone flow lookups
 // (keyed upper-case): outByZone[origin] = movement leaving, inByZone[dest] = arriving.
 // Origin/dest names are normalised to canonical so they join the geojson centroids.
@@ -82,10 +100,14 @@ function parseMobilityMatrix(text, canon) {
 // subpath (BASE_URL is '/' in dev, '/DRC-Ebola-genomic-epi/' in the build).
 const BASE = import.meta.env.BASE_URL;
 
+// Which line-list version to load (selectable via the ?linelist= param + header selector).
+const linelistSource = resolveLinelistSource(new URLSearchParams(location.search));
+setupLinelistSelector(linelistSource.key);
+
 const [tips, meta, linelistText, aliasText] = await Promise.all([
   fetch(`${BASE}data/ituri-tips.json`).then(r => r.json()),
   fetch(`${BASE}data/ituri-meta.json`).then(r => r.json()),
-  fetch(`${BASE}data/linelist_data.csv`).then(r => r.text()),
+  fetch(`${BASE}data/${linelistSource.file}`).then(r => r.text()),
   fetch(`${BASE}data/aliases.csv`).then(r => r.text()).catch(() => ''),   // crosswalk (optional)
 ]);
 
