@@ -489,30 +489,37 @@ export function createMapPanel(containerId, tips, { onCtChange = () => {} } = {}
       choroLegend.addTo(map);
 
       // metric button group (replaces the on/off toggle): Off + risk + per-status + total (+ toSequence when prio active)
-      const SHORT = { off: 'Off', risk: 'Risk', Positive: 'Pos', Negative: 'Neg', Invalid: 'Inv', Unclassified: 'Unc', total: 'Total', toSequence: 'Seq+', inProgress: 'Seq~' };
+      const SHORT = { off: 'Off', risk: 'Risk', Positive: 'Pos', Negative: 'Neg', Invalid: 'Inv', Unclassified: 'Unc', total: 'Total', toSequence: 'Seq+', inProgress: 'InSeq' };
       const FULL  = { off: 'Hide colour (zones stay clickable)', risk: 'Relative risk', Positive: 'Positive samples', Negative: 'Negative samples', Invalid: 'Invalid samples', Unclassified: 'Unclassified samples', total: 'Total samples', toSequence: 'To sequence (prioritisation)', inProgress: 'Being sequenced (in progress)' };
-      let groupDiv = null;
+      // Two button groups: the general metrics, then a separate sequencing group (InSeq, Seq+).
+      const ORDER_MAIN = ['off', 'risk', 'Positive', 'Negative', 'Invalid', 'Unclassified', 'total'];
+      const ORDER_SEQ  = ['inProgress', 'toSequence'];
+      let groupWrap = null;
       const buildGroup = () => {
-        if (!groupDiv) return;
-        const ORDER = ['off', 'risk', 'Positive', 'Negative', 'Invalid', 'Unclassified', 'total', 'toSequence', 'inProgress'];
-        groupDiv.replaceChildren();
-        for (const key of ORDER) {
-          const b = L.DomUtil.create('button', key === metric ? 'active' : '', groupDiv);
-          b.type = 'button'; b.textContent = SHORT[key]; b.title = FULL[key]; b.dataset.metric = key;
-          b.onclick = () => {
-            const wasToSeq = metric === 'toSequence';
-            metric = key;
-            [...groupDiv.children].forEach((c) => c.classList.toggle('active', c.dataset.metric === key));
-            restyle(); renderLegend();
-            updateCtVisibility();   // the Ct input rides with the Positive metric
-            // Selecting "To sequence" activates prioritisation (knobs + compute); leaving it deactivates.
-            if (key === 'toSequence' && !wasToSeq) setPrio(true);
-            else if (key !== 'toSequence' && wasToSeq) setPrio(false);
-          };
-        }
+        if (!groupWrap) return;
+        groupWrap.replaceChildren();
+        const addGroup = (keys) => {
+          const g = L.DomUtil.create('div', 'choropleth-group', groupWrap);
+          for (const key of keys) {
+            const b = L.DomUtil.create('button', key === metric ? 'active' : '', g);
+            b.type = 'button'; b.textContent = SHORT[key]; b.title = FULL[key]; b.dataset.metric = key;
+            b.onclick = () => {
+              const wasToSeq = metric === 'toSequence';
+              metric = key;
+              groupWrap.querySelectorAll('button').forEach((c) => c.classList.toggle('active', c.dataset.metric === key));
+              restyle(); renderLegend();
+              updateCtVisibility();   // the Ct input rides with the Positive metric
+              // Selecting "To sequence" activates prioritisation (knobs + compute); leaving it deactivates.
+              if (key === 'toSequence' && !wasToSeq) setPrio(true);
+              else if (key !== 'toSequence' && wasToSeq) setPrio(false);
+            };
+          }
+        };
+        addGroup(ORDER_MAIN);
+        addGroup(ORDER_SEQ);
       };
       const groupCtl = L.control({ position: 'topright' });
-      groupCtl.onAdd = () => { groupDiv = L.DomUtil.create('div', 'choropleth-group'); L.DomEvent.disableClickPropagation(groupDiv); buildGroup(); return groupDiv; };
+      groupCtl.onAdd = () => { groupWrap = L.DomUtil.create('div', 'choropleth-groups'); L.DomEvent.disableClickPropagation(groupWrap); buildGroup(); return groupWrap; };
       groupCtl.addTo(map);
 
       // search-and-zoom: type a health-zone name → pick a match → zoom + select it.

@@ -18,7 +18,7 @@ const EXIST = '#7c1d1d';        // existing-sequences band (maroon), matches the
 const EXIST_EMPTY = '#efece7';  // band placeholder when a cell has no prior sequences
 const INPROG = '#c77d2e';       // in-process-of-being-sequenced band (amber); intensity ∝ in-process count
 const DAY = 86400000;
-const ROW_IDEAL = 14, PLOT_MAX = 320;   // grow rows to ~14px, then cap the plot height & compress
+const ROW_IDEAL = 16.8, PLOT_MAX = 378;   // grow rows to ~16.8px, then cap the plot height & compress
 
 export function createHeatmap(host) {
   const holder = document.createElement('div'); holder.className = 'ps-svg';
@@ -88,7 +88,7 @@ export function createHeatmap(host) {
       const ci = timeBin - minBin;
       const x = PAD.left + ci * colW, y = PAD.top + ri * rowH;
       const cw = Math.max(0.5, colW - 0.6);
-      const totalH = Math.max(0.5, rowH - 0.6);
+      const totalH = Math.max(0.5, rowH - 1.5);   // 0.75 inset top & bottom = 1.5px inter-row gap
       const existH = Math.min(totalH * 0.28, 4);                    // shorter top band (phylogeny)
       const inProgH = Math.min(totalH * 0.20, 3);                   // thin middle band (in-process)
       const allocH = Math.max(0.5, totalH - existH - inProgH - 1.2); // two 0.6 gaps
@@ -98,14 +98,14 @@ export function createHeatmap(host) {
       // top band: maroon ∝ existing sequences; faint placeholder for candidate cells with none.
       if (ex > 0 || c) {
         svg.appendChild(elem('rect', {
-          x: x + 0.3, y: y + 0.3, width: cw, height: existH,
+          x: x + 0.3, y: y + 0.75, width: cw, height: existH,
           fill: ex > 0 ? EXIST : EXIST_EMPTY, 'fill-opacity': ex > 0 ? (0.3 + 0.7 * ex / maxExist) : 1,
         }));
       }
       // middle band: amber ∝ in-process count (drawn only where present; slot is always reserved).
       if (ip > 0) {
         svg.appendChild(elem('rect', {
-          x: x + 0.3, y: y + 0.3 + existH + 0.6, width: cw, height: inProgH,
+          x: x + 0.3, y: y + 0.75 + existH + 0.6, width: cw, height: inProgH,
           fill: INPROG, 'fill-opacity': 0.3 + 0.7 * ip / maxInProg,
         }));
       }
@@ -114,7 +114,7 @@ export function createHeatmap(host) {
         cellAt.set(key, c);
         const sel = c.selected > 0;
         svg.appendChild(elem('rect', {
-          x: x + 0.3, y: y + 0.3 + existH + inProgH + 1.2, width: cw, height: allocH,
+          x: x + 0.3, y: y + 0.75 + existH + inProgH + 1.2, width: cw, height: allocH,
           fill: sel ? TEAL : AVAIL_FILL, 'fill-opacity': sel ? (0.3 + 0.7 * c.selected / maxSel) : 1,
         }));
       }
@@ -162,7 +162,7 @@ export function createHeatmap(host) {
     tip.innerHTML = `<div class="ps-tip-h">${titleCase(zone)}</div><div>${when}</div>`
       + `<div><b>${avail}</b> avail · risk <b>${riskVal == null ? '—' : (+riskVal).toFixed(3)}</b></div>`
       + `<div><span style="color:${EXIST}"><b>${ex}</b> existing sequence${ex === 1 ? '' : 's'}</span></div>`
-      + (ip > 0 ? `<div><span style="color:${INPROG}"><b>${ip}</b> in sequencing</span></div>` : '')
+      + `<div><span style="color:${INPROG}"><b>${ip}</b> in sequencing</span></div>`
       + `<div><span style="color:${TEAL}"><b>${sel}</b> to sequence next</span>`
         + ((c && c.floorSelected > 0 && c.propSelected > 0)
           ? ` <span style="color:#9c968b">(floor ${c.floorSelected} + prop ${c.propSelected})</span>` : '')

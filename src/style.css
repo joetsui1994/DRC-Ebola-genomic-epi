@@ -310,6 +310,7 @@ body {
 .risk-toggle.off { color: var(--muted); }
 
 /* Choropleth metric button group (segmented control, top-right of the map) */
+.choropleth-groups { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
 .choropleth-group {
   display: flex; flex-wrap: wrap;
   background: rgba(255, 255, 255, 0.94); border: 1px solid var(--border);
@@ -327,6 +328,10 @@ body {
 .choropleth-group button[data-metric="toSequence"] { color: #587e72; }
 .choropleth-group button[data-metric="toSequence"].active { background: #587e72; color: #fff; }
 .choropleth-group button[data-metric="toSequence"]:hover:not(.active) { background: rgba(88, 126, 114, 0.14); }
+/* The "Being sequenced" (InSeq) metric button takes the amber in-process hue. */
+.choropleth-group button[data-metric="inProgress"] { color: #c77d2e; }
+.choropleth-group button[data-metric="inProgress"].active { background: #c77d2e; color: #fff; }
+.choropleth-group button[data-metric="inProgress"]:hover:not(.active) { background: rgba(199, 125, 46, 0.14); }
 
 /* Top-right map controls share one row: the choropleth metric group on the right,
    the mobility toggle to its left (row-reverse keeps the metric group at the edge;
