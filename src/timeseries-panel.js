@@ -493,7 +493,7 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
     const lines = [`<div class="ws-range">${fmtDay(lo)} – ${fmtDay(hi)} · ${days} d</div>`];
     lines.push(`<div>${pct == null
       ? '<span class="ws-dim">no tests in range</span>'
-      : `<b>${pct}%</b> positive <span class="ws-dim">(${pos}/${tested})</span>`}</div>`);
+      : `<b>${pct}%</b> test positivity <span class="ws-dim">(${pos}/${tested})</span>`}</div>`);
     // Append the proportion of (Ct-eligible) positives sequenced to the sequences line.
     const seqPct = pos ? Math.round((seq / pos) * 100) : null;
     lines.push(`<div class="ws-seq"><b>${seq}</b> existing sequence${seq === 1 ? '' : 's'}${seqPct == null ? '' : ` (${seqPct}% of +ve)`}</div>`);
