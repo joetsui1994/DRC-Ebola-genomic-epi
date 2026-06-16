@@ -49,6 +49,51 @@ describe('buildCells', () => {
   });
 });
 
+describe('buildCells inProgressRows', () => {
+  const candidateRows = [
+    { sample_id: 'X1', health_zone: 'Bunia', status: 'Positive', ct: '24', date: '2026-04-05' }, // bin 0
+    { sample_id: 'X2', health_zone: 'Bunia', status: 'Positive', ct: '25', date: '2026-04-05' }, // bin 0
+    { sample_id: 'X3', health_zone: 'Bunia', status: 'Positive', ct: '26', date: '2026-04-05' }, // bin 0
+  ];
+
+  it('in-process rows raise h/H_k and reduce availability, like sequenced history', () => {
+    const inProgressRows = [{ health_zone: 'Bunia', date: '2026-04-05' }];   // bin 0
+    const { cells, locHistory, cellHistory, inProgressHistory } = buildCells({
+      candidateRows, inProgressRows, risk, canon, ctThreshold: 31, binWidthDays: 7, subtractHistory: true,
+    });
+    const c = cells.find((x) => x.location === 'BUNIA' && x.timeBin === 0);
+    expect(c.h).toBe(1);                 // h reflects the in-process sample
+    expect(c.available).toBe(2);         // 3 candidates - 1 (subtractHistory)
+    expect(locHistory.get('BUNIA')).toBe(1);
+    // tracked SEPARATELY from phylogeny history
+    expect(inProgressHistory.get('BUNIA|0')).toBe(1);
+    expect(cellHistory.get('BUNIA|0') || 0).toBe(0);   // cellHistory stays phylogeny-only
+  });
+
+  it('in-process and sequenced both contribute to h but stay in separate maps', () => {
+    const inProgressRows = [{ health_zone: 'Bunia', date: '2026-04-05' }];
+    const sequencedRows = [{ health_zone: 'Bunia', date: '2026-04-05' }];
+    const { cells, cellHistory, inProgressHistory, locHistory } = buildCells({
+      candidateRows, inProgressRows, sequencedRows, risk, canon, ctThreshold: 31, binWidthDays: 7, subtractHistory: true,
+    });
+    const c = cells.find((x) => x.location === 'BUNIA' && x.timeBin === 0);
+    expect(c.h).toBe(2);                 // 1 sequenced + 1 in-process
+    expect(c.available).toBe(1);         // 3 - 2
+    expect(cellHistory.get('BUNIA|0')).toBe(1);        // phylogeny only
+    expect(inProgressHistory.get('BUNIA|0')).toBe(1);  // in-process only
+    expect(locHistory.get('BUNIA')).toBe(2);
+  });
+
+  it('end-to-end: an in-process sample is never re-selected', () => {
+    const inProgressRows = [{ health_zone: 'Bunia', date: '2026-04-05' }];
+    const { cells, origin, tNow } = buildCells({
+      candidateRows, inProgressRows, risk, canon, ctThreshold: 31, binWidthDays: 7, subtractHistory: true, withIds: true,
+    });
+    const { selection } = prioritise({ cells, n: 5, delta: 0.5, tilt: 0, binWidthDays: 7, origin, tNow, seed: 1 });
+    expect(selection.length).toBe(2);    // only 2 of the 3 candidates remain selectable
+  });
+});
+
 describe('parseUpload', () => {
   it('parses header + rows, flags sequenced, tolerates DD/MM/YYYY', () => {
     const csv = 'sample_id,health_zone,status,ct,date,sequenced\n'

@@ -31,7 +31,8 @@ function parseLinelist(text, canon) {
   const head = lines[0].split(',').map((h) => h.trim());
   const idx = (name) => head.indexOf(name);
   const iId = idx('sample_id'), iZone = idx('health_zone'), iArea = idx('health_area'),
-        iStatus = idx('status'), iDate = idx('date'), iCt = idx('ct'), iRid = idx('row_id');
+        iStatus = idx('status'), iDate = idx('date'), iCt = idx('ct'), iRid = idx('row_id'),
+        iSeqing = idx('being_sequenced');
   const out = [];
   for (let i = 1; i < lines.length; i++) {
     const c = lines[i].split(',');
@@ -44,6 +45,9 @@ function parseLinelist(text, canon) {
       status: STATUS_NORM[status] || status,
       date: iDate >= 0 ? c[iDate] : '',
       ct: iCt >= 0 ? c[iCt] : '',
+      // In the process of being sequenced (committed but not yet in the phylogeny). Absent
+      // column → false everywhere, so all surfaces degrade to showing nothing.
+      being_sequenced: iSeqing >= 0 ? /^(1|true|yes|y)$/i.test((c[iSeqing] || '').trim()) : false,
     });
   }
   return out;

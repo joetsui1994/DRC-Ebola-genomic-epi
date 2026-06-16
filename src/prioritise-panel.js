@@ -184,8 +184,11 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
     const inUpload = !!uploadRows;
     const candidateRows = inUpload ? uploadRows.filter((r) => !r.sequenced) : window.__PRIO_LINELIST__ || [];
     const sequencedRows = inUpload ? uploadRows.filter((r) => r.sequenced) : seqRows;
+    // In-process-of-being-sequenced rows (public mode only): they stay in candidateRows
+    // but, fed as history, subtractHistory removes them from selection and raises h/H_k.
+    const inProgressRows = inUpload ? [] : candidateRows.filter((r) => r.being_sequenced).map((r) => ({ health_zone: r.health_zone, date: r.date }));
     const built = buildCells({
-      candidateRows, sequencedRows, risk, canon,
+      candidateRows, sequencedRows, inProgressRows, risk, canon,
       ctThreshold: params.ctThreshold, binWidthDays: params.binWidthDays,
       subtractHistory: !inUpload, withIds: true,   // public linelist now carries sample_id too
     });
@@ -198,12 +201,12 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
     // Ct-stable row universe for the heatmap: all candidate zones with the Ct filter OFF, so the
     // Ct knob only changes cell values, never adds/removes rows. Independent of δ/β/N.
     const universe = buildCells({
-      candidateRows, sequencedRows, risk, canon,
+      candidateRows, sequencedRows, inProgressRows, risk, canon,
       ctThreshold: Infinity, binWidthDays: params.binWidthDays,
       subtractHistory: !inUpload, withIds: false,
     });
     const zones = [...new Set(universe.cells.map((c) => c.location))].sort();
-    return { inUpload, selection, cellSummary, origin: built.origin, zones, cellHistory: built.cellHistory, diagnostics: built.diagnostics };
+    return { inUpload, selection, cellSummary, origin: built.origin, zones, cellHistory: built.cellHistory, inProgress: built.inProgressHistory, diagnostics: built.diagnostics };
   }
 
   // Update the live count readout + the heatmap from an engine result (both paths use this).
@@ -211,7 +214,7 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
     diagEl.textContent = r.inUpload
       ? `${r.diagnostics.kept} eligible, ${r.diagnostics.dropped} dropped · ${r.selection.length} to sequence`
       : `${r.diagnostics.kept} eligible candidates · ${r.selection.length} to sequence`;
-    heat.update(r.cellSummary, params, { origin: r.origin, binWidthDays: params.binWidthDays, zones: r.zones, existing: r.cellHistory, risk });
+    heat.update(r.cellSummary, params, { origin: r.origin, binWidthDays: params.binWidthDays, zones: r.zones, existing: r.cellHistory, inProgress: r.inProgress, risk });
   }
 
   // Run the engine, push results out (main.js gates the map choropleth on `active` and the

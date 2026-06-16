@@ -21,7 +21,7 @@ function normDate(d) {
  *   diagnostics: { kept, dropped, byReason: {notPositive, ctIneligible, badDate, unknownZone} }
  */
 export function buildCells({
-  candidateRows, sequencedRows = [], risk, canon, ctThreshold, binWidthDays,
+  candidateRows, sequencedRows = [], inProgressRows = [], risk, canon, ctThreshold, binWidthDays,
   subtractHistory = false, withIds = false, origin = null, tNow = null,
 }) {
   const reason = { notPositive: 0, ctIneligible: 0, badDate: 0, unknownZone: 0 };
@@ -37,28 +37,43 @@ export function buildCells({
     eligible.push({ ...r, date, loc });
   }
 
-  const seq = [];
-  for (const r of sequencedRows) {
-    const date = normDate(r.date);
-    const loc = up(canon(r.health_zone));
-    if (date && risk.has(loc)) seq.push({ date, loc });
-  }
+  // Normalise the two history sources (phylogeny tips + in-process-of-being-sequenced).
+  const normHist = (rows) => {
+    const out = [];
+    for (const r of rows) {
+      const date = normDate(r.date);
+      const loc = up(canon(r.health_zone));
+      if (date && risk.has(loc)) out.push({ date, loc });
+    }
+    return out;
+  };
+  const seq = normHist(sequencedRows);
+  const inProg = normHist(inProgressRows);
 
-  const allDates = [...eligible.map((r) => r.date), ...seq.map((r) => r.date)].sort();
+  const allDates = [...eligible.map((r) => r.date), ...seq.map((r) => r.date), ...inProg.map((r) => r.date)].sort();
   const o = origin || allDates[0] || '2026-01-01';
   const t = tNow || allDates[allDates.length - 1] || o;
 
-  // h per cell from history
+  // Per-cell history, tracked separately so the heatmap can show phylogeny sequences
+  // and in-process samples as distinct boxes, even though both feed h.
+  const tallyCells = (rows) => {
+    const m = new Map();
+    for (const r of rows) {
+      const key = `${r.loc}|${assignCell(r.date, o, binWidthDays)}`;
+      m.set(key, (m.get(key) || 0) + 1);
+    }
+    return m;
+  };
+  const cellHistory = tallyCells(seq);          // phylogeny only (maroon band)
+  const inProgressHistory = tallyCells(inProg); // in-process only (amber band)
+  // Combined h(k,t) — both down-weight the cell and reduce availability.
   const hMap = new Map();
-  for (const r of seq) {
-    const key = `${r.loc}|${assignCell(r.date, o, binWidthDays)}`;
-    hMap.set(key, (hMap.get(key) || 0) + 1);
-  }
+  for (const m of [cellHistory, inProgressHistory]) for (const [key, v] of m) hMap.set(key, (hMap.get(key) || 0) + v);
 
-  // location-level pre-batch history total (H_k) — counts ALL history, independent of
-  // whether the location has candidates this batch (cells drop available<=0 cells).
+  // Location-level pre-batch history total (H_k) — counts ALL history (phylogeny + in-process),
+  // independent of whether the location has candidates this batch (cells drop available<=0 cells).
   const locHistory = new Map();
-  for (const r of seq) {
+  for (const r of [...seq, ...inProg]) {
     locHistory.set(r.loc, (locHistory.get(r.loc) || 0) + 1);
   }
 
@@ -84,7 +99,7 @@ export function buildCells({
     });
   }
 
-  return { cells, origin: o, tNow: t, locHistory, cellHistory: hMap, diagnostics: { kept: eligible.length, dropped: candidateRows.length - eligible.length, byReason: reason } };
+  return { cells, origin: o, tNow: t, locHistory, cellHistory, inProgressHistory, diagnostics: { kept: eligible.length, dropped: candidateRows.length - eligible.length, byReason: reason } };
 }
 
 /** Parse an uploaded CSV (naive split; header case-insensitive) into rows. */

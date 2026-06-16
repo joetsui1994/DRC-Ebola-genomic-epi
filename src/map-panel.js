@@ -16,6 +16,7 @@ const HIDDEN_STYLE    = { opacity: 0, fillOpacity: 0 };   // marker filtered out
 const RISK_RAMP   = ['#f6e3df', '#e8b3a6', '#d08163', '#aa4a32', '#7c1d1d'];   // risk + total
 const RISK_NODATA = '#e8e6e1';
 const TOSEQ_RAMP = ['#e7eef0', '#bcd4c9', '#86b8a0', '#4f8f78', '#205c4c'];   // "to sequence" (teal-green)
+const INPROG_RAMP = ['#fbeedd', '#f1d2a0', '#e0a85e', '#c77d2e', '#925815'];  // "being sequenced" (amber)
 // Per-status sequential ramps (light → dark) keyed on the bar-chart status hues,
 // extended into a saturated dark end so all 5 classes stay distinct even for the
 // pale tan/grey statuses.
@@ -378,7 +379,7 @@ export function createMapPanel(containerId, tips, { onCtChange = () => {} } = {}
      * @param {Map<string,{Positive:number,Negative:number,Invalid:number,Unclassified:number,total:number}>} seedCounts  initial per-zone counts (upper-cased Nom)
      */
     addZoneLayer(geojson, seedCounts = new Map(), posCt = new Map(), rows = []) {
-      const ZERO = { Positive: 0, Negative: 0, Invalid: 0, Unclassified: 0, total: 0 };
+      const ZERO = { Positive: 0, Negative: 0, Invalid: 0, Unclassified: 0, total: 0, inProgress: 0 };
       const countsOf = (f) => zoneCounts.get(upper(f.properties.Nom)) || ZERO;   // reads scope zoneCounts
       const intFmt = (x) => String(Math.round(x));
       zoneCounts = seedCounts; zonePosCt = posCt; linelistRows = rows;
@@ -394,6 +395,7 @@ export function createMapPanel(containerId, tips, { onCtChange = () => {} } = {}
         Unclassified: { label: 'Unclassified samples', ramp: STATUS_RAMP.Unclassified, kind: 'count', fmt: intFmt, value: (f) => countsOf(f).Unclassified },
         total:        { label: 'Total samples',        ramp: RISK_RAMP,                kind: 'count', fmt: intFmt, value: (f) => countsOf(f).total },
         toSequence:   { label: 'To sequence', ramp: TOSEQ_RAMP, kind: 'count', fmt: intFmt, value: (f) => toSeqByZone.get(upper(f.properties.Nom)) || 0 },
+        inProgress:   { label: 'Being sequenced (in progress)', ramp: INPROG_RAMP, kind: 'count', fmt: intFmt, value: (f) => countsOf(f).inProgress },
       };
       // Class breaks for a metric (counts classed over the non-zero zones only).
       const recomputeBreaks = (cfg) => {
@@ -438,6 +440,7 @@ export function createMapPanel(containerId, tips, { onCtChange = () => {} } = {}
         const nom = f.properties.Nom;
         if (metric === 'risk') { const r = f.properties.relative_risk; return `${nom} (health zone) — ${typeof r === 'number' ? r.toFixed(3) : 'n/a'} (RR)`; }
         if (metric === 'toSequence') return `${nom} (health zone) — ${METRICS.toSequence.value(f) || 0} to sequence`;
+        if (metric === 'inProgress') return `${nom} (health zone) — ${METRICS.inProgress.value(f) || 0} being sequenced`;
         if (metric !== 'off') return `${nom} (health zone) — ${METRICS[metric].value(f) || 0} ${metric.toLowerCase()}`;
         return `${nom} (health zone)`;
       };
@@ -486,12 +489,12 @@ export function createMapPanel(containerId, tips, { onCtChange = () => {} } = {}
       choroLegend.addTo(map);
 
       // metric button group (replaces the on/off toggle): Off + risk + per-status + total (+ toSequence when prio active)
-      const SHORT = { off: 'Off', risk: 'Risk', Positive: 'Pos', Negative: 'Neg', Invalid: 'Inv', Unclassified: 'Unc', total: 'Total', toSequence: 'Seq+' };
-      const FULL  = { off: 'Hide colour (zones stay clickable)', risk: 'Relative risk', Positive: 'Positive samples', Negative: 'Negative samples', Invalid: 'Invalid samples', Unclassified: 'Unclassified samples', total: 'Total samples', toSequence: 'To sequence (prioritisation)' };
+      const SHORT = { off: 'Off', risk: 'Risk', Positive: 'Pos', Negative: 'Neg', Invalid: 'Inv', Unclassified: 'Unc', total: 'Total', toSequence: 'Seq+', inProgress: 'Seq~' };
+      const FULL  = { off: 'Hide colour (zones stay clickable)', risk: 'Relative risk', Positive: 'Positive samples', Negative: 'Negative samples', Invalid: 'Invalid samples', Unclassified: 'Unclassified samples', total: 'Total samples', toSequence: 'To sequence (prioritisation)', inProgress: 'Being sequenced (in progress)' };
       let groupDiv = null;
       const buildGroup = () => {
         if (!groupDiv) return;
-        const ORDER = ['off', 'risk', 'Positive', 'Negative', 'Invalid', 'Unclassified', 'total', 'toSequence'];
+        const ORDER = ['off', 'risk', 'Positive', 'Negative', 'Invalid', 'Unclassified', 'total', 'toSequence', 'inProgress'];
         groupDiv.replaceChildren();
         for (const key of ORDER) {
           const b = L.DomUtil.create('button', key === metric ? 'active' : '', groupDiv);

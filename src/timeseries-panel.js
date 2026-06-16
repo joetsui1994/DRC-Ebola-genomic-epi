@@ -50,6 +50,7 @@ export function brushWindow(x0, x1, scale, minPx = 3) {
 
 const SEQ_COLOR = '#7c1d1d';   // sequence-availability track (genomic samples) — maroon
 const ALLOC_COLOR = '#205c4c'; // to-sequence allocation track (prioritisation) — teal-green
+const INPROG_COLOR = '#c77d2e'; // in-process-of-being-sequenced track — amber
 
 const el = (name, attrs) => {
   const n = document.createElementNS(SVNS, name);
@@ -119,7 +120,8 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
   const legend = document.createElement('div');
   legend.className = 'dist-legend';
   legend.innerHTML = STATUS.map(s => `<span><i style="background:${STATUS_COLOR[s]}"></i>${s}</span>`).join('')
-    + `<span><i class="seq-dot" style="background:${SEQ_COLOR}"></i>Sequences</span>`;
+    + `<span><i class="seq-dot" style="background:${SEQ_COLOR}"></i>Sequences</span>`
+    + `<span><i class="seq-dot" style="background:${INPROG_COLOR}"></i>In sequencing</span>`;
 
   const controls = document.createElement('div');   // top-left row: toggle + legend
   controls.className = 'dist-controls';
@@ -144,6 +146,8 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
     for (const st of STATUS) html += `<div class="tip-row"><i style="background:${STATUS_COLOR[st]}"></i>${st}<b>${counts[st]}</b></div>`;
     const seqN = seqMap.get(dateStr) || 0;
     if (seqN) html += `<div class="tip-row"><i class="seq-dot" style="background:${SEQ_COLOR}"></i>Sequences<b>${seqN}</b></div>`;
+    const inProgN = inProgMap.get(dateStr) || 0;
+    if (inProgN) html += `<div class="tip-row"><i class="seq-dot" style="background:${INPROG_COLOR}"></i>In sequencing<b>${inProgN}</b></div>`;
     const toSeqN = allocMap.get(dateStr) || 0;
     if (toSeqN) html += `<div class="tip-row"><i class="seq-dot" style="background:${ALLOC_COLOR}"></i>To sequence<b>${toSeqN}</b></div>`;
     tip.innerHTML = html;
@@ -167,6 +171,7 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
   let scale, markerLayer, H;
   let seqMap = new Map();   // date → #sequences (current selection), for the track + tooltip
   let allocMap = new Map(); // date → #to-sequence (prioritisation), for the track + tooltip
+  let inProgMap = new Map(); // date → #in-process-of-being-sequenced (selection), for the track + tooltip
   let allocation = null;   // cellSummary[] | null  (to-sequence per zone×bin)
   let allocOpts = null;    // { binWidthDays, origin } | null
 
@@ -300,7 +305,7 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
   // One row per date: status counts (Ct-filtered), total, existing sequences, and the
   // to-sequence-next allocation. Honours the location selection, the Ct filter, and the
   // brushed window (when set, dates are clipped to it; otherwise to the visible axis).
-  const EXPORT_COLS = ['date', ...STATUS, 'total', 'existing_seq', 'to_sequence'];
+  const EXPORT_COLS = ['date', ...STATUS, 'total', 'existing_seq', 'in_progress', 'to_sequence'];
   const ymd = (ms) => new Date(ms).toISOString().slice(0, 10);
   function exportWindow() { return win ? { lo: Math.min(win.d0, win.d1), hi: Math.max(win.d0, win.d1) } : null; }
   function exportRows() {
@@ -312,15 +317,17 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
     };
     const counts = aggregate();                                          // selection + Ct, [t0,effMaxMs]
     const seq = seqByDate();                                             // selection, [t0,t1]
+    const inProg = inProgByDate();                                       // selection, [t0,effMaxMs]
     const alloc = allocByDate(allocOpts?.binWidthDays || 7, allocOpts?.origin || domain.minDate);
     const days = new Set();
     for (const d of counts.keys()) if (inRange(d)) days.add(d);
     for (const d of seq.keys()) if (inRange(d)) days.add(d);
+    for (const d of inProg.keys()) if (inRange(d)) days.add(d);
     for (const d of alloc.keys()) if (inRange(d)) days.add(d);
     return [...days].sort().map((ds) => {
       const c = counts.get(ds) || { Positive: 0, Negative: 0, Invalid: 0, Unclassified: 0 };
       const total = STATUS.reduce((s, k) => s + c[k], 0);
-      return { date: ds, ...c, total, existing_seq: seq.get(ds) || 0, to_sequence: alloc.get(ds) || 0 };
+      return { date: ds, ...c, total, existing_seq: seq.get(ds) || 0, in_progress: inProg.get(ds) || 0, to_sequence: alloc.get(ds) || 0 };
     });
   }
   const buildCsvText = (rows) =>
@@ -527,6 +534,20 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
     return m;
   }
 
+  // In-process-of-being-sequenced samples per date, for the current selection. Like the
+  // bars these are line-list rows (clipped to [t0, effMaxMs]), but — like the Sequences
+  // track — they are NOT Ct-filtered: a committed sample counts regardless of its Ct.
+  function inProgByDate() {
+    const m = new Map();
+    for (const r of filteredRows()) {
+      if (!r.being_sequenced) continue;
+      const t = +new Date(r.date);
+      if (isNaN(t) || t < t0 || t > effMaxMs) continue;
+      m.set(r.date, (m.get(r.date) || 0) + 1);
+    }
+    return m;
+  }
+
   // To-sequence counts per date for the current selection (sum cellSummary.selected over
   // cells; in zone mode, restrict to the selected zones; map each bin to its midpoint date).
   function allocByDate(binWidthDays, origin) {
@@ -581,19 +602,24 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
 
     const byDay = aggregate();
     seqMap = seqByDate();
+    inProgMap = inProgByDate();
     let yMax = 1;
     for (const d of byDay.values()) {
       const tot = d.Positive + d.Negative + d.Invalid + d.Unclassified;
       if (tot > yMax) yMax = tot;
     }
-    // Reserve a band below the legend for the sequence-availability track and, when
-    // prioritisation is active, the to-sequence allocation track beneath it (lowered with a
-    // gap). The bars start below whichever tracks are shown so neither line crosses them.
+    // Reserve a band below the legend for up to three stacked dot tracks: sequences (maroon),
+    // in-process-of-being-sequenced (amber), and — when prioritisation is active — the
+    // to-sequence allocation (teal). Each present track takes the next 14px slot; absent tracks
+    // take no space. The bars start below whichever tracks are shown so no line crosses them.
     const alloc = allocByDate(allocOpts?.binWidthDays || 7, allocOpts?.origin || domain.minDate);
     allocMap = alloc;                                     // expose to the hover tooltip
-    const trackY = PAD.top + 24;                          // sequence-availability track
-    const allocY = seqMap.size ? trackY + 14 : trackY;   // to-sequence track (below, with a gap)
-    const plotTop = (alloc.size ? allocY : trackY) + 8;
+    let cursor = PAD.top + 24;
+    const trackY = cursor;   if (seqMap.size) cursor += 14;     // sequences (maroon)
+    const inProgY = cursor;  if (inProgMap.size) cursor += 14;  // in sequencing (amber)
+    const allocY = cursor;   if (alloc.size) cursor += 14;      // to-sequence (teal)
+    const anyTrack = seqMap.size || inProgMap.size || alloc.size;
+    const plotTop = (anyTrack ? cursor - 14 : trackY) + 8;
     const plotH = baseY - plotTop;
     const yToPx = (v) => baseY - (v / yMax) * plotH;
     const barW = Math.max(1, Math.abs(scale.dateToX(new Date(t0 + DAY_MS)) - xMin) - 1);
@@ -650,6 +676,21 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
       }
     }
 
+    // In-sequencing track: a dashed amber line + circles sized by #in-process samples/day.
+    // Always shown when in-process samples fall in the view. Mirrors the sequence track.
+    if (inProgMap.size) {
+      svg.appendChild(el('line', {
+        x1: xMin, y1: inProgY, x2: xMax, y2: inProgY,
+        stroke: INPROG_COLOR, 'stroke-width': 1, 'stroke-dasharray': '4 3', 'stroke-opacity': 0.5,
+      }));
+      for (const [dateStr, n] of inProgMap) {
+        const cx = dx(dateStr);
+        if (cx < PAD.left - 1 || cx > W - 1) continue;
+        const r = Math.min(6, 2 + 1.6 * Math.sqrt(n));
+        svg.appendChild(el('circle', { cx, cy: inProgY, r, fill: INPROG_COLOR, 'fill-opacity': 0.5 }));
+      }
+    }
+
     // To-sequence allocation track: a dashed teal-green line + circles sized by #to-sequence
     // per bin (selection-aware). Mirrors the sequence track, sat below it with a gap.
     if (alloc.size) {
@@ -672,7 +713,7 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
     // transparent per-day hit-areas (full height: track + bars) drive the hover tooltip;
     // include sequence- and to-sequence-only dates so their circles are hoverable too.
     const dayPx = Math.abs(scale.dateToX(new Date(t0 + DAY_MS)) - xMin);
-    for (const dateStr of new Set([...byDay.keys(), ...seqMap.keys(), ...allocMap.keys()])) {
+    for (const dateStr of new Set([...byDay.keys(), ...seqMap.keys(), ...inProgMap.keys(), ...allocMap.keys()])) {
       const counts = byDay.get(dateStr) || { Positive: 0, Negative: 0, Invalid: 0, Unclassified: 0 };
       const hit = el('rect', {
         x: dx(dateStr) - dayPx / 2, y: PAD.top,

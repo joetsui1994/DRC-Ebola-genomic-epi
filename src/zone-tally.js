@@ -22,8 +22,9 @@ export function tallyZones(rows, window = null) {
     if (!z) continue;
     if (ZONE_STATUS.includes(r.status)) {
       let o = zoneCounts.get(z);
-      if (!o) { o = { Positive: 0, Negative: 0, Invalid: 0, Unclassified: 0, total: 0 }; zoneCounts.set(z, o); }
+      if (!o) { o = { Positive: 0, Negative: 0, Invalid: 0, Unclassified: 0, total: 0, inProgress: 0 }; zoneCounts.set(z, o); }
       o[r.status]++; o.total++;
+      if (r.being_sequenced) o.inProgress++;
     }
     if (r.status === 'Positive') {
       const v = parseFloat(r.ct);

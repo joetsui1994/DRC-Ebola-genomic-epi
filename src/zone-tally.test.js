@@ -15,18 +15,33 @@ const rows = [
 describe('tallyZones', () => {
   it('full tally: counts by status + positive Ct lists, keyed by UPPER Nom', () => {
     const { zoneCounts, zonePosCt } = tallyZones(rows, null);
-    expect(zoneCounts.get('BUNIA')).toEqual({ Positive: 3, Negative: 1, Invalid: 0, Unclassified: 0, total: 4 });
-    expect(zoneCounts.get('KATWA')).toEqual({ Positive: 1, Negative: 0, Invalid: 0, Unclassified: 0, total: 1 });
+    expect(zoneCounts.get('BUNIA')).toEqual({ Positive: 3, Negative: 1, Invalid: 0, Unclassified: 0, total: 4, inProgress: 0 });
+    expect(zoneCounts.get('KATWA')).toEqual({ Positive: 1, Negative: 0, Invalid: 0, Unclassified: 0, total: 1, inProgress: 0 });
     expect(zonePosCt.get('BUNIA').sort((a,b)=>a-b)).toEqual([22, 24, 30]); // 3 positives w/ numeric Ct
     expect(zonePosCt.has('KATWA')).toBe(false);                            // Katwa positive had no Ct
   });
   it('window excludes out-of-window AND undated rows (inclusive bounds)', () => {
     const { zoneCounts, zonePosCt } = tallyZones(rows, { d0: D('2026-05-01'), d1: D('2026-05-31') });
-    expect(zoneCounts.get('BUNIA')).toEqual({ Positive: 1, Negative: 1, Invalid: 0, Unclassified: 0, total: 2 });
+    expect(zoneCounts.get('BUNIA')).toEqual({ Positive: 1, Negative: 1, Invalid: 0, Unclassified: 0, total: 2, inProgress: 0 });
     expect(zonePosCt.get('BUNIA')).toEqual([24]);                          // 30 (Jun) + 22 (undated) excluded
   });
   it('empty window yields empty maps', () => {
     const { zoneCounts } = tallyZones(rows, { d0: D('2027-01-01'), d1: D('2027-02-01') });
     expect(zoneCounts.size).toBe(0);
+  });
+
+  it('counts being_sequenced rows into an inProgress field per zone, respecting the window', () => {
+    const ipRows = [
+      { health_zone: 'Bunia', status: 'Positive', date: '2026-05-10', ct: '24', being_sequenced: true },
+      { health_zone: 'Bunia', status: 'Positive', date: '2026-06-10', ct: '25', being_sequenced: true }, // out of window below
+      { health_zone: 'Bunia', status: 'Positive', date: '2026-05-12', ct: '26', being_sequenced: false },
+      { health_zone: 'Katwa', status: 'Positive', date: '2026-05-12', ct: '27', being_sequenced: true },
+    ];
+    const all = tallyZones(ipRows, null).zoneCounts;
+    expect(all.get('BUNIA').inProgress).toBe(2);
+    expect(all.get('KATWA').inProgress).toBe(1);
+
+    const win = tallyZones(ipRows, { d0: D('2026-05-01'), d1: D('2026-05-31') }).zoneCounts;
+    expect(win.get('BUNIA').inProgress).toBe(1);   // June row excluded
   });
 });
