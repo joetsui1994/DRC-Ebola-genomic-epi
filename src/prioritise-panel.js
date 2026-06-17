@@ -141,10 +141,11 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
   container.innerHTML = METHODOLOGY_HTML
     + COVERAGE_FLOOR_HTML
     + '<h4>Explore the allocation</h4>'
-    + '<p class="ps-cap">Each row corresponds to a health zone (with eligible samples or existing sequences) and each column a time-bin. '
-      + 'Each cell comprises two boxes: the lower (teal) box indicates the number of samples to be sequenced according to our heuristic, '
-      + 'while the upper (maroon) box indicates the number of sequences already in the phylogeny for that health zone and time-bin. '
-      + 'A darker colour indicates more samples in both boxes.</p>'
+    + '<p class="ps-cap">Each row corresponds to a health zone (with eligible samples, existing sequences, or samples in sequencing) and each column a time-bin. '
+      + 'Each cell stacks up to three boxes: the top band (<i class="ps-swatch" style="background:#7c1d1d"></i> maroon) indicates the number of sequences already in the phylogeny for that health zone and time-bin; '
+      + 'the thin middle band (<i class="ps-swatch" style="background:#c77d2e"></i> amber) indicates samples currently in the process of being sequenced; '
+      + 'and the lower box (<i class="ps-swatch" style="background:#205c4c"></i> teal) indicates the number of samples to be sequenced according to our heuristic given the current configurations. '
+      + 'A darker colour indicates more samples.</p>'
     + '<div id="prio-heatmap"></div>'
     + '<div id="prio-scatter-knobs" class="ps-knobs"></div>'
     + '<div id="prio-seed" class="prio-seed-page"></div>'

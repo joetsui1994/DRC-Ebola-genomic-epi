@@ -458,6 +458,8 @@ body {
 
 /* Allocation heatmap (methodology page) + its shared knob strip. */
 .ps-cap { font-size: 11px; color: var(--muted); margin: 4px 0 2px; line-height: 1.45; }
+/* Inline colour swatch used in captions to point at a heatmap box colour. */
+.ps-swatch { display: inline-block; width: 9px; height: 9px; border-radius: 2px; vertical-align: middle; margin: 0 1px; }
 #prio-heatmap { position: relative; margin: 4px 0; }
 .ps-svg { position: relative; width: 100%; }
 .ps-svg svg { display: block; }
