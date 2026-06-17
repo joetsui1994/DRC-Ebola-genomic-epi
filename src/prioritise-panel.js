@@ -309,7 +309,7 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
       try { parsed = parseUpload(String(reader.result)); }
       catch { uploadRows = null; fileEl.value = ''; showUpMsg('Could not read the file as CSV.', 'error'); syncUploadUI(); recompute(); return; }
       const v = validateUpload(parsed);
-      if (!v.ok) { uploadRows = null; fileEl.value = ''; showUpMsg(`Upload rejected — ${v.error} Showing the public data.`, 'error'); syncUploadUI(); recompute(); return; }
+      if (!v.ok) { uploadRows = null; fileEl.value = ''; showUpMsg(`Upload rejected — ${v.error}`, 'error'); syncUploadUI(); recompute(); return; }
       uploadRows = parsed.rows;
       showUpMsg(loadReport(parsed, f.name), 'info');
       syncUploadUI();
