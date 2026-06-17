@@ -470,7 +470,10 @@ export function createMapPanel(containerId, tips, { onCtChange = () => {} } = {}
         const title = (metric === 'Positive' && ctThreshold != null) ? `Positive · Ct < ${ctThreshold}` : cfg.label;
         let html = `<div class="lg-title">${title}</div>`;
         if (cfg.kind === 'count') html += `<span><i style="background:${COUNT_NODATA};border-color:rgba(0,0,0,0.12)"></i>0 (none)</span>`;
-        for (let i = 0; i < cfg.ramp.length; i++) html += `<span><i style="background:${cfg.ramp[i]};border-color:rgba(0,0,0,0.12)"></i>${cfg.fmt(lo[i])}–${cfg.fmt(hi[i])}</span>`;
+        // No data for this count metric (no zone with a value > 0): show just the
+        // "0 (none)" swatch — the ramp breaks are empty, so its classes would read 0–0 / NaN–NaN.
+        const noData = cfg.kind === 'count' && !(cfg.max > 0);
+        if (!noData) for (let i = 0; i < cfg.ramp.length; i++) html += `<span><i style="background:${cfg.ramp[i]};border-color:rgba(0,0,0,0.12)"></i>${cfg.fmt(lo[i])}–${cfg.fmt(hi[i])}</span>`;
         choroLegendDiv.innerHTML = html;
       };
       applyToSeq = () => { recomputeBreaks(METRICS.toSequence); if (metric === 'toSequence') { restyle(); renderLegend(); } };
