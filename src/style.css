@@ -475,13 +475,21 @@ body {
 .ps-knobs .pk-v { width: 30px; }
 
 .prio-up { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 10px 0; font-size: 11.5px; color: var(--muted); }
-/* Upload action row: file/drop zone + template + clear, all on one line. */
+/* Upload action row: file picker + clear. */
 .prio-up-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
-.prio-up-actions .prio-up { margin: 0; padding: 4px 6px; border: 1px dashed transparent; }
-.prio-up--drag { border-color: var(--terracotta) !important; border-radius: 6px; background: rgba(155, 125, 78, 0.1); }
+.prio-up-actions .prio-up { margin: 0; }
 .prio-clear { font-size: 10px; font-weight: 600; color: #7c1d1d; background: rgba(124, 29, 29, 0.08);
   border: 1px solid rgba(124, 29, 29, 0.3); border-radius: 5px; padding: 2px 8px; cursor: pointer; }
 .prio-clear:hover { background: rgba(124, 29, 29, 0.16); }
+/* Inline "download a template" link inside the caption. */
+.prio-linkbtn { font: inherit; color: #587e72; background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; }
+.prio-linkbtn:hover { color: #2f5246; }
+/* Full-page drop overlay (fixed to the prioritisation panel while a file is dragged). */
+.prio-drop-overlay { position: fixed; z-index: 1200; pointer-events: none; display: flex; align-items: center; justify-content: center;
+  background: rgba(88, 126, 114, 0.12); border: 2px dashed #587e72; border-radius: 10px; }
+.prio-drop-overlay[hidden] { display: none; }
+.prio-drop-inner { font-size: 14px; font-weight: 700; color: #2f5246; background: rgba(255, 255, 255, 0.92);
+  padding: 10px 18px; border-radius: 8px; box-shadow: 0 1px 4px rgba(30, 25, 18, 0.15); }
 .prio-up-note { color: var(--muted); }
 .prio-soon { display: inline-block; font-size: 8.5px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
   color: #fff; background: #587e72; border-radius: 4px; padding: 2px 6px; }

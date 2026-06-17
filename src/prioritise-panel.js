@@ -163,7 +163,7 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
     + '<div id="prio-diag" class="prio-diag"></div>'
     + '<h4>Use your own line list</h4>'
     + '<p class="ps-cap">Prioritisation runs on the public data by default. To activate it on the map, switch the choropleth metric (top-right of the Outbreak map) to <strong>Seq+</strong>. Optionally upload your own line list to get a ranked list with real sample IDs — parsed in your browser, never uploaded. Relative risk per zone is taken from the map data (a current snapshot, constant in time); the upload supplies only the line list.</p>'
-    + '<p class="ps-cap">Expected CSV columns:</p>'
+    + '<p class="ps-cap">Expected CSV columns (<button type="button" class="prio-linkbtn" id="prio-template">download a template</button>):</p>'
     + '<div class="prio-tablewrap"><table>'
       + '<thead><tr><th>column</th><th>required</th><th>example</th><th>notes</th></tr></thead>'
       + '<tbody>'
@@ -179,8 +179,7 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
       + '</tbody></table></div>'
     + '<p class="ps-cap">An uploaded line list replaces the public data for the prioritisation (the Lab/DHIS selector no longer applies); it is checked for the required columns before use.</p>'
     + '<div class="prio-up-actions">'
-      + '<label class="prio-up" id="prio-drop"><input type="file" id="prio-file" accept=".csv,text/csv"><span class="prio-up-note">upload or drop a line list (parsed in your browser, never uploaded)</span></label>'
-      + '<button type="button" class="prio-dl-btn" id="prio-template">⤓ template</button>'
+      + '<label class="prio-up"><input type="file" id="prio-file" accept=".csv,text/csv"><span class="prio-up-note">upload a line list, or drop one anywhere on this page (parsed in your browser, never uploaded)</span></label>'
       + '<button type="button" class="prio-clear" id="prio-clear" hidden>✕ clear</button>'
     + '</div>'
     + '<div id="prio-up-msg" class="prio-up-msg" hidden></div>';
@@ -329,14 +328,25 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
   // Download a starter template.
   container.querySelector('#prio-template').addEventListener('click', () => download('linelist_template.csv', UPLOAD_TEMPLATE));
 
-  // Drag-and-drop onto the upload area → same path as the picker.
-  const dropEl = container.querySelector('#prio-drop');
-  ['dragenter', 'dragover'].forEach((evt) => dropEl.addEventListener(evt, (e) => {
-    e.preventDefault(); dropEl.classList.add('prio-up--drag');
-  }));
-  ['dragleave', 'dragend'].forEach((evt) => dropEl.addEventListener(evt, () => dropEl.classList.remove('prio-up--drag')));
-  dropEl.addEventListener('drop', (e) => {
-    e.preventDefault(); dropEl.classList.remove('prio-up--drag');
+  // Drag-and-drop a file anywhere on the prioritisation page → same path as the picker.
+  // A full-page overlay (fixed to the container's rect) signals the drop target while dragging.
+  const overlay = document.createElement('div');
+  overlay.className = 'prio-drop-overlay'; overlay.hidden = true;
+  overlay.innerHTML = '<div class="prio-drop-inner">⤓ Drop your line list to load it</div>';
+  document.body.appendChild(overlay);
+  const hasFiles = (e) => Array.from(e.dataTransfer?.types || []).includes('Files');
+  function showOverlay() {
+    const r = container.getBoundingClientRect();
+    Object.assign(overlay.style, { top: `${r.top}px`, left: `${r.left}px`, width: `${r.width}px`, height: `${r.height}px` });
+    overlay.hidden = false;
+  }
+  let dragDepth = 0;
+  container.addEventListener('dragenter', (e) => { if (!hasFiles(e)) return; e.preventDefault(); dragDepth++; showOverlay(); });
+  container.addEventListener('dragover', (e) => { if (hasFiles(e)) e.preventDefault(); });
+  container.addEventListener('dragleave', (e) => { if (!hasFiles(e)) return; dragDepth = Math.max(0, dragDepth - 1); if (!dragDepth) overlay.hidden = true; });
+  container.addEventListener('drop', (e) => {
+    if (!hasFiles(e)) return;
+    e.preventDefault(); dragDepth = 0; overlay.hidden = true;
     handleFile(e.dataTransfer?.files?.[0]);
   });
 
