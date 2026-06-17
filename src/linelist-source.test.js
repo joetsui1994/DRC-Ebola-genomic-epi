@@ -19,7 +19,7 @@ describe('resolveLinelistSource', () => {
     const r = resolveLinelistSource(sp('linelist=hospital'));
     expect(r.key).toBe('hospital');
     expect(r.file).toBe('linelist_data.hospital.csv');
-    expect(r.label).toBe('Hospital-admission');
+    expect(r.label).toBe('DHIS');
   });
 
   it('falls back to lab for an unknown value', () => {
