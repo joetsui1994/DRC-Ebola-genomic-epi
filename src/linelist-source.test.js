@@ -15,10 +15,10 @@ describe('resolveLinelistSource', () => {
     expect(resolveLinelistSource(sp('linelist=lab')).key).toBe('lab');
   });
 
-  it('resolves the hospital param to its file + label', () => {
-    const r = resolveLinelistSource(sp('linelist=hospital'));
-    expect(r.key).toBe('hospital');
-    expect(r.file).toBe('linelist_data.hospital.csv');
+  it('resolves the dhis param to its file + label', () => {
+    const r = resolveLinelistSource(sp('linelist=dhis'));
+    expect(r.key).toBe('dhis');
+    expect(r.file).toBe('linelist_data.dhis.csv');
     expect(r.label).toBe('DHIS');
   });
 
@@ -27,6 +27,6 @@ describe('resolveLinelistSource', () => {
   });
 
   it('exposes both sources for building the selector', () => {
-    expect(Object.keys(LINELIST_SOURCES)).toEqual(['lab', 'hospital']);
+    expect(Object.keys(LINELIST_SOURCES)).toEqual(['lab', 'dhis']);
   });
 });

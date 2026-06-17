@@ -3,7 +3,7 @@
 // Two named versions; defaults to "lab" (the original) for absent/unknown values.
 export const LINELIST_SOURCES = {
   lab:      { file: 'linelist_data.csv',          label: 'Lab' },
-  hospital: { file: 'linelist_data.hospital.csv', label: 'DHIS' },
+  dhis: { file: 'linelist_data.dhis.csv', label: 'DHIS' },
 };
 
 /**
