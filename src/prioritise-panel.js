@@ -2,11 +2,18 @@
 // Prioritisation tab: methodology write-up + local upload + activate switch + knobs,
 // running the client-side engine and pushing results to the map + chart panels.
 import { prioritise } from './prioritise.js';
-import { buildCells, parseUpload, validateUpload } from './prioritise-data.js';
+import { buildCells, parseUpload, validateUpload, summarizeUpload } from './prioritise-data.js';
 import { createHeatmap } from './prio-heatmap.js';
 import { buildKnobs, buildSeedControl } from './prio-knobs.js';
 
 const DEFAULTS = { delta: 0.5, tilt: 0, floorTilt: 0, n: 50, ctThreshold: 32, binWidthDays: 1, mode: 'proportional', floorSize: 1, floorBudgetCap: null, stalenessWindow: null, seed: 1 };
+
+// Downloadable starter file for "Use your own line list" — full header + two example rows.
+const UPLOAD_TEMPLATE = [
+  'row_id,sample_id,health_zone,health_area,status,ct,date,sequenced,being_sequenced',
+  '1,DRC-0001,Bunia,Hoho,Positive,24.3,2026-05-03,,',
+  '2,DRC-0002,Bunia,Hoho,Positive,22.1,2026-05-04,1,',
+].join('\n');
 
 const METHODOLOGY_HTML = `
   <p class="prio-lead">Risk-based sequencing prioritisation</p>
@@ -171,7 +178,11 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
       + '<tr><td>row_id</td><td>optional</td><td>42</td><td>carried into the ranked output alongside sample_id</td></tr>'
       + '</tbody></table></div>'
     + '<p class="ps-cap">An uploaded line list replaces the public data for the prioritisation (the Lab/DHIS selector no longer applies); it is checked for the required columns before use.</p>'
-    + '<label class="prio-up"><input type="file" id="prio-file" accept=".csv,text/csv"><span class="prio-up-note">upload a line list (parsed in your browser, never uploaded)</span></label>'
+    + '<div class="prio-up-actions">'
+      + '<label class="prio-up" id="prio-drop"><input type="file" id="prio-file" accept=".csv,text/csv"><span class="prio-up-note">upload or drop a line list (parsed in your browser, never uploaded)</span></label>'
+      + '<button type="button" class="prio-dl-btn" id="prio-template">⤓ template</button>'
+      + '<button type="button" class="prio-clear" id="prio-clear" hidden>✕ clear</button>'
+    + '</div>'
     + '<div id="prio-up-msg" class="prio-up-msg" hidden></div>';
 
   const fileEl = container.querySelector('#prio-file');
@@ -264,28 +275,69 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
   }
 
   const upMsgEl = container.querySelector('#prio-up-msg');
+  const clearBtn = container.querySelector('#prio-clear');
   function showUpMsg(text, kind) {            // kind: 'error' | 'info' | null (hide)
     if (!text) { upMsgEl.hidden = true; upMsgEl.textContent = ''; upMsgEl.className = 'prio-up-msg'; return; }
     upMsgEl.hidden = false; upMsgEl.textContent = text; upMsgEl.className = `prio-up-msg prio-up-msg--${kind}`;
   }
+  function syncUploadUI() { clearBtn.hidden = !uploadRows; }
+
+  // A short report on an accepted file: per-status, undated/no-Ct, and unknown zones (dropped).
+  function loadReport(parsed, fileName) {
+    const s = summarizeUpload(parsed.rows, risk, canon);
+    const statuses = Object.entries(s.byStatus).map(([k, v]) => `${v} ${k}`).join(', ');
+    let msg = `Loaded ${s.total} row${s.total === 1 ? '' : 's'} from “${fileName}” — ${statuses}`;
+    const notes = [];
+    if (s.undated) notes.push(`${s.undated} undated`);
+    if (s.noCt) notes.push(`${s.noCt} no Ct`);
+    if (notes.length) msg += ` · ${notes.join(' · ')}`;
+    if (s.unknownZones.length) {
+      const shown = s.unknownZones.slice(0, 8).join(', ');
+      const extra = s.unknownZones.length > 8 ? ` +${s.unknownZones.length - 8} more` : '';
+      msg += ` · ${s.unknownZones.length} unknown zone${s.unknownZones.length === 1 ? '' : 's'}: ${shown}${extra} (dropped)`;
+    }
+    return msg;
+  }
 
   // QA the file before anything: validate required columns + data rows, surface any error,
   // and only then apply it. A rejected file leaves the prioritisation on the public data.
-  fileEl.addEventListener('change', (e) => {
-    const f = e.target.files?.[0]; if (!f) return;
+  // Shared by the file picker and the drop zone.
+  function handleFile(f) {
+    if (!f) return;
     const reader = new FileReader();
     reader.onload = () => {
       let parsed;
       try { parsed = parseUpload(String(reader.result)); }
-      catch { uploadRows = null; showUpMsg('Could not read the file as CSV.', 'error'); recompute(); return; }
+      catch { uploadRows = null; fileEl.value = ''; showUpMsg('Could not read the file as CSV.', 'error'); syncUploadUI(); recompute(); return; }
       const v = validateUpload(parsed);
-      if (!v.ok) { uploadRows = null; fileEl.value = ''; showUpMsg(`Upload rejected — ${v.error} Showing the public data.`, 'error'); recompute(); return; }
+      if (!v.ok) { uploadRows = null; fileEl.value = ''; showUpMsg(`Upload rejected — ${v.error} Showing the public data.`, 'error'); syncUploadUI(); recompute(); return; }
       uploadRows = parsed.rows;
-      showUpMsg(`Loaded ${parsed.rows.length} row${parsed.rows.length === 1 ? '' : 's'} from “${f.name}”.`, 'info');
+      showUpMsg(loadReport(parsed, f.name), 'info');
+      syncUploadUI();
       recompute();
     };
-    reader.onerror = () => { uploadRows = null; showUpMsg('Could not read the file.', 'error'); recompute(); };
+    reader.onerror = () => { uploadRows = null; fileEl.value = ''; showUpMsg('Could not read the file.', 'error'); syncUploadUI(); recompute(); };
     reader.readAsText(f);
+  }
+  fileEl.addEventListener('change', (e) => handleFile(e.target.files?.[0]));
+
+  // Clear → drop the uploaded list, return to public data (no reload).
+  clearBtn.addEventListener('click', () => {
+    uploadRows = null; fileEl.value = ''; showUpMsg(null); syncUploadUI(); recompute();
+  });
+
+  // Download a starter template.
+  container.querySelector('#prio-template').addEventListener('click', () => download('linelist_template.csv', UPLOAD_TEMPLATE));
+
+  // Drag-and-drop onto the upload area → same path as the picker.
+  const dropEl = container.querySelector('#prio-drop');
+  ['dragenter', 'dragover'].forEach((evt) => dropEl.addEventListener(evt, (e) => {
+    e.preventDefault(); dropEl.classList.add('prio-up--drag');
+  }));
+  ['dragleave', 'dragend'].forEach((evt) => dropEl.addEventListener(evt, () => dropEl.classList.remove('prio-up--drag')));
+  dropEl.addEventListener('drop', (e) => {
+    e.preventDefault(); dropEl.classList.remove('prio-up--drag');
+    handleFile(e.dataTransfer?.files?.[0]);
   });
 
   // Always-available exports — recomputed from the current knob values at click time, so the

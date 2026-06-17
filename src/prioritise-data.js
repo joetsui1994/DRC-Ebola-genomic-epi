@@ -155,3 +155,24 @@ export function validateUpload({ rows, header }) {
   if (!rows.length) return { ok: false, error: 'The file has a header but no data rows.' };
   return { ok: true };
 }
+
+/**
+ * A soft report on a parsed upload (for user feedback): per-status counts, how many
+ * rows are undated or have no numeric Ct, and the distinct health zones that don't
+ * match the map (using the same canon + risk rule buildCells applies, so it matches
+ * what the engine drops). Original zone casing is preserved, in encounter order.
+ */
+export function summarizeUpload(rows, risk, canon) {
+  const byStatus = {};
+  let undated = 0, noCt = 0;
+  const unknownZones = [];
+  const seenUnknown = new Set();
+  for (const r of rows) {
+    byStatus[r.status] = (byStatus[r.status] || 0) + 1;
+    if (!r.date) undated++;
+    if (!Number.isFinite(parseFloat(r.ct))) noCt++;
+    const loc = up(canon(r.health_zone));
+    if (!risk.has(loc) && !seenUnknown.has(loc)) { seenUnknown.add(loc); unknownZones.push(r.health_zone); }
+  }
+  return { total: rows.length, byStatus, undated, noCt, unknownZones };
+}

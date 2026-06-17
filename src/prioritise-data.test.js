@@ -1,6 +1,6 @@
 // src/prioritise-data.test.js
 import { describe, it, expect } from 'vitest';
-import { buildCells, parseUpload, validateUpload } from './prioritise-data.js';
+import { buildCells, parseUpload, validateUpload, summarizeUpload } from './prioritise-data.js';
 import { prioritise } from './prioritise.js';
 
 const risk = new Map([['BUNIA', 0.9], ['KATWA', 0.5]]);   // upper Nom -> relative_risk
@@ -146,6 +146,33 @@ describe('validateUpload', () => {
     const v = validateUpload(parseUpload('sample_id,health_zone,status,date,ct\n'));
     expect(v.ok).toBe(false);
     expect(v.error).toMatch(/no data/i);
+  });
+});
+
+describe('summarizeUpload', () => {
+  const canon = (z) => (z === 'Bigville' ? 'Bunia' : z);   // alias Bigville → Bunia (known)
+
+  it('tallies status, undated, no-Ct, and unknown zones (canon-aware, de-duped)', () => {
+    const { rows } = parseUpload(
+      'sample_id,health_zone,status,ct,date\n'
+      + 'A1,Bunia,Positive,24,2026-04-05\n'
+      + 'A2,Katwa,Negative,,2026-04-05\n'        // no Ct
+      + 'A3,Nowhere,Positive,20,\n'              // unknown zone + undated
+      + 'A4,Bunia,Positive,NA,2026-04-05\n'      // no Ct
+      + 'A5,Foo,Unclassified,,2026-04-05\n'      // unknown zone + no Ct
+      + 'A6,Nowhere,Positive,21,2026-04-05\n'    // unknown zone (dup)
+      + 'A7,Bigville,Positive,22,2026-04-05\n');  // canon → Bunia (known)
+    const s = summarizeUpload(rows, risk, canon);
+    expect(s.total).toBe(7);
+    expect(s.byStatus).toEqual({ Positive: 5, Negative: 1, Unclassified: 1 });
+    expect(s.undated).toBe(1);
+    expect(s.noCt).toBe(3);
+    expect(s.unknownZones).toEqual(['Nowhere', 'Foo']);   // distinct, original casing, encounter order
+  });
+
+  it('handles empty input', () => {
+    const s = summarizeUpload([], risk, canon);
+    expect(s).toEqual({ total: 0, byStatus: {}, undated: 0, noCt: 0, unknownZones: [] });
   });
 });
 
