@@ -2,7 +2,7 @@
 // Prioritisation tab: methodology write-up + local upload + activate switch + knobs,
 // running the client-side engine and pushing results to the map + chart panels.
 import { prioritise } from './prioritise.js';
-import { buildCells, parseUpload } from './prioritise-data.js';
+import { buildCells, parseUpload, validateUpload } from './prioritise-data.js';
 import { createHeatmap } from './prio-heatmap.js';
 import { buildKnobs, buildSeedControl } from './prio-knobs.js';
 
@@ -167,8 +167,12 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
       + '<tr><td>date</td><td>yes</td><td>2026-05-03</td><td>symptom-onset date (where available) — ISO or DD/MM/YYYY</td></tr>'
       + '<tr><td>health_area</td><td>optional</td><td>Hoho</td><td>finer location label (display only)</td></tr>'
       + '<tr><td>sequenced</td><td>optional</td><td>1</td><td>mark already-sequenced rows (1 / true / yes) → history <em>h</em>; blank = candidate</td></tr>'
+      + '<tr><td>being_sequenced</td><td>optional</td><td>1</td><td>mark in-process samples (1 / true / yes) → removed from selection &amp; added to history <em>h</em></td></tr>'
+      + '<tr><td>row_id</td><td>optional</td><td>42</td><td>carried into the ranked output alongside sample_id</td></tr>'
       + '</tbody></table></div>'
-    + '<label class="prio-up"><span class="prio-soon">coming soon</span><input type="file" id="prio-file" accept=".csv,text/csv" disabled><span class="prio-up-note">upload a line list — soon to be available (will be parsed in your browser, never uploaded)</span></label>';
+    + '<p class="ps-cap">An uploaded line list replaces the public data for the prioritisation (the Lab/DHIS selector no longer applies); it is checked for the required columns before use.</p>'
+    + '<label class="prio-up"><input type="file" id="prio-file" accept=".csv,text/csv"><span class="prio-up-note">upload a line list (parsed in your browser, never uploaded)</span></label>'
+    + '<div id="prio-up-msg" class="prio-up-msg" hidden></div>';
 
   const fileEl = container.querySelector('#prio-file');
   const diagEl = container.querySelector('#prio-diag');
@@ -183,11 +187,14 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
   // Run the engine on the current data + params, without touching the map/chart.
   function runEngine() {
     const inUpload = !!uploadRows;
-    const candidateRows = inUpload ? uploadRows.filter((r) => !r.sequenced) : window.__PRIO_LINELIST__ || [];
+    const candidateRows = inUpload ? uploadRows.filter((r) => !r.sequenced && !r.being_sequenced) : window.__PRIO_LINELIST__ || [];
     const sequencedRows = inUpload ? uploadRows.filter((r) => r.sequenced) : seqRows;
-    // In-process-of-being-sequenced rows (public mode only): they stay in candidateRows
-    // but, fed as history, subtractHistory removes them from selection and raises h/H_k.
-    const inProgressRows = inUpload ? [] : candidateRows.filter((r) => r.being_sequenced).map((r) => ({ health_zone: r.health_zone, date: r.date }));
+    // In-process-of-being-sequenced rows raise h/H_k and drop out of selection. In public mode
+    // they stay in candidateRows and subtractHistory removes them; in upload mode subtractHistory
+    // is off, so they're excluded from candidateRows above and only counted as history here.
+    const inProgressRows = (inUpload
+      ? uploadRows.filter((r) => r.being_sequenced && !r.sequenced)
+      : candidateRows.filter((r) => r.being_sequenced)).map((r) => ({ health_zone: r.health_zone, date: r.date }));
     const built = buildCells({
       candidateRows, sequencedRows, inProgressRows, risk, canon,
       ctThreshold: params.ctThreshold, binWidthDays: params.binWidthDays,
@@ -210,11 +217,25 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
     return { inUpload, selection, cellSummary, origin: built.origin, zones, cellHistory: built.cellHistory, inProgress: built.inProgressHistory, diagnostics: built.diagnostics };
   }
 
+  // Human-readable breakdown of why candidate rows were dropped (upload QA aid).
+  function dropReasons(by) {
+    const parts = [];
+    if (by.notPositive) parts.push(`${by.notPositive} not positive`);
+    if (by.ctIneligible) parts.push(`${by.ctIneligible} Ct-ineligible / no Ct`);
+    if (by.badDate) parts.push(`${by.badDate} bad/no date`);
+    if (by.unknownZone) parts.push(`${by.unknownZone} unknown zone`);
+    return parts.join(' · ');
+  }
+
   // Update the live count readout + the heatmap from an engine result (both paths use this).
   function render(r) {
-    diagEl.textContent = r.inUpload
-      ? `${r.diagnostics.kept} eligible, ${r.diagnostics.dropped} dropped · ${r.selection.length} to sequence`
-      : `${r.diagnostics.kept} eligible candidates · ${r.selection.length} to sequence`;
+    if (r.inUpload) {
+      const reasons = dropReasons(r.diagnostics.byReason);
+      diagEl.textContent = `${r.diagnostics.kept} eligible, ${r.diagnostics.dropped} dropped`
+        + (reasons ? ` (${reasons})` : '') + ` · ${r.selection.length} to sequence`;
+    } else {
+      diagEl.textContent = `${r.diagnostics.kept} eligible candidates · ${r.selection.length} to sequence`;
+    }
     heat.update(r.cellSummary, params, { origin: r.origin, binWidthDays: params.binWidthDays, zones: r.zones, existing: r.cellHistory, inProgress: r.inProgress, risk });
   }
 
@@ -242,10 +263,28 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
     document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
   }
 
+  const upMsgEl = container.querySelector('#prio-up-msg');
+  function showUpMsg(text, kind) {            // kind: 'error' | 'info' | null (hide)
+    if (!text) { upMsgEl.hidden = true; upMsgEl.textContent = ''; upMsgEl.className = 'prio-up-msg'; return; }
+    upMsgEl.hidden = false; upMsgEl.textContent = text; upMsgEl.className = `prio-up-msg prio-up-msg--${kind}`;
+  }
+
+  // QA the file before anything: validate required columns + data rows, surface any error,
+  // and only then apply it. A rejected file leaves the prioritisation on the public data.
   fileEl.addEventListener('change', (e) => {
     const f = e.target.files?.[0]; if (!f) return;
     const reader = new FileReader();
-    reader.onload = () => { uploadRows = parseUpload(String(reader.result)).rows; recompute(); };
+    reader.onload = () => {
+      let parsed;
+      try { parsed = parseUpload(String(reader.result)); }
+      catch { uploadRows = null; showUpMsg('Could not read the file as CSV.', 'error'); recompute(); return; }
+      const v = validateUpload(parsed);
+      if (!v.ok) { uploadRows = null; fileEl.value = ''; showUpMsg(`Upload rejected — ${v.error} Showing the public data.`, 'error'); recompute(); return; }
+      uploadRows = parsed.rows;
+      showUpMsg(`Loaded ${parsed.rows.length} row${parsed.rows.length === 1 ? '' : 's'} from “${f.name}”.`, 'info');
+      recompute();
+    };
+    reader.onerror = () => { uploadRows = null; showUpMsg('Could not read the file.', 'error'); recompute(); };
     reader.readAsText(f);
   });
 
@@ -268,7 +307,7 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
   // out at a permissive Ct and is independent of bin/δ/β, so this is a cheap one-shot count.
   function eligibleCeiling() {
     const inUpload = !!uploadRows;
-    const candidateRows = inUpload ? uploadRows.filter((r) => !r.sequenced) : window.__PRIO_LINELIST__ || [];
+    const candidateRows = inUpload ? uploadRows.filter((r) => !r.sequenced && !r.being_sequenced) : window.__PRIO_LINELIST__ || [];
     return Math.max(1, buildCells({ candidateRows, sequencedRows: [], risk, canon, ctThreshold: 1e9, binWidthDays: 1, subtractHistory: false }).diagnostics.kept);
   }
 

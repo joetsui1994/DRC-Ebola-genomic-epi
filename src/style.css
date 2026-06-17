@@ -488,6 +488,10 @@ body {
   cursor: not-allowed; color: var(--muted); background: rgba(0,0,0,0.04); border-color: var(--border);
 }
 .prio-diag { font-size: 11px; color: var(--muted); margin: 4px 0; }
+/* Upload QA message: red box for a rejected file, muted for an accepted-load note. */
+.prio-up-msg { font-size: 11px; margin: 4px 0; padding: 4px 8px; border-radius: 5px; }
+.prio-up-msg--error { color: #7c1d1d; background: rgba(124, 29, 29, 0.08); border: 1px solid rgba(124, 29, 29, 0.3); }
+.prio-up-msg--info { color: var(--muted); background: rgba(0, 0, 0, 0.03); border: 1px solid var(--border); }
 .prio-dl { margin: 4px 0 2px; }
 .prio-dl-btn { margin: 6px 8px 0 0; font-size: 10px; font-weight: 600; color: #587e72;
   background: rgba(88,126,114,0.1); border: 1px solid rgba(88,126,114,0.3); border-radius: 5px; padding: 2px 8px; cursor: pointer; }

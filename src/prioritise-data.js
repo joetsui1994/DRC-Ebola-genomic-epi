@@ -102,26 +102,56 @@ export function buildCells({
   return { cells, origin: o, tNow: t, locHistory, cellHistory, inProgressHistory, diagnostics: { kept: eligible.length, dropped: candidateRows.length - eligible.length, byReason: reason } };
 }
 
-/** Parse an uploaded CSV (naive split; header case-insensitive) into rows. */
+// Normalise a status to the app's four categories, case-insensitively, so an upload
+// with lowercase (e.g. DHIS-style "positive") isn't silently dropped. Unknown → passthrough.
+const STATUS_CANON = { positive: 'Positive', negative: 'Negative', invalid: 'Invalid', unclassified: 'Unclassified',
+  'not yet run': 'Unclassified', undetermined: 'Invalid' };
+function normStatus(s) {
+  const t = (s || '').trim();
+  return STATUS_CANON[t.toLowerCase()] || t;
+}
+
+const truthy = (v) => /^(1|true|yes|y)$/i.test((v || '').trim());
+
+/** Required upload columns (header, lower-cased). ct is conditionally required (positives). */
+export const REQUIRED_UPLOAD_COLS = ['sample_id', 'health_zone', 'status', 'date'];
+
+/** Parse an uploaded CSV (naive split; header case-insensitive) into rows + header. */
 export function parseUpload(text) {
   const lines = text.replace(/^﻿/, '').trim().split(/\r?\n/);
-  if (!lines.length) return { rows: [], header: [] };
+  if (!lines.length || lines[0] === '') return { rows: [], header: [] };
   const header = lines[0].split(',').map((h) => h.trim().toLowerCase());
   const idx = (name) => header.indexOf(name);
   const iId = idx('sample_id'), iZone = idx('health_zone'), iStatus = idx('status'),
-        iCt = idx('ct'), iDate = idx('date'), iArea = idx('health_area'), iSeq = idx('sequenced');
+        iCt = idx('ct'), iDate = idx('date'), iArea = idx('health_area'), iSeq = idx('sequenced'),
+        iRid = idx('row_id'), iBseq = idx('being_sequenced');
   const rows = [];
   for (let i = 1; i < lines.length; i++) {
     const c = lines[i].split(',');
     rows.push({
+      row_id: iRid >= 0 ? (c[iRid] || '').trim() : '',
       sample_id: iId >= 0 ? (c[iId] || '').trim() : '',
       health_zone: iZone >= 0 ? (c[iZone] || '').trim() : '',
       health_area: iArea >= 0 ? (c[iArea] || '').trim() : '',
-      status: iStatus >= 0 ? (c[iStatus] || '').trim() : '',
+      status: iStatus >= 0 ? normStatus(c[iStatus]) : '',
       ct: iCt >= 0 ? (c[iCt] || '').trim() : '',
       date: normDate(iDate >= 0 ? c[iDate] : ''),
-      sequenced: iSeq >= 0 ? /^(1|true|yes|y)$/i.test((c[iSeq] || '').trim()) : false,
+      sequenced: iSeq >= 0 ? truthy(c[iSeq]) : false,
+      being_sequenced: iBseq >= 0 ? truthy(c[iBseq]) : false,
     });
   }
   return { rows, header };
+}
+
+/**
+ * QA an uploaded line list before it is used. Checks for required columns and at
+ * least one data row.
+ * @returns {{ ok: true } | { ok: false, error: string }}
+ */
+export function validateUpload({ rows, header }) {
+  if (!header || !header.length) return { ok: false, error: 'The file is empty or has no header row.' };
+  const missing = REQUIRED_UPLOAD_COLS.filter((c) => !header.includes(c));
+  if (missing.length) return { ok: false, error: `Missing required column${missing.length > 1 ? 's' : ''}: ${missing.join(', ')}.` };
+  if (!rows.length) return { ok: false, error: 'The file has a header but no data rows.' };
+  return { ok: true };
 }

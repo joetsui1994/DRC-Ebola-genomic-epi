@@ -1,6 +1,6 @@
 // src/prioritise-data.test.js
 import { describe, it, expect } from 'vitest';
-import { buildCells, parseUpload } from './prioritise-data.js';
+import { buildCells, parseUpload, validateUpload } from './prioritise-data.js';
 import { prioritise } from './prioritise.js';
 
 const risk = new Map([['BUNIA', 0.9], ['KATWA', 0.5]]);   // upper Nom -> relative_risk
@@ -103,6 +103,49 @@ describe('parseUpload', () => {
     expect(rows.length).toBe(2);
     expect(rows[0]).toMatchObject({ sample_id: 'A1', health_zone: 'Bunia', status: 'Positive', ct: '24', date: '2026-04-05', sequenced: false });
     expect(rows[1]).toMatchObject({ sample_id: 'A2', date: '2026-04-06', sequenced: true });
+  });
+
+  it('carries row_id and parses being_sequenced when present', () => {
+    const csv = 'row_id,sample_id,health_zone,status,ct,date,being_sequenced\n'
+      + '7,A1,Bunia,Positive,24,2026-04-05,TRUE\n'
+      + '8,A2,Bunia,Positive,25,2026-04-05,\n';
+    const { rows } = parseUpload(csv);
+    expect(rows[0]).toMatchObject({ row_id: '7', being_sequenced: true });
+    expect(rows[1]).toMatchObject({ row_id: '8', being_sequenced: false });
+  });
+
+  it('normalises status case-insensitively to the app categories', () => {
+    const csv = 'sample_id,health_zone,status,ct,date\n'
+      + 'A1,Bunia,positive,24,2026-04-05\n'
+      + 'A2,Bunia,NEGATIVE,,2026-04-05\n'
+      + 'A3,Bunia,Not yet run,,2026-04-05\n';
+    const { rows } = parseUpload(csv);
+    expect(rows.map((r) => r.status)).toEqual(['Positive', 'Negative', 'Unclassified']);
+  });
+});
+
+describe('validateUpload', () => {
+  it('passes a well-formed upload', () => {
+    const parsed = parseUpload('sample_id,health_zone,status,date,ct\nA1,Bunia,Positive,2026-04-05,24\n');
+    expect(validateUpload(parsed).ok).toBe(true);
+  });
+
+  it('reports missing required columns', () => {
+    const parsed = parseUpload('sample_id,status,ct\nA1,Positive,24\n');   // no health_zone, no date
+    const v = validateUpload(parsed);
+    expect(v.ok).toBe(false);
+    expect(v.error).toMatch(/health_zone/);
+    expect(v.error).toMatch(/date/);
+  });
+
+  it('rejects an empty file', () => {
+    expect(validateUpload(parseUpload('')).ok).toBe(false);
+  });
+
+  it('rejects a header with no data rows', () => {
+    const v = validateUpload(parseUpload('sample_id,health_zone,status,date,ct\n'));
+    expect(v.ok).toBe(false);
+    expect(v.error).toMatch(/no data/i);
   });
 });
 
