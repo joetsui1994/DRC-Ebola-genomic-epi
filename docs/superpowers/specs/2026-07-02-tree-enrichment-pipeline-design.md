@@ -60,8 +60,10 @@ non-served directory `data-raw/` at repo root holds the pipeline inputs:
 
 - `data-raw/Ituri_2026-06-26_n35.EGC.ptree` — the raw source tree.
 - `data-raw/Ituri_2026-05-28_HKY_EGC_rate1.9E-3.HIPSTR.enriched.ptree` — the old
-  enriched tree, moved here (it is a reference input for lat/lon reuse; once
-  `TREE_URL` is repointed it is no longer served).
+  enriched tree, moved here as a historical archive. It is **no longer a pipeline
+  input** (lat/lon is recomputed from the polygons, not reused); it is moved out of
+  `public/` only so the deprecated tree is no longer served once `TREE_URL` is
+  repointed.
 
 **The app reads a stable filename** that never changes across tree refreshes:
 `public/data/ituri-tree.ptree`. Each future update overwrites it, so
@@ -78,27 +80,39 @@ non-served directory `data-raw/` at repo root holds the pipeline inputs:
   **two new rows added**:
   - `Mongwalu,Mongbwalu,egc_tree,Spelling variant of Mongbwalu in the EGC tree`
   - `Nyankunnde,Nyakunde,egc_tree,Double-n typo of Nyakunde in the EGC tree`
-- `data-raw/Ituri_2026-05-28_…HIPSTR.enriched.ptree` — old enriched tree; source
-  of reused `lat`/`lon`/`health_zone` for the 15 tips already present in it.
+
+The old enriched tree is **not** an input — lat/lon is recomputed for every tip
+from the geojson polygons rather than reused, so no stale coordinate can carry
+over when a tip is relocated between trees.
+
+## Location corrections
+
+Some accessions are mislabelled in the raw EGC tree and are corrected by an
+explicit, documented map applied to the raw `location` **before** anything else:
+
+| Accession | Raw location | Corrected to | Reason |
+|---|---|---|---|
+| `PP_00711T3` | `Lumumba` | `Rwampara` | Upstream mislabel; the sample belongs to Rwampara (as in the prior enriched tree). `Lumumba` is not a health zone. |
+
+With this correction, `Lumumba` no longer appears and **every one of the 35 tips
+resolves to a real health zone present in `health-zones.geojson`** — there are no
+sub-zone or off-polygon locations left to special-case.
 
 ## Per-tip enrichment rule
 
 For each of the 35 tips, keyed by `accession`:
 
-1. **Parse raw `location`.** If it begins with `ex-`, strip the prefix to get the
-   base zone and set `exported=true`; otherwise `exported=false`. (In this tree the
-   only export value is `ex-Bunia` → base `Bunia`, on `PP_006XCJJ` and
+1. **Apply the location correction map** (above) to the raw `location`.
+2. **Parse the corrected `location`.** If it begins with `ex-`, strip the prefix to
+   get the base zone and set `exported=true`; otherwise `exported=false`. (In this
+   tree the only export value is `ex-Bunia` → base `Bunia`, on `PP_006XCJJ` and
    `PP_006XXY5`.)
-2. **`health_zone`** = the base zone canonicalised through `aliases.csv`.
+3. **`health_zone`** = the base zone canonicalised through `aliases.csv`.
    **`health_area` = null** (the old enriched tree recorded `health_area` as
    `"null"` for every tip; location sits at zone level).
-3. **`lat`/`lon`:**
-   - If the accession exists in the old enriched tree → **reuse** its `lat`/`lon`.
-   - Otherwise → the health zone's `cy`(lat)/`cx`(lon) from `health-zones.geojson`.
-
-   Every sub-zone location without a geojson polygon (`Lumumba` on `PP_00711T3`,
-   `ex-Bunia`) is already in the old enriched tree, so it reuses a point. Every
-   *new* (non-reused) tip resolves to a real geojson health zone.
+4. **`lat`/`lon`** = the health zone's `cy`(lat)/`cx`(lon) from
+   `health-zones.geojson`, for **every** tip — a single, uniform coordinate source
+   (the polygon pole of inaccessibility). No reuse of legacy points.
 
 ### Export semantics
 
@@ -149,29 +163,31 @@ separate future decision (YAGNI).
 - **Alias canonicaliser** — reuse the same crosswalk semantics as `main.js`
   (`makeCanon`) / `update-relative-risk.mjs` so zone names reconcile identically at
   build time and runtime.
-- **Geo resolver** — old-enriched-accession reuse first, geojson `cx`/`cy`
-  fallback; fails loudly if a non-reused tip's zone is absent from the geojson (so
-  a future new location can't silently get null coordinates).
+- **Geo resolver** — canonical health_zone → geojson `cx`/`cy`, for every tip;
+  fails loudly if a tip's zone is absent from the geojson (so a future new location
+  can't silently get null coordinates).
 - **Meta computer** — max tip date and root height → `mostRecentDate`/`rootDate`.
 
 ## Error handling
 
-- Any tip whose canonicalised zone is neither reusable (old-enriched) nor present
-  in the geojson → **hard error** listing the accession + raw location, rather than
-  emitting a tip with null lat/lon.
+- Any tip whose canonicalised zone is absent from the geojson → **hard error**
+  listing the accession + corrected location, rather than emitting a tip with null
+  lat/lon.
 - Unparseable dates or a missing root height → hard error.
 - The script is **idempotent**: re-running on the same inputs reproduces identical
   outputs (dates read from data; `updated` is the only run-stamped field).
 
 ## Testing
 
-- Unit: annotation parse↔serialise round-trips a real tip block unchanged;
-  `ex-Bunia` → `location=Bunia`/`exported=true`; a reused accession keeps its old
-  lat/lon; a new accession gets the geojson `cy`/`cx`.
+- Unit: annotation parse↔serialise round-trips a real tip block unchanged; the
+  correction map turns `PP_00711T3`'s `Lumumba` into `Rwampara`; `ex-Bunia` →
+  `location=Bunia`/`exported=true`; a tip's lat/lon equals its zone's geojson
+  `cy`/`cx`.
 - Integration: run the script on the real inputs; assert 35 tips in
   `ituri-tips.json`, all with non-null `health_zone`/`lat`/`lon` and a boolean
-  `exported`; assert exactly 2 `exported=true`; assert `ituri-meta.json` has all
-  five fields and `rootDate < mostRecentDate`.
+  `exported`; assert exactly 2 `exported=true`; assert no tip's `location` is
+  `Lumumba`; assert `ituri-meta.json` has all five fields and
+  `rootDate < mostRecentDate`.
 - Manual: load the dashboard, confirm the tree renders with a time axis, node bars,
   health-zone tip colours, and that map markers place at the enriched coordinates.
 
