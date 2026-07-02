@@ -18,7 +18,8 @@ export function readTipFields(inner) {
 // Rewrite location to the resolved value and append the enrichment keys. Everything
 // else in the block is left byte-for-byte intact (numbers are never reformatted).
 export function enrichTipInner(inner, rec) {
-  const rewritten = inner.replace(/location="[^"]*"/, `location="${rec.location}"`);
+  // Function replacer so a '$' in the value can't be read as a replacement token.
+  const rewritten = inner.replace(/location="[^"]*"/, () => `location="${rec.location}"`);
   return rewritten +
     `,health_zone="${rec.health_zone}"` +
     `,health_area="${rec.health_area}"` +
