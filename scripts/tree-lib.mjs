@@ -26,3 +26,29 @@ export function enrichTipInner(inner, rec) {
     `,lat=${rec.lat},lon=${rec.lon}` +
     `,exported=${rec.exported}`;
 }
+
+// Alias crosswalk (observed -> canonical Nom), identical semantics to main.js's
+// makeCanon and update-relative-risk.mjs so build-time and runtime agree.
+// Columns: 0 observed_name, 1 canonical_nom.
+export function makeCanon(aliasText) {
+  const map = new Map();
+  for (const line of aliasText.trim().split(/\r?\n/).slice(1)) {
+    const [observed, canonical] = line.split(',');
+    if (observed && canonical) map.set(observed.toUpperCase().trim(), canonical.trim());
+  }
+  return (name) => map.get((name || '').toUpperCase().trim()) || name;
+}
+
+// health-zones.geojson carries pole-of-inaccessibility coords per feature:
+// cx = longitude, cy = latitude. Build Nom -> {lat, lon}.
+export function parseZones(geojsonText) {
+  const gj = JSON.parse(geojsonText);
+  const map = new Map();
+  for (const f of gj.features) {
+    const p = f.properties || {};
+    if (p.Nom != null && p.cx != null && p.cy != null) {
+      map.set(p.Nom, { lat: p.cy, lon: p.cx });
+    }
+  }
+  return map;
+}
