@@ -2,7 +2,7 @@
 // small, app-facing interface. Locks the tree to fit-to-window with explicit
 // paddings so its time axis aligns with the time-series panel.
 
-const TREE_URL = `${import.meta.env.BASE_URL}data/Ituri_2026-05-28_HKY_EGC_rate1.9E-3.HIPSTR.enriched.ptree`;
+const TREE_URL = `${import.meta.env.BASE_URL}data/ituri-tree.ptree`;
 
 export const TREE_PAD_LEFT = 20;
 export const TREE_PAD_RIGHT = 20;
