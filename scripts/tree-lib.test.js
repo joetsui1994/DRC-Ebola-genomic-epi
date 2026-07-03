@@ -119,6 +119,9 @@ describe('rootHeightFromText', () => {
   it('returns the maximum height_mean across all nodes', () => {
     expect(rootHeightFromText(TREE)).toBeCloseTo(0.10, 10);
   });
+  it('throws when there are no height_mean annotations', () => {
+    expect(() => rootHeightFromText('#NEXUS\n(A:0.1,B:0.2);')).toThrow(/no height_mean/);
+  });
 });
 
 describe('computeMeta', () => {
@@ -132,5 +135,20 @@ describe('computeMeta', () => {
       updated: '2026-07-02',
       tipCount: 2,
     });
+  });
+  it('picks the true max date regardless of input order', () => {
+    const meta = computeMeta(
+      [{ date: '2026-05-20' }, { date: '2026-05-26' }, { date: '2026-05-10' }],
+      0.05, { sourceTree: 's', updated: '2026-07-02' });
+    expect(meta.mostRecentDate).toBe('2026-05-26');
+    expect(meta.tipCount).toBe(3);
+  });
+  it('throws when no records have a date', () => {
+    expect(() => computeMeta([{ date: '' }, {}], 0.05, { sourceTree: 's', updated: 'u' }))
+      .toThrow(/no tip dates/);
+  });
+  it('throws on a non-positive root height', () => {
+    expect(() => computeMeta([{ date: '2026-05-26' }], 0, { sourceTree: 's', updated: 'u' }))
+      .toThrow(/bad root height/);
   });
 });
