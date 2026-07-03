@@ -69,7 +69,7 @@ export function resolveTip(fields, { corrections, canon, zones }) {
     date: fields.date,
     location,
     health_zone,
-    health_area: 'null',
+    health_area: 'null',   // literal string for the NEXUS tree; build-tree.mjs converts to JSON null for tips.json
     lat: coord.lat,
     lon: coord.lon,
     exported,
