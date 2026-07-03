@@ -52,3 +52,26 @@ export function parseZones(geojsonText) {
   }
   return map;
 }
+
+// Resolve one tip's enriched fields. Order matters: correction -> ex- strip ->
+// canonicalise -> geo lookup. Throws (never emits null coords) if the zone is unknown.
+export function resolveTip(fields, { corrections, canon, zones }) {
+  const corrected = corrections[fields.accession] ?? fields.location;
+  const exported = corrected.startsWith('ex-');
+  const location = exported ? corrected.slice(3) : corrected;
+  const health_zone = canon(location);
+  const coord = zones.get(health_zone);
+  if (!coord) {
+    throw new Error(`No geojson zone for "${health_zone}" (tip ${fields.accession}, location "${location}")`);
+  }
+  return {
+    accession: fields.accession,
+    date: fields.date,
+    location,
+    health_zone,
+    health_area: 'null',
+    lat: coord.lat,
+    lon: coord.lon,
+    exported,
+  };
+}
