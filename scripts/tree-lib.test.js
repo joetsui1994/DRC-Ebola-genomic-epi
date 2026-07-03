@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { readTipFields, enrichTipInner, makeCanon, parseZones } from './tree-lib.mjs';
 import { resolveTip } from './tree-lib.mjs';
+import { enrichTreeText, rootHeightFromText, computeMeta } from './tree-lib.mjs';
 
 const TIP = 'height_mean=0.05,height_median=0.05,date="2026-05-03",location="Lumumba",accession="PP_00711T3"';
 
@@ -87,5 +88,49 @@ describe('resolveTip', () => {
   it('throws when the zone is absent from the geojson', () => {
     expect(() => resolveTip({ accession: 'Y', date: '2026-05-01', location: 'Nowhere' }, CTX))
       .toThrow(/Nowhere/);
+  });
+});
+
+const TREE =
+  '#NEXUS\nBEGIN TREES;\n\ttree TREE1 = [&R] (' +
+  'A[&height_mean=0.02,date="2026-05-10",location="ex-Bunia",accession="A"]:0.01,' +
+  'B[&height_mean=0.03,date="2026-05-20",location="Mongwalu",accession="B"]:0.02' +
+  ')[&posterior=0.99,height_mean=0.10,height_95%_HPD={0.04,0.12}]:0.0;\nEND;\n';
+
+const resolve = (f) => ({
+  accession: f.accession, date: f.date,
+  location: f.location.replace(/^ex-/, ''),
+  health_zone: f.location.replace(/^ex-/, '') === 'Mongwalu' ? 'Mongbwalu' : f.location.replace(/^ex-/, ''),
+  health_area: 'null', lat: 1, lon: 2, exported: f.location.startsWith('ex-'),
+});
+
+describe('enrichTreeText', () => {
+  it('enriches only tip blocks and returns one record per tip', () => {
+    const { text, records } = enrichTreeText(TREE, resolve);
+    expect(records.map((r) => r.accession)).toEqual(['A', 'B']);
+    expect(text).toContain('exported=true');   // tip A
+    expect(text).toContain('health_zone="Mongbwalu"'); // tip B
+    expect(text).toContain('[&posterior=0.99,height_mean=0.10,height_95%_HPD={0.04,0.12}]'); // internal node untouched
+    expect(text).not.toContain('exported=false,exported'); // internal node got no keys
+  });
+});
+
+describe('rootHeightFromText', () => {
+  it('returns the maximum height_mean across all nodes', () => {
+    expect(rootHeightFromText(TREE)).toBeCloseTo(0.10, 10);
+  });
+});
+
+describe('computeMeta', () => {
+  it('computes most-recent + root dates and provenance', () => {
+    const records = [{ date: '2026-05-10' }, { date: '2026-05-26' }];
+    const meta = computeMeta(records, 0.10810721572739972, { sourceTree: 'src.ptree', updated: '2026-07-02' });
+    expect(meta).toEqual({
+      mostRecentDate: '2026-05-26',
+      rootDate: '2026-04-16',
+      sourceTree: 'src.ptree',
+      updated: '2026-07-02',
+      tipCount: 2,
+    });
   });
 });

@@ -75,3 +75,37 @@ export function resolveTip(fields, { corrections, canon, zones }) {
     exported,
   };
 }
+
+// Replace every tip block (identified by containing accession=) with its enriched
+// form; internal-node blocks and the topology pass through unchanged. Returns the
+// new text and the resolved records (for ituri-tips.json), in tree order.
+export function enrichTreeText(text, resolve) {
+  const records = [];
+  const newText = text.replace(/\[&([^\]]*)\]/g, (whole, inner) => {
+    if (!/accession="/.test(inner)) return whole;   // internal node — leave intact
+    const rec = resolve(readTipFields(inner));
+    records.push(rec);
+    return `[&${enrichTipInner(inner, rec)}]`;
+  });
+  return { text: newText, records };
+}
+
+// BEAST node height = years before the most-recent tip, so the root is the max.
+export function rootHeightFromText(text) {
+  const hs = [...text.matchAll(/height_mean=([0-9.eE+-]+)/g)].map((m) => Number(m[1]));
+  if (!hs.length) throw new Error('no height_mean annotations found');
+  return Math.max(...hs);
+}
+
+const DAY_MS = 86400000;
+const YEAR_DAYS = 365.25;
+
+export function computeMeta(records, rootHeightYears, { sourceTree, updated }) {
+  const dates = records.map((r) => r.date).filter(Boolean).sort();
+  if (!dates.length) throw new Error('no tip dates');
+  if (!(rootHeightYears > 0)) throw new Error(`bad root height: ${rootHeightYears}`);
+  const mostRecentDate = dates[dates.length - 1];
+  const rootMs = Date.parse(mostRecentDate) - rootHeightYears * YEAR_DAYS * DAY_MS;
+  const rootDate = new Date(rootMs).toISOString().slice(0, 10);
+  return { mostRecentDate, rootDate, sourceTree, updated, tipCount: records.length };
+}
