@@ -575,9 +575,9 @@ Run:
 ```bash
 node -e "const t=require('./public/data/ituri-tips.json'); console.log(t.length, t.find(x=>x.id==='PP_00711T3'), t.filter(x=>x.exported).map(x=>x.id))"
 cat public/data/ituri-meta.json
-grep -c 'exported=' public/data/ituri-tree.ptree
+grep -o 'exported=' public/data/ituri-tree.ptree | wc -l
 ```
-Expected: `35`, the `PP_00711T3` entry shows `location:'Rwampara', health_zone:'Rwampara', lat:1.60555, lon:30.03822, exported:false`; exported ids `['PP_006XCJJ','PP_006XXY5']`; meta has all five fields with `rootDate` `2026-04-16`; `grep -c` prints `35`.
+Expected: `35`, the `PP_00711T3` entry shows `location:'Rwampara', health_zone:'Rwampara', lat:1.60555, lon:30.03822, exported:false`; exported ids `['PP_006XCJJ','PP_006XXY5']`; meta has all five fields with `rootDate` `2026-04-16`; the `exported=` count prints `35`. (Use `grep -o … | wc -l`, not `grep -c` — the whole NEXUS tree is one line, so `grep -c` would report `1`.)
 
 - [ ] **Step 5: Commit**
 

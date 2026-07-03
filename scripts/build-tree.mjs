@@ -24,6 +24,9 @@ const OUT_META = join(ROOT, 'public/data/ituri-meta.json');
 
 const dateArg = process.argv.find((a) => a.startsWith('--date='));
 const updated = dateArg ? dateArg.slice(7) : new Date().toISOString().slice(0, 10);
+if (!/^\d{4}-\d{2}-\d{2}$/.test(updated)) {
+  throw new Error(`--date must be YYYY-MM-DD (got "${updated}")`);
+}
 
 const canon = makeCanon(readFileSync(ALIASES, 'utf8'));
 const zones = parseZones(readFileSync(GEOJSON, 'utf8'));
