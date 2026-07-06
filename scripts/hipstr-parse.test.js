@@ -125,4 +125,12 @@ describe('hipstrToInline', () => {
     expect(text).not.toMatch(/Translate|Taxlabels/);         // blocks dropped
     expect(text.startsWith('#NEXUS')).toBe(true);
   });
+  it('throws on a tip whose stats lack height_mean', () => {
+    const bad = FILE.replace('height_mean=0.02739726027,', '');
+    expect(() => hipstrToInline(bad, { resolve })).toThrow(/height_mean/);
+  });
+  it('throws when there is no tree statement', () => {
+    const noTree = '#NEXUS\nBegin trees;\n\tTranslate\n\t\t1 A|PP_x|DRC|B|2026-05-01\n;\nEnd;';
+    expect(() => hipstrToInline(noTree, { resolve })).toThrow(/tree TREE1/);
+  });
 });

@@ -55,11 +55,18 @@ export function completeDate(rawDate, height, refMs) {
 // A numbered tip token: a `(` or `,` delimiter, the leaf number, then its [&...]
 // stats block. Internal nodes are `)[&...]` (no number) and are never matched.
 const TIP_TOKEN = /([(,])(\d+)\[&([^\]]*)\]/g;
-const heightOf = (stats) => Number((stats.match(/height_mean=([0-9.eE+-]+)/) || [])[1]);
+function heightOf(stats) {
+  const m = stats.match(/height_mean=([0-9.eE+-]+)/);
+  const h = m ? Number(m[1]) : NaN;
+  if (!Number.isFinite(h)) throw new Error(`tip missing/invalid height_mean: [&${stats.slice(0, 60)}]`);
+  return h;
+}
 
 export function hipstrToInline(text, { resolve }) {
   const trans = parseTranslate(text);
-  const treeStr = text.slice(text.indexOf('tree TREE1'));
+  const at = text.indexOf('tree TREE1');
+  if (at < 0) throw new Error("no 'tree TREE1' statement found");
+  const treeStr = text.slice(at);
 
   // Pass 1: collect each tip's parsed label + height; fit the clock from full-date tips.
   const byNum = new Map();
@@ -89,6 +96,8 @@ export function hipstrToInline(text, { resolve }) {
     return `${delim}${rec.accession}[&${ann}]`;
   });
 
-  const treeLine = newTree.slice(0, newTree.indexOf(';') + 1);   // up to the tree terminator
+  const end = newTree.indexOf(';');
+  if (end < 0) throw new Error('tree statement has no terminating ;');
+  const treeLine = newTree.slice(0, end + 1);   // up to the tree terminator
   return { text: `#NEXUS\nBEGIN TREES;\n\t${treeLine}\nEND;\n`, records };
 }
