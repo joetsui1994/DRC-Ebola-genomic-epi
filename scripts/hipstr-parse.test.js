@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { parseTranslate, parseLabel } from './hipstr-parse.mjs';
+import { clockRefMs, completeDate } from './hipstr-parse.mjs';
 
 const TRANS = `Begin trees;
 	Translate
@@ -43,5 +44,29 @@ describe('parseTranslate robustness', () => {
   });
   it('throws when there is no Translate block', () => {
     expect(() => parseTranslate('#NEXUS\n(1,2);')).toThrow(/Translate/i);
+  });
+});
+
+describe('clockRefMs', () => {
+  it('averages (date + height*year) over full-date tips', () => {
+    // two tips on a perfect clock with height-0 date 2026-06-23
+    const y = (d) => Date.parse(d);
+    const ref = clockRefMs([
+      { date: '2026-05-24', height: 30 / 365.25 },   // 30d before -> 2026-06-23
+      { date: '2026-06-13', height: 10 / 365.25 },   // 10d before -> 2026-06-23
+    ]);
+    expect(new Date(ref).toISOString().slice(0, 10)).toBe('2026-06-23');
+    expect(ref).toBeCloseTo(y('2026-06-23'), -6);
+  });
+});
+
+describe('completeDate', () => {
+  const ref = Date.parse('2026-06-23');
+  it('passes a full YYYY-MM-DD date through unchanged', () => {
+    expect(completeDate('2026-05-15', 0.1, ref)).toBe('2026-05-15');
+  });
+  it('completes a YYYY-MM date from the tree height (rounded to the nearest day)', () => {
+    // height 30/365.25 yr before 2026-06-23 -> 2026-05-24
+    expect(completeDate('2026-05', 30 / 365.25, ref)).toBe('2026-05-24');
   });
 });

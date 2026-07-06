@@ -31,3 +31,23 @@ export function parseLabel(label) {
   if (!accession || !location) throw new Error(`incomplete label: "${label}"`);
   return { fieldId, accession, location, date };
 }
+
+const DAY_MS = 86400000;
+
+// Height-0 calendar date (in ms) fit from the full-date tips: mean of
+// date + height*year. On a clock-consistent tree every full tip agrees.
+export function clockRefMs(fullTips) {
+  if (!fullTips.length) throw new Error('no full-date tips to fit the clock');
+  const sum = fullTips.reduce((a, t) => a + Date.parse(t.date) + t.height * MS_PER_YEAR, 0);
+  return sum / fullTips.length;
+}
+
+// Full dates pass through; a YYYY-MM date is completed to the tree-implied day
+// (ref - height), rounded to the nearest whole day so it matches where PearTree
+// draws the tip.
+export function completeDate(rawDate, height, refMs) {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(rawDate)) return rawDate;
+  const ms = refMs - height * MS_PER_YEAR;
+  const rounded = Math.round(ms / DAY_MS) * DAY_MS;
+  return new Date(rounded).toISOString().slice(0, 10);
+}
