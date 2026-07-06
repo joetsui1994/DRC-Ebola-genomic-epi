@@ -51,3 +51,44 @@ export function completeDate(rawDate, height, refMs) {
   const rounded = Math.round(ms / DAY_MS) * DAY_MS;
   return new Date(rounded).toISOString().slice(0, 10);
 }
+
+// A numbered tip token: a `(` or `,` delimiter, the leaf number, then its [&...]
+// stats block. Internal nodes are `)[&...]` (no number) and are never matched.
+const TIP_TOKEN = /([(,])(\d+)\[&([^\]]*)\]/g;
+const heightOf = (stats) => Number((stats.match(/height_mean=([0-9.eE+-]+)/) || [])[1]);
+
+export function hipstrToInline(text, { resolve }) {
+  const trans = parseTranslate(text);
+  const treeStr = text.slice(text.indexOf('tree TREE1'));
+
+  // Pass 1: collect each tip's parsed label + height; fit the clock from full-date tips.
+  const byNum = new Map();
+  const fullTips = [];
+  for (const m of treeStr.matchAll(TIP_TOKEN)) {
+    const num = m[2];
+    if (!trans.has(num)) continue;
+    const fields = parseLabel(trans.get(num));
+    const height = heightOf(m[3]);
+    byNum.set(num, { fields, height });
+    if (/^\d{4}-\d{2}-\d{2}$/.test(fields.date)) fullTips.push({ date: fields.date, height });
+  }
+  const refMs = clockRefMs(fullTips);
+
+  // Pass 2: rewrite tip tokens; collect records in tree order.
+  const records = [];
+  const newTree = treeStr.replace(TIP_TOKEN, (whole, delim, num, stats) => {
+    if (!trans.has(num)) return whole;
+    const { fields, height } = byNum.get(num);
+    const date = completeDate(fields.date, height, refMs);
+    const rec = resolve({ accession: fields.accession, date, location: fields.location });
+    records.push(rec);
+    const ann =
+      `date="${date}",accession="${rec.accession}",location="${rec.location}"` +
+      `,health_zone="${rec.health_zone}",health_area="${rec.health_area}"` +
+      `,lat=${rec.lat},lon=${rec.lon},exported=${rec.exported},${stats}`;
+    return `${delim}${rec.accession}[&${ann}]`;
+  });
+
+  const treeLine = newTree.slice(0, newTree.indexOf(';') + 1);   // up to the tree terminator
+  return { text: `#NEXUS\nBEGIN TREES;\n\t${treeLine}\nEND;\n`, records };
+}

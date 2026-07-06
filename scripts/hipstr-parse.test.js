@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { parseTranslate, parseLabel } from './hipstr-parse.mjs';
 import { clockRefMs, completeDate } from './hipstr-parse.mjs';
+import { hipstrToInline } from './hipstr-parse.mjs';
 
 const TRANS = `Begin trees;
 	Translate
@@ -77,5 +78,51 @@ describe('completeDate', () => {
     expect(completeDate('2026-05', 30.4 / 365.25, ref)).toBe('2026-05-24');
     // 30.6 d before -> 2026-05-23 ~09:36 -> rounds down to 2026-05-23
     expect(completeDate('2026-05', 30.6 / 365.25, ref)).toBe('2026-05-23');
+  });
+});
+
+const FILE = `#NEXUS
+Begin taxa;
+	Dimensions ntax=2;
+	Taxlabels
+		'X|PP_A.1|DRC|Ituri|Bunia|2026-06-13'
+		'Y|PP_B.1|DRC|Ituri|Mongwalu|2026-06'
+;
+End;
+Begin trees;
+	Translate
+		1 'X|PP_A.1|DRC|Ituri|Bunia|2026-06-13',
+		2 'Y|PP_B.1|DRC|Ituri|Mongwalu|2026-06'
+;
+tree TREE1 = [&R] (1[&height_mean=0.02739726027,foo=1]:0.05,2[&height_mean=0.05479452055,foo=2]:0.05)[&posterior=1.0,height_mean=0.1,height_95%_HPD={0.08,0.12}]:0.0;
+End;`;
+
+// resolve stub: canon Mongwalu->Mongbwalu, geo fixed
+const resolve = (f) => ({
+  accession: f.accession, date: f.date, location: f.location,
+  health_zone: f.location === 'Mongwalu' ? 'Mongbwalu' : f.location,
+  health_area: 'null', lat: 1.5, lon: 30.2, exported: false,
+});
+
+describe('hipstrToInline', () => {
+  const { text, records } = hipstrToInline(FILE, { resolve });
+  it('returns one record per tip, in tree order, with base accessions', () => {
+    expect(records.map((r) => r.accession)).toEqual(['PP_A', 'PP_B']);
+  });
+  it('injects inline tip annotations named by accession', () => {
+    expect(text).toContain('PP_A[&date="2026-06-13"');
+    expect(text).toContain('health_zone="Mongbwalu"');
+    expect(text).toContain('accession="PP_B"');
+  });
+  it('completes the truncated tip date from its height (ref fit from the full tip)', () => {
+    // full tip PP_A: height 0.0274 yr ≈ 10 d, so height-0 ref = 2026-06-13 + 10 d =
+    // 2026-06-23. PP_B height 0.0548 yr ≈ 20 d -> 2026-06-23 − 20 d = 2026-06-03.
+    expect(records.find((r) => r.accession === 'PP_B').date).toBe('2026-06-03');
+  });
+  it('preserves the internal node and original tip stats, drops taxa/translate', () => {
+    expect(text).toContain('height_95%_HPD={0.08,0.12}');   // internal node intact
+    expect(text).toContain('foo=1');                         // original tip stats kept
+    expect(text).not.toMatch(/Translate|Taxlabels/);         // blocks dropped
+    expect(text.startsWith('#NEXUS')).toBe(true);
   });
 });
