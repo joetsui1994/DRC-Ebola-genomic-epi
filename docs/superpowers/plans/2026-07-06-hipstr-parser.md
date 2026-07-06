@@ -10,7 +10,7 @@
 
 **Spec:** `docs/superpowers/specs/2026-07-06-hipstr-parser-spec-change.md` (amends `2026-07-02-tree-enrichment-pipeline-design.md`).
 
-**Grounded expected values** (computed from the real n139 tree): 139 tips; `mostRecentDate` = `2026-06-23`; root height ≈ `0.31729` yr → `rootDate` = `2026-02-28`; 0 exports; 11 truncated dates completed (e.g. `PP_0075Z74` → `2026-05-13`, `PP_0075YXQ` → `2026-05-20`); 16 health zones, all in the geojson; clock reference (height-0) = `2026-06-23`.
+**Grounded expected values** (computed from the real n139 tree): 139 tips; `mostRecentDate` = `2026-06-23`; root height ≈ `0.31729` yr → `rootDate` = `2026-02-27`; 0 exports; 11 truncated dates completed (e.g. `PP_0075Z74` → `2026-05-13`, `PP_0075YXQ` → `2026-05-20`); 16 health zones, all in the geojson; clock reference (height-0) = `2026-06-23`.
 
 ---
 
@@ -448,7 +448,7 @@ Meta: mostRecent=2026-06-23 root=2026-02-28 updated=2026-07-06
 node -e "const t=require('./public/data/ituri-tips.json'); console.log('n=',t.length, 'partialDates=', t.filter(x=>!/^\d{4}-\d{2}-\d{2}$/.test(x.date)).length, 'exported=', t.filter(x=>x.exported).length); console.log(t.find(x=>x.id==='PP_0075Z74')); console.log(t.find(x=>x.id==='PP_00711T3'));"
 cat public/data/ituri-meta.json
 ```
-Expected: `n= 139 partialDates= 0 exported= 0`; `PP_0075Z74` has `date:'2026-05-13'`, `health_zone:'Rwampara'`; `PP_00711T3` has `location:'Rwampara', health_zone:'Rwampara'`; meta = `{mostRecentDate:'2026-06-23', rootDate:'2026-02-28', sourceTree:'Ituri_2026-07-06_DRC_n139.ebds.hipstr.tree', updated:'2026-07-06', tipCount:139}`.
+Expected: `n= 139 partialDates= 0 exported= 0`; `PP_0075Z74` has `date:'2026-05-13'`, `location:'Aru'`, `health_zone:'Aru'`; `PP_00711T3` has `location:'Rwampara', health_zone:'Rwampara'`; meta = `{mostRecentDate:'2026-06-23', rootDate:'2026-02-27', sourceTree:'Ituri_2026-07-06_DRC_n139.ebds.hipstr.tree', updated:'2026-07-06', tipCount:139}`.
 
 If any value differs, STOP and report rather than committing.
 
@@ -498,7 +498,7 @@ describe('enriched n139 tree artifacts', () => {
     expect(sota.health_zone).toBe('Nyakunde');
   });
   it('meta carries dates + provenance with root before most-recent', () => {
-    expect(meta).toMatchObject({ mostRecentDate: '2026-06-23', rootDate: '2026-02-28', tipCount: 139 });
+    expect(meta).toMatchObject({ mostRecentDate: '2026-06-23', rootDate: '2026-02-27', tipCount: 139 });
     expect(meta.sourceTree).toBe('Ituri_2026-07-06_DRC_n139.ebds.hipstr.tree');
     expect(meta.updated).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     expect(meta.rootDate < meta.mostRecentDate).toBe(true);
