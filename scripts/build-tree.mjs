@@ -1,10 +1,12 @@
-// Enrich the n35 EGC time tree for the dashboard and regenerate its companion
-// files. Reads raw tree from data-raw/ + geojson/aliases from public/data/, writes
-// the app-ready tree + tips + meta into public/data/. See the design spec.
+// Enrich the source phylogenetic tree for the dashboard and regenerate its
+// companion files. Reads the raw tree from data-raw/ + geojson/aliases from
+// public/data/, writes the app-ready tree + tips + meta into public/data/. The
+// current source is the HIPSTR n139 build (parsed via hipstr-parse.mjs). See the
+// design spec + the 2026-07-06 HIPSTR spec change.
 //
 // Usage:
 //   node scripts/build-tree.mjs                 # stamp `updated` = today
-//   node scripts/build-tree.mjs --date=2026-07-03
+//   node scripts/build-tree.mjs --date=2026-07-06
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';

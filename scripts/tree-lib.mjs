@@ -1,4 +1,7 @@
-// Pure functions for enriching the n35 EGC NEXUS tree. No file IO — all inputs are
+// Pure functions for enriching a phylogenetic NEXUS tree (canonicalisation, geo
+// resolution, meta). Shared enrichment core, format-agnostic — the HIPSTR n139
+// front-end lives in hipstr-parse.mjs; the EGC inline front-end (enrichTreeText/
+// readTipFields/enrichTipInner) is retained here too. No file IO — all inputs are
 // strings/objects so every unit is testable. See the design spec:
 // docs/superpowers/specs/2026-07-02-tree-enrichment-pipeline-design.md
 
