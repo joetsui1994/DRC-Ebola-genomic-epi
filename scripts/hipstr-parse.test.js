@@ -31,4 +31,17 @@ describe('parseLabel', () => {
   it('throws on a label whose last field is not a YYYY-MM(-DD) date', () => {
     expect(() => parseLabel('a|PP_x|DRC|Bunia|notadate')).toThrow(/date/);
   });
+  it('throws on a label with too few fields (drift guard)', () => {
+    expect(() => parseLabel('PP_x|2026-05')).toThrow(/few fields/);
+  });
+});
+
+describe('parseTranslate robustness', () => {
+  it('parses unquoted labels too', () => {
+    const m = parseTranslate("Translate\n\t1 26FHV|PP_A|DRC|Bunia|2026-05-01\n;\ntree x=(1);");
+    expect(m.get('1')).toBe('26FHV|PP_A|DRC|Bunia|2026-05-01');
+  });
+  it('throws when there is no Translate block', () => {
+    expect(() => parseTranslate('#NEXUS\n(1,2);')).toThrow(/Translate/i);
+  });
 });

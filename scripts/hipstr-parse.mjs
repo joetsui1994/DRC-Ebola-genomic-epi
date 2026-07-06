@@ -7,11 +7,11 @@ const DATE_RE = /^\d{4}-\d{2}(-\d{2})?$/;
 
 // Translate block: `<number> '<label>',` (or unquoted), terminated by a lone `;`.
 export function parseTranslate(text) {
-  const start = text.search(/[Tt]ranslate/);
+  const start = text.search(/translate/i);
   if (start < 0) throw new Error('no Translate block');
   const block = text.slice(start, text.indexOf(';', start));
   const map = new Map();
-  for (const m of block.matchAll(/(\d+)\s+'?([^',\n]+?)'?\s*,?\s*$/gm)) {
+  for (const m of block.matchAll(/^\s*(\d+)\s+'?([^',\n]+?)'?\s*,?\s*$/gm)) {
     map.set(m[1], m[2].trim());
   }
   return map;
@@ -22,6 +22,7 @@ export function parseTranslate(text) {
 // `.N` version suffix stripped. Robust to 5- or 6-field labels.
 export function parseLabel(label) {
   const p = label.split('|');
+  if (p.length < 4) throw new Error(`too few fields in label: "${label}"`);
   const date = p[p.length - 1].trim();
   if (!DATE_RE.test(date)) throw new Error(`label date not YYYY-MM(-DD): "${label}"`);
   const location = p[p.length - 2].trim();
