@@ -1,7 +1,7 @@
 # Spec change: HIPSTR/Translate input format + n139 source
 
 **Date:** 2026-07-06
-**Status:** Proposed
+**Status:** Approved
 **Amends:** `docs/superpowers/specs/2026-07-02-tree-enrichment-pipeline-design.md`
 
 ## Why
@@ -90,34 +90,37 @@ its own estimate, not the recorded day.
 marker several days off where PearTree draws them — re-introducing the very
 misalignment this change fixes.
 
-**Decision (pending confirmation).** Options for `completeDate`:
+**Decision: (A) tree-implied day.** Set each truncated (`YYYY-MM`) tip's date to
+its tree-implied day — `dayFromHeight(height) = ref − height·365.25`, where `ref`
+is the height-0 reference fit from the 128 full-date tips (their mean of
+`date + height·365.25`). This guarantees every marker aligns with where PearTree
+draws the node; for the 8 consistent tips it lands within a day of the recorded
+date, and for the 3 inconsistent ones it uses the tree's own estimate (which is
+what the geometry represents) rather than a recorded day the tree wasn't built
+with. Full-date tips keep their recorded date verbatim.
 
-- **(A) Tree-implied day (recommended).** Set each truncated tip's date to
-  `heightToDate(height)` off the tree's own clock reference (`ref − height·365.25`,
-  `ref` fit from the 128 full-date tips). Guarantees alignment for all tips; for
-  the 8 consistent ones it lands within a day of the recorded date. Cost: the 3
-  inconsistent tips display the tree's estimated day, not the recorded day.
-- **(B) Recover from n120.** Epidemiologically the recorded day, but misaligns the
-  3 inconsistent tips on the axis. Rejected unless the tree is re-exported.
-- **(C) Upstream re-export.** Re-run with the real days fixed so tree geometry
-  matches recorded dates — the durable fix; removes the trade-off entirely.
-
-This spec assumes **(A)** as the implementable default and flags **(C)** as the
-preferred upstream follow-up. `completeDate` is a small injected function so the
-choice is swappable without touching the parser.
+`completeDate(fields, height, ref)` is a small function: return the recorded date
+unchanged if it is already `YYYY-MM-DD`; otherwise return `dayFromHeight(height)`
+formatted `YYYY-MM-DD`. `ref` is computed once from the full-date tips before the
+tip walk. (The durable upstream fix — re-exporting with real days fixed so the
+recorded dates match the geometry — is noted as a follow-up but not required here.)
 
 ## Location reconciliation (n139)
 
 20 distinct locations; 18 resolve via existing geojson `Nom` + `aliases.csv`. Deltas:
 
-- **Add alias row:** `Mungwalu,Mongbwalu,egc_tree,Spelling variant of Mongbwalu`
-  (joins `Mungwalu`/`Mongwalu`/`Mongbwalu` — three spellings — to one zone).
-  (`Mongwalu→Mongbwalu` was already added; `Gety→Gethy` already exists.)
-- **`Sota` (1 tip) — unresolved, decision required.** Not a geojson zone, no alias,
-  no near-spelling. Needs its parent health zone (add as an alias/correction, e.g.
-  `Sota → <zone>`), or the tip is parked without a zone/coordinate.
+- **Add two alias rows:**
+  - `Mungwalu,Mongbwalu,egc_tree,Spelling variant of Mongbwalu`
+    (joins `Mungwalu`/`Mongwalu`/`Mongbwalu` — three spellings — to one zone;
+    `Mongwalu→Mongbwalu` was already added; `Gety→Gethy` already exists).
+  - `Sota,Nyakunde,egc_tree,Locality in the Nyakunde health zone`
+    — `Sota` is a locality in the **Nyakunde** health zone (per data owner). It maps
+    directly to the geojson `Nom` `Nyakunde` (not the alias `Nyankunde`), so the
+    Sota tip gets `location="Sota"`, `health_zone="Nyakunde"`, and Nyakunde's
+    pole-of-inaccessibility lat/lon. All 20 locations now resolve.
 - **`Lumumba` no longer appears** (the EGC-era sub-zone correction is moot);
-  `CORRECTIONS` is empty for this source unless `Sota` is handled as a correction.
+  `CORRECTIONS` is empty for this source (`Sota` is handled via alias, not a
+  correction).
 - **No `ex-` exports** in this tree; the `exported` flag is emitted `false` for all
   tips (schema stays uniform).
 
