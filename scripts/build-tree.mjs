@@ -10,11 +10,12 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import {
   CORRECTIONS, makeCanon, parseZones, resolveTip,
-  enrichTreeText, rootHeightFromText, computeMeta,
+  rootHeightFromText, computeMeta,
 } from './tree-lib.mjs';
+import { hipstrToInline } from './hipstr-parse.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const SOURCE_TREE = 'Ituri_2026-06-26_n35.EGC.ptree';
+const SOURCE_TREE = 'Ituri_2026-07-06_DRC_n139.ebds.hipstr.tree';
 const RAW = join(ROOT, 'data-raw', SOURCE_TREE);
 const GEOJSON = join(ROOT, 'public/data/health-zones.geojson');
 const ALIASES = join(ROOT, 'public/data/aliases.csv');
@@ -33,7 +34,7 @@ const zones = parseZones(readFileSync(GEOJSON, 'utf8'));
 const rawText = readFileSync(RAW, 'utf8');
 
 const resolve = (fields) => resolveTip(fields, { corrections: CORRECTIONS, canon, zones });
-const { text, records } = enrichTreeText(rawText, resolve);
+const { text, records } = hipstrToInline(rawText, { resolve });
 const meta = computeMeta(records, rootHeightFromText(rawText), { sourceTree: SOURCE_TREE, updated });
 
 const tips = records.map((r) => ({

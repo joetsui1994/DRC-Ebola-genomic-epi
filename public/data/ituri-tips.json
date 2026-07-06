@@ -1,36 +1,6 @@
 [
   {
-    "id": "PP_006Y8ME",
-    "date": "2026-05-06",
-    "location": "Katwa",
-    "health_zone": "Katwa",
-    "health_area": null,
-    "lat": 0.1177,
-    "lon": 29.32264,
-    "exported": false
-  },
-  {
-    "id": "PP_0075Z74",
-    "date": "2026-05-26",
-    "location": "Aru",
-    "health_zone": "Aru",
-    "health_area": null,
-    "lat": 2.86091,
-    "lon": 30.73767,
-    "exported": false
-  },
-  {
-    "id": "PP_0075Z66",
-    "date": "2026-05-17",
-    "location": "Mongwalu",
-    "health_zone": "Mongbwalu",
-    "health_area": null,
-    "lat": 1.94577,
-    "lon": 29.93815,
-    "exported": false
-  },
-  {
-    "id": "PP_0075YWS",
+    "id": "PP_0076SU0",
     "date": "2026-05-20",
     "location": "Rwampara",
     "health_zone": "Rwampara",
@@ -40,8 +10,68 @@
     "exported": false
   },
   {
-    "id": "PP_0075YXQ",
-    "date": "2026-05-20",
+    "id": "PP_00764GD",
+    "date": "2026-05-30",
+    "location": "Bambu",
+    "health_zone": "Bambu",
+    "health_area": null,
+    "lat": 1.86611,
+    "lon": 30.20587,
+    "exported": false
+  },
+  {
+    "id": "PP_00764QW",
+    "date": "2026-06-04",
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822,
+    "exported": false
+  },
+  {
+    "id": "PP_007656Y",
+    "date": "2026-06-09",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_00765SR",
+    "date": "2026-06-08",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_00764SS",
+    "date": "2026-06-05",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_00765TP",
+    "date": "2026-06-08",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_00711R7",
+    "date": "2026-05-03",
     "location": "Rwampara",
     "health_zone": "Rwampara",
     "health_area": null,
@@ -70,7 +100,7 @@
     "exported": false
   },
   {
-    "id": "PP_00711R7",
+    "id": "PP_00712Q8",
     "date": "2026-05-03",
     "location": "Rwampara",
     "health_zone": "Rwampara",
@@ -80,13 +110,23 @@
     "exported": false
   },
   {
-    "id": "PP_00712Q8",
-    "date": "2026-05-03",
+    "id": "PP_00765FE",
+    "date": "2026-06-08",
     "location": "Rwampara",
     "health_zone": "Rwampara",
     "health_area": null,
     "lat": 1.60555,
     "lon": 30.03822,
+    "exported": false
+  },
+  {
+    "id": "PP_00763UP",
+    "date": "2026-05-27",
+    "location": "Sota",
+    "health_zone": "Nyakunde",
+    "health_area": null,
+    "lat": 1.48015,
+    "lon": 29.94463,
     "exported": false
   },
   {
@@ -100,18 +140,118 @@
     "exported": false
   },
   {
-    "id": "PP_0075Z2E",
-    "date": "2026-05-20",
-    "location": "Bunia",
-    "health_zone": "Bunia",
+    "id": "PP_0076TA2",
+    "date": "2026-05-24",
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
     "health_area": null,
-    "lat": 1.58722,
-    "lon": 30.22568,
+    "lat": 1.60555,
+    "lon": 30.03822,
+    "exported": false
+  },
+  {
+    "id": "PP_00764UN",
+    "date": "2026-05-28",
+    "location": "Bambu",
+    "health_zone": "Bambu",
+    "health_area": null,
+    "lat": 1.86611,
+    "lon": 30.20587,
+    "exported": false
+  },
+  {
+    "id": "PP_0075Z74",
+    "date": "2026-05-13",
+    "location": "Aru",
+    "health_zone": "Aru",
+    "health_area": null,
+    "lat": 2.86091,
+    "lon": 30.73767,
+    "exported": false
+  },
+  {
+    "id": "PP_006Y8ME",
+    "date": "2026-05-06",
+    "location": "Katwa",
+    "health_zone": "Katwa",
+    "health_area": null,
+    "lat": 0.1177,
+    "lon": 29.32264,
+    "exported": false
+  },
+  {
+    "id": "PP_0076T4E",
+    "date": "2026-05-21",
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822,
+    "exported": false
+  },
+  {
+    "id": "PP_0076T94",
+    "date": "2026-05-20",
+    "location": "Nyankunde",
+    "health_zone": "Nyakunde",
+    "health_area": null,
+    "lat": 1.48015,
+    "lon": 29.94463,
+    "exported": false
+  },
+  {
+    "id": "PP_0075YWS",
+    "date": "2026-05-19",
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822,
+    "exported": false
+  },
+  {
+    "id": "PP_0075Z66",
+    "date": "2026-05-17",
+    "location": "Mongbwalu",
+    "health_zone": "Mongbwalu",
+    "health_area": null,
+    "lat": 1.94577,
+    "lon": 29.93815,
+    "exported": false
+  },
+  {
+    "id": "PP_00764WJ",
+    "date": "2026-05-30",
+    "location": "Nizi",
+    "health_zone": "Nizi",
+    "health_area": null,
+    "lat": 1.74884,
+    "lon": 30.32512,
+    "exported": false
+  },
+  {
+    "id": "PP_0075YXQ",
+    "date": "2026-05-20",
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822,
+    "exported": false
+  },
+  {
+    "id": "PP_00764L4",
+    "date": "2026-06-03",
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822,
     "exported": false
   },
   {
     "id": "PP_0075ZDS",
-    "date": "2026-05-26",
+    "date": "2026-05-24",
     "location": "Aungba",
     "health_zone": "Aungba",
     "health_area": null,
@@ -120,13 +260,43 @@
     "exported": false
   },
   {
-    "id": "PP_006Y8R6",
-    "date": "2026-05-16",
+    "id": "PP_00765EG",
+    "date": "2026-06-13",
+    "location": "Mungwalu",
+    "health_zone": "Mongbwalu",
+    "health_area": null,
+    "lat": 1.94577,
+    "lon": 29.93815,
+    "exported": false
+  },
+  {
+    "id": "PP_0075Z2E",
+    "date": "2026-05-19",
     "location": "Bunia",
     "health_zone": "Bunia",
     "health_area": null,
     "lat": 1.58722,
     "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_00764HA",
+    "date": "2026-05-30",
+    "location": "Mungwalu",
+    "health_zone": "Mongbwalu",
+    "health_area": null,
+    "lat": 1.94577,
+    "lon": 29.93815,
+    "exported": false
+  },
+  {
+    "id": "PP_0076T78",
+    "date": "2026-05-21",
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822,
     "exported": false
   },
   {
@@ -140,6 +310,56 @@
     "exported": false
   },
   {
+    "id": "PP_00764BP",
+    "date": "2026-05-31",
+    "location": "Aru",
+    "health_zone": "Aru",
+    "health_area": null,
+    "lat": 2.86091,
+    "lon": 30.73767,
+    "exported": false
+  },
+  {
+    "id": "PP_007647X",
+    "date": "2026-06-02",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_00763ST",
+    "date": "2026-05-25",
+    "location": "Kilo",
+    "health_zone": "Kilo",
+    "health_area": null,
+    "lat": 1.78049,
+    "lon": 30.08468,
+    "exported": false
+  },
+  {
+    "id": "PP_006Y8R6",
+    "date": "2026-05-16",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_006Y8S4",
+    "date": "2026-05-16",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
     "id": "PP_00711T3",
     "date": "2026-05-03",
     "location": "Rwampara",
@@ -150,73 +370,13 @@
     "exported": false
   },
   {
-    "id": "PP_006Y8NC",
-    "date": "2026-05-06",
+    "id": "PP_00764YE",
+    "date": "2026-06-13",
     "location": "Bunia",
     "health_zone": "Bunia",
     "health_area": null,
     "lat": 1.58722,
     "lon": 30.22568,
-    "exported": false
-  },
-  {
-    "id": "PP_006Y8PA",
-    "date": "2026-05-06",
-    "location": "Bunia",
-    "health_zone": "Bunia",
-    "health_area": null,
-    "lat": 1.58722,
-    "lon": 30.22568,
-    "exported": false
-  },
-  {
-    "id": "PP_006Y8Q8",
-    "date": "2026-05-06",
-    "location": "Bunia",
-    "health_zone": "Bunia",
-    "health_area": null,
-    "lat": 1.58722,
-    "lon": 30.22568,
-    "exported": false
-  },
-  {
-    "id": "PP_0075Z4A",
-    "date": "2026-05-16",
-    "location": "Nyakunde",
-    "health_zone": "Nyakunde",
-    "health_area": null,
-    "lat": 1.48015,
-    "lon": 29.94463,
-    "exported": false
-  },
-  {
-    "id": "PP_0075Z90",
-    "date": "2026-05-26",
-    "location": "Rwampara",
-    "health_zone": "Rwampara",
-    "health_area": null,
-    "lat": 1.60555,
-    "lon": 30.03822,
-    "exported": false
-  },
-  {
-    "id": "PP_0075ZCU",
-    "date": "2026-05-20",
-    "location": "Rwampara",
-    "health_zone": "Rwampara",
-    "health_area": null,
-    "lat": 1.60555,
-    "lon": 30.03822,
-    "exported": false
-  },
-  {
-    "id": "PP_0075ZAY",
-    "date": "2026-05-26",
-    "location": "Rwampara",
-    "health_zone": "Rwampara",
-    "health_area": null,
-    "lat": 1.60555,
-    "lon": 30.03822,
     "exported": false
   },
   {
@@ -230,13 +390,533 @@
     "exported": false
   },
   {
-    "id": "PP_0075ZFN",
-    "date": "2026-05-26",
+    "id": "PP_00764TQ",
+    "date": "2026-05-05",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_0075ZAY",
+    "date": "2026-05-24",
     "location": "Rwampara",
     "health_zone": "Rwampara",
     "health_area": null,
     "lat": 1.60555,
     "lon": 30.03822,
+    "exported": false
+  },
+  {
+    "id": "PP_0076SZQ",
+    "date": "2026-05-20",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_0076T1L",
+    "date": "2026-05-20",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_00765NZ",
+    "date": "2026-06-10",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_00765XF",
+    "date": "2026-06-10",
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822,
+    "exported": false
+  },
+  {
+    "id": "PP_007650A",
+    "date": "2026-06-13",
+    "location": "Nizi",
+    "health_zone": "Nizi",
+    "health_area": null,
+    "lat": 1.74884,
+    "lon": 30.32512,
+    "exported": false
+  },
+  {
+    "id": "PP_00764J8",
+    "date": "2026-05-02",
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822,
+    "exported": false
+  },
+  {
+    "id": "PP_00765PX",
+    "date": "2026-06-10",
+    "location": "Nizi",
+    "health_zone": "Nizi",
+    "health_area": null,
+    "lat": 1.74884,
+    "lon": 30.32512,
+    "exported": false
+  },
+  {
+    "id": "PP_006Y8NC",
+    "date": "2026-05-15",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_0076625",
+    "date": "2026-06-10",
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822,
+    "exported": false
+  },
+  {
+    "id": "PP_006Y8PA",
+    "date": "2026-05-15",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_006Y8Q8",
+    "date": "2026-05-15",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_0075ZCU",
+    "date": "2026-05-22",
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822,
+    "exported": false
+  },
+  {
+    "id": "PP_0075Z90",
+    "date": "2026-05-22",
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822,
+    "exported": false
+  },
+  {
+    "id": "PP_0075Z4A",
+    "date": "2026-05-16",
+    "location": "Nyakunde",
+    "health_zone": "Nyakunde",
+    "health_area": null,
+    "lat": 1.48015,
+    "lon": 29.94463,
+    "exported": false
+  },
+  {
+    "id": "PP_0076SWW",
+    "date": "2026-05-19",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_007657W",
+    "date": "2026-06-11",
+    "location": "Mangala",
+    "health_zone": "Mangala",
+    "health_area": null,
+    "lat": 1.98223,
+    "lon": 30.42532,
+    "exported": false
+  },
+  {
+    "id": "PP_00763ZD",
+    "date": "2026-05-26",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_00764VL",
+    "date": "2026-05-29",
+    "location": "Nizi",
+    "health_zone": "Nizi",
+    "health_area": null,
+    "lat": 1.74884,
+    "lon": 30.32512,
+    "exported": false
+  },
+  {
+    "id": "PP_00764N0",
+    "date": "2026-06-03",
+    "location": "Nizi",
+    "health_zone": "Nizi",
+    "health_area": null,
+    "lat": 1.74884,
+    "lon": 30.32512,
+    "exported": false
+  },
+  {
+    "id": "PP_00765L3",
+    "date": "2026-06-10",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_00763J9",
+    "date": "2026-05-29",
+    "location": "Nizi",
+    "health_zone": "Nizi",
+    "health_area": null,
+    "lat": 1.74884,
+    "lon": 30.32512,
+    "exported": false
+  },
+  {
+    "id": "PP_00764FF",
+    "date": "2026-05-29",
+    "location": "Nizi",
+    "health_zone": "Nizi",
+    "health_area": null,
+    "lat": 1.74884,
+    "lon": 30.32512,
+    "exported": false
+  },
+  {
+    "id": "PP_007659S",
+    "date": "2026-06-11",
+    "location": "Lita",
+    "health_zone": "Lita",
+    "health_area": null,
+    "lat": 1.57019,
+    "lon": 30.37681,
+    "exported": false
+  },
+  {
+    "id": "PP_00765CL",
+    "date": "2026-06-13",
+    "location": "Nizi",
+    "health_zone": "Nizi",
+    "health_area": null,
+    "lat": 1.74884,
+    "lon": 30.32512,
+    "exported": false
+  },
+  {
+    "id": "PP_0076526",
+    "date": "2026-06-13",
+    "location": "Nizi",
+    "health_zone": "Nizi",
+    "health_area": null,
+    "lat": 1.74884,
+    "lon": 30.32512,
+    "exported": false
+  },
+  {
+    "id": "PP_00763RV",
+    "date": "2026-05-27",
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822,
+    "exported": false
+  },
+  {
+    "id": "PP_0076T2J",
+    "date": "2026-05-21",
+    "location": "Gety",
+    "health_zone": "Gethy",
+    "health_area": null,
+    "lat": 1.27002,
+    "lon": 30.22713,
+    "exported": false
+  },
+  {
+    "id": "PP_00764RU",
+    "date": "2026-06-04",
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822,
+    "exported": false
+  },
+  {
+    "id": "PP_0076550",
+    "date": "2026-06-09",
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822,
+    "exported": false
+  },
+  {
+    "id": "PP_007648V",
+    "date": "2026-06-03",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_00765YD",
+    "date": "2026-06-10",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_0075ZFN",
+    "date": "2026-05-18",
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822,
+    "exported": false
+  },
+  {
+    "id": "PP_0076443",
+    "date": "2026-05-24",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_0076542",
+    "date": "2026-06-16",
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822,
+    "exported": false
+  },
+  {
+    "id": "PP_0076534",
+    "date": "2026-06-15",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_00763TR",
+    "date": "2026-05-27",
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822,
+    "exported": false
+  },
+  {
+    "id": "PP_0076TB0",
+    "date": "2026-05-24",
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822,
+    "exported": false
+  },
+  {
+    "id": "PP_00765J7",
+    "date": "2026-06-10",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_0076435",
+    "date": "2026-05-20",
+    "location": "Mungwalu",
+    "health_zone": "Mongbwalu",
+    "health_area": null,
+    "lat": 1.94577,
+    "lon": 29.93815,
+    "exported": false
+  },
+  {
+    "id": "PP_0075ZBW",
+    "date": "2026-05-24",
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822,
+    "exported": false
+  },
+  {
+    "id": "PP_0076T0N",
+    "date": "2026-05-19",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_0076518",
+    "date": "2026-06-13",
+    "location": "Lita",
+    "health_zone": "Lita",
+    "health_area": null,
+    "lat": 1.57019,
+    "lon": 30.37681,
+    "exported": false
+  },
+  {
+    "id": "PP_00765BN",
+    "date": "2026-06-12",
+    "location": "Lita",
+    "health_zone": "Lita",
+    "health_area": null,
+    "lat": 1.57019,
+    "lon": 30.37681,
+    "exported": false
+  },
+  {
+    "id": "PP_00763K7",
+    "date": "2026-05-29",
+    "location": "Lita",
+    "health_zone": "Lita",
+    "health_area": null,
+    "lat": 1.57019,
+    "lon": 30.37681,
+    "exported": false
+  },
+  {
+    "id": "PP_0076SVY",
+    "date": "2026-05-19",
+    "location": "Komanda",
+    "health_zone": "Komanda",
+    "health_area": null,
+    "lat": 1.1183,
+    "lon": 29.64832,
+    "exported": false
+  },
+  {
+    "id": "PP_00764ZC",
+    "date": "2026-06-14",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_0076SXU",
+    "date": "2026-05-20",
+    "location": "Mongbwalu",
+    "health_zone": "Mongbwalu",
+    "health_area": null,
+    "lat": 1.94577,
+    "lon": 29.93815,
+    "exported": false
+  },
+  {
+    "id": "PP_00765RT",
+    "date": "2026-06-06",
+    "location": "Kilo",
+    "health_zone": "Kilo",
+    "health_area": null,
+    "lat": 1.78049,
+    "lon": 30.08468,
+    "exported": false
+  },
+  {
+    "id": "PP_00763N1",
+    "date": "2026-05-26",
+    "location": "Mungwalu",
+    "health_zone": "Mongbwalu",
+    "health_area": null,
+    "lat": 1.94577,
+    "lon": 29.93815,
+    "exported": false
+  },
+  {
+    "id": "PP_0076T5C",
+    "date": "2026-05-22",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_0076T6A",
+    "date": "2026-05-21",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
     "exported": false
   },
   {
@@ -252,7 +932,7 @@
   {
     "id": "PP_00711VZ",
     "date": "2026-05-03",
-    "location": "Nyankunnde",
+    "location": "Nyankunde",
     "health_zone": "Nyakunde",
     "health_area": null,
     "lat": 1.48015,
@@ -260,18 +940,38 @@
     "exported": false
   },
   {
-    "id": "PP_006XCJJ",
-    "date": "2026-05-14",
+    "id": "PP_00765VK",
+    "date": "2026-06-10",
     "location": "Bunia",
     "health_zone": "Bunia",
     "health_area": null,
     "lat": 1.58722,
     "lon": 30.22568,
-    "exported": true
+    "exported": false
   },
   {
-    "id": "PP_0075ZBW",
-    "date": "2026-05-26",
+    "id": "PP_0076427",
+    "date": "2026-05-25",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_00763VM",
+    "date": "2026-06-23",
+    "location": "Rimba",
+    "health_zone": "Rimba",
+    "health_area": null,
+    "lat": 2.21965,
+    "lon": 30.75646,
+    "exported": false
+  },
+  {
+    "id": "PP_00764CM",
+    "date": "2026-06-04",
     "location": "Rwampara",
     "health_zone": "Rwampara",
     "health_area": null,
@@ -280,38 +980,18 @@
     "exported": false
   },
   {
-    "id": "PP_006XHKB",
-    "date": "2026-05-03",
-    "location": "Bunia",
-    "health_zone": "Bunia",
+    "id": "PP_007646Z",
+    "date": "2026-05-24",
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
     "health_area": null,
-    "lat": 1.58722,
-    "lon": 30.22568,
+    "lat": 1.60555,
+    "lon": 30.03822,
     "exported": false
   },
   {
-    "id": "PP_006XXY5",
-    "date": "2026-05-20",
-    "location": "Bunia",
-    "health_zone": "Bunia",
-    "health_area": null,
-    "lat": 1.58722,
-    "lon": 30.22568,
-    "exported": true
-  },
-  {
-    "id": "PP_0075Z58",
-    "date": "2026-05-20",
-    "location": "Bunia",
-    "health_zone": "Bunia",
-    "health_area": null,
-    "lat": 1.58722,
-    "lon": 30.22568,
-    "exported": false
-  },
-  {
-    "id": "PP_0075Z3C",
-    "date": "2026-05-16",
+    "id": "PP_00763M3",
+    "date": "2026-05-26",
     "location": "Rwampara",
     "health_zone": "Rwampara",
     "health_area": null,
@@ -330,8 +1010,48 @@
     "exported": false
   },
   {
-    "id": "PP_0075Z0J",
-    "date": "2026-05-15",
+    "id": "PP_0076451",
+    "date": "2026-05-23",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_00764PY",
+    "date": "2026-06-03",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_00764K6",
+    "date": "2026-06-01",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_00764AR",
+    "date": "2026-06-03",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_00764M2",
+    "date": "2026-06-03",
     "location": "Rwampara",
     "health_zone": "Rwampara",
     "health_area": null,
@@ -342,6 +1062,326 @@
   {
     "id": "PP_0075ZEQ",
     "date": "2026-05-21",
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822,
+    "exported": false
+  },
+  {
+    "id": "PP_007658U",
+    "date": "2026-06-10",
+    "location": "Mambasa",
+    "health_zone": "Mambasa",
+    "health_area": null,
+    "lat": 1.61578,
+    "lon": 28.68938,
+    "exported": false
+  },
+  {
+    "id": "PP_00765GC",
+    "date": "2026-06-08",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_00765K5",
+    "date": "2026-06-10",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_0075Z3C",
+    "date": "2026-05-16",
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822,
+    "exported": false
+  },
+  {
+    "id": "PP_007649T",
+    "date": "2026-06-03",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_00763YF",
+    "date": "2026-05-26",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_00764EH",
+    "date": "2026-05-30",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_00765UM",
+    "date": "2026-06-08",
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822,
+    "exported": false
+  },
+  {
+    "id": "PP_0076617",
+    "date": "2026-06-10",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_0075Z0J",
+    "date": "2026-05-15",
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822,
+    "exported": false
+  },
+  {
+    "id": "PP_006XHKB",
+    "date": "2026-05-03",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_0075Z58",
+    "date": "2026-05-21",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_00763L5",
+    "date": "2026-05-25",
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822,
+    "exported": false
+  },
+  {
+    "id": "PP_0076T3G",
+    "date": "2026-05-22",
+    "location": "Gety",
+    "health_zone": "Gethy",
+    "health_area": null,
+    "lat": 1.27002,
+    "lon": 30.22713,
+    "exported": false
+  },
+  {
+    "id": "PP_00765WH",
+    "date": "2026-06-10",
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822,
+    "exported": false
+  },
+  {
+    "id": "PP_00763QX",
+    "date": "2026-05-27",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_0076609",
+    "date": "2026-06-10",
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822,
+    "exported": false
+  },
+  {
+    "id": "PP_00765QV",
+    "date": "2026-06-10",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_0076419",
+    "date": "2026-05-24",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_00763PZ",
+    "date": "2026-05-27",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_0076T86",
+    "date": "2026-05-22",
+    "location": "Mongbwalu",
+    "health_zone": "Mongbwalu",
+    "health_area": null,
+    "lat": 1.94577,
+    "lon": 29.93815,
+    "exported": false
+  },
+  {
+    "id": "PP_00765H9",
+    "date": "2026-06-08",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_00765DJ",
+    "date": "2026-06-14",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_00763XH",
+    "date": "2026-05-25",
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822,
+    "exported": false
+  },
+  {
+    "id": "PP_00764DK",
+    "date": "2026-05-29",
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822,
+    "exported": false
+  },
+  {
+    "id": "PP_00763WK",
+    "date": "2026-05-26",
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822,
+    "exported": false
+  },
+  {
+    "id": "PP_00764XG",
+    "date": "2026-05-30",
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822,
+    "exported": false
+  },
+  {
+    "id": "PP_0076SYS",
+    "date": "2026-05-19",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_007640B",
+    "date": "2026-05-25",
+    "location": "Nyankunde",
+    "health_zone": "Nyakunde",
+    "health_area": null,
+    "lat": 1.48015,
+    "lon": 29.94463,
+    "exported": false
+  },
+  {
+    "id": "PP_00765M1",
+    "date": "2026-06-10",
+    "location": "Bunia",
+    "health_zone": "Bunia",
+    "health_area": null,
+    "lat": 1.58722,
+    "lon": 30.22568,
+    "exported": false
+  },
+  {
+    "id": "PP_00765ZB",
+    "date": "2026-06-10",
+    "location": "Rwampara",
+    "health_zone": "Rwampara",
+    "health_area": null,
+    "lat": 1.60555,
+    "lon": 30.03822,
+    "exported": false
+  },
+  {
+    "id": "PP_00765AQ",
+    "date": "2026-06-11",
     "location": "Rwampara",
     "health_zone": "Rwampara",
     "health_area": null,
