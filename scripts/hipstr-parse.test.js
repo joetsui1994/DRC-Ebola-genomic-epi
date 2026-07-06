@@ -58,6 +58,9 @@ describe('clockRefMs', () => {
     expect(new Date(ref).toISOString().slice(0, 10)).toBe('2026-06-23');
     expect(ref).toBeCloseTo(y('2026-06-23'), -6);
   });
+  it('throws when there are no full-date tips', () => {
+    expect(() => clockRefMs([])).toThrow(/no full-date tips/);
+  });
 });
 
 describe('completeDate', () => {
@@ -68,5 +71,11 @@ describe('completeDate', () => {
   it('completes a YYYY-MM date from the tree height (rounded to the nearest day)', () => {
     // height 30/365.25 yr before 2026-06-23 -> 2026-05-24
     expect(completeDate('2026-05', 30 / 365.25, ref)).toBe('2026-05-24');
+  });
+  it('rounds a fractional-day height to the nearest day', () => {
+    // 30.4 d before 2026-06-23 -> 2026-05-23 ~14:24 -> rounds up to 2026-05-24
+    expect(completeDate('2026-05', 30.4 / 365.25, ref)).toBe('2026-05-24');
+    // 30.6 d before -> 2026-05-23 ~09:36 -> rounds down to 2026-05-23
+    expect(completeDate('2026-05', 30.6 / 365.25, ref)).toBe('2026-05-23');
   });
 });
