@@ -8,6 +8,7 @@ import { makeSplitter } from './splitter.js';
 import { createPrioritisationPanel } from './prioritise-panel.js';
 import { tallyZones } from './zone-tally.js';
 import { LINELIST_SOURCES, resolveLinelistSource } from './linelist-source.js';
+import { filterSampleCollected } from './linelist-filter.js';
 
 // Parse the health-zone alias crosswalk (observed_name → canonical_nom) into a
 // normaliser. Health-zone names in the line-list / mobility / tree are mapped onto
@@ -115,8 +116,18 @@ const [tips, meta, linelistText, aliasText] = await Promise.all([
 ]);
 
 const canon = makeCanon(aliasText);
-const linelist = parseLinelist(linelistText, canon);
-// Expose the raw line-list rows (public-mode candidates) to the prioritisation engine.
+const fullLinelist = parseLinelist(linelistText, canon);
+
+// Header "Sample collected only" toggle — DHIS-only, default ON. The full parsed array stays in
+// memory; the toggle filters the *view* pushed to every consumer (map, prioritisation, time-series).
+const isDhis = linelistSource.key === 'dhis';
+const sampleToggle = document.getElementById('sample-collected-toggle');
+const sampleToggleWrap = document.getElementById('sample-toggle-wrap');
+if (sampleToggleWrap) sampleToggleWrap.style.display = isDhis ? '' : 'none';
+const viewRows = () => filterSampleCollected(fullLinelist, isDhis && !!sampleToggle?.checked);
+
+const linelist = viewRows();   // initial view honours the default-ON toggle for DHIS
+// Expose the current line-list rows (public-mode candidates) to the prioritisation engine.
 window.__PRIO_LINELIST__ = linelist;
 
 // Per-zone status counts + positive-Ct lists for the choropleth (full dataset; the brush
@@ -140,6 +151,7 @@ const map = createMapPanel('map-body', tips, { onCtChange: (t) => tsPanel?.setCt
 // Health-zone risk choropleth + mobility arrows (standalone layers, under the
 // markers). Mobility loads after the risk layer because it reuses the zone
 // centroids built there.
+let prioPanel = null;   // late-bound below; used by the sample-collected toggle
 fetch(`${BASE}data/health-zones.geojson`)
   .then(r => r.json())
   .then(zones => {
@@ -161,6 +173,7 @@ fetch(`${BASE}data/health-zones.geojson`)
         else ts.setAllocation(null);
       },
     });
+    prioPanel = prio;
     map.attachPrioKnobs?.(prio);   // on-map knobs panel
     return fetch(`${BASE}data/flowminder__inflow__static.matrix.csv`)
       .then(r => r.text())
@@ -178,6 +191,16 @@ const ts  = createTimeseriesPanel('timeseries-body', linelist, { minDate: meta.r
   onSettling: (on) => document.getElementById('canvas-container')?.classList.toggle('settling-hide', on),
 });
 tsPanel = ts;   // late-bind for the map → distribution Ct sync
+
+// Live sample-collected toggle: re-filter and push the new view to every consumer — no reload.
+sampleToggle?.addEventListener('change', () => {
+  const rows = viewRows();
+  map.setLinelist(rows);
+  ts.setRows(rows);
+  window.__PRIO_LINELIST__ = rows;
+  prioPanel?.refresh();
+});
+
 const tree = await createTreePanel('tree-body', meta);
 treePanel = tree;
 
