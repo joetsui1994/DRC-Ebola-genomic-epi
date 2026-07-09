@@ -157,6 +157,7 @@ export function createMapPanel(containerId, tips, { onCtChange = () => {} } = {}
   let zoneCounts = new Map();        // upper Nom → {status counts} (dynamic; windowed by the brush)
   let linelistRows = [];             // retained for windowed re-tally (set in addZoneLayer)
   let applyCounts = null;            // recompute breaks + redraw after a re-tally (set in addZoneLayer)
+  let currentWindow = null;          // last brush date window; re-applied on line-list swaps
   let applyCtThreshold = null;       // recompute Positive metric + redraw (set in addZoneLayer)
   let toSeqByZone = new Map();       // upper Nom -> to-sequence count (prioritisation)
   let applyToSeq = null;             // recompute "To sequence" metric + redraw (set in addZoneLayer)
@@ -290,6 +291,30 @@ export function createMapPanel(containerId, tips, { onCtChange = () => {} } = {}
   tabMap?.addEventListener('click', () => showTab('map'));
   tabPrio?.addEventListener('click', () => showTab('prio'));
 
+  // Re-tally the choropleth + markers from the current line-list rows over the current date
+  // window. Shared by setDateWindow (window change) and setLinelist (sample-collected toggle).
+  function retally() {
+    const win = currentWindow;
+    const tally = tallyZones(linelistRows, win);
+    zoneCounts = tally.zoneCounts; zonePosCt = tally.zonePosCt;
+    applyCounts?.();
+    for (const { group, marker } of markers) {
+      let n = group.tipIds.length;
+      if (win) {
+        n = 0;
+        for (const ds of group.dates) { const tt = +new Date(ds); if (!isNaN(tt) && tt >= win.d0 && tt <= win.d1) n++; }
+      }
+      // _winHidden is honoured by highlight()/clearHighlight() and the marker click handler
+      // (Leaflet ignores a runtime `interactive` change, so the flag gates clicks instead).
+      group._winHidden = (n === 0);
+      if (n === 0) marker.setStyle(HIDDEN_STYLE);
+      else {
+        marker.setStyle({ opacity: 1, fillOpacity: BASE_STYLE.fillOpacity });
+        marker.setRadius(6 + 3 * Math.sqrt(n));
+      }
+    }
+  }
+
   return {
     /** cb(tipIds[]) when a marker is clicked. */
     onMarkerClick(cb) { clickHandler = cb; },
@@ -330,25 +355,15 @@ export function createMapPanel(containerId, tips, { onCtChange = () => {} } = {}
     /** Filter the choropleth + markers to a time window (inclusive ms bounds), or null = all.
      *  Re-tallies the line-list rows, reclasses, and shows/resizes markers by in-window count. */
     setDateWindow(d0, d1) {
-      const win = (d0 != null && d1 != null) ? { d0: +d0, d1: +d1 } : null;
-      const tally = tallyZones(linelistRows, win);
-      zoneCounts = tally.zoneCounts; zonePosCt = tally.zonePosCt;
-      applyCounts?.();
-      for (const { group, marker } of markers) {
-        let n = group.tipIds.length;
-        if (win) {
-          n = 0;
-          for (const ds of group.dates) { const tt = +new Date(ds); if (!isNaN(tt) && tt >= win.d0 && tt <= win.d1) n++; }
-        }
-        // _winHidden is honoured by highlight()/clearHighlight() and the marker click handler
-        // (Leaflet ignores a runtime `interactive` change, so the flag gates clicks instead).
-        group._winHidden = (n === 0);
-        if (n === 0) marker.setStyle(HIDDEN_STYLE);
-        else {
-          marker.setStyle({ opacity: 1, fillOpacity: BASE_STYLE.fillOpacity });
-          marker.setRadius(6 + 3 * Math.sqrt(n));
-        }
-      }
+      currentWindow = (d0 != null && d1 != null) ? { d0: +d0, d1: +d1 } : null;
+      retally();
+    },
+
+    /** Replace the line-list rows behind the choropleth (sample-collected toggle) and re-tally
+     *  over the current date window. Markers come from `tips`, so they are unaffected. */
+    setLinelist(rows) {
+      linelistRows = rows || [];
+      retally();
     },
 
     /** Register the prioritisation panel and build the on-map knobs (shown only while the
