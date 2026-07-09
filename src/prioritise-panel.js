@@ -382,6 +382,8 @@ export function createPrioritisationPanel(container, { risk, canon, tips, onChan
   return {
     /** Update knobs (from the on-map panel) and recompute. */
     setParams(p) { applyParams(p); },
+    /** Re-run the engine, re-reading window.__PRIO_LINELIST__ (sample-collected toggle). */
+    refresh: () => recompute(),
     /** Toggle prioritisation — called by the map's "To sequence" (Seq+) metric. */
     setActive,
     /** Toggle the chart overlay with the prioritisation tab — called by the tab switcher. */
