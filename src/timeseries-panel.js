@@ -772,6 +772,9 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
       ctInput.value = ctThreshold == null ? '' : String(ctThreshold);
       applyExtent();
     },
+    /** Replace the underlying line-list rows (sample-collected toggle) and re-render. The `rows`
+     *  binding is the factory parameter, so reassigning it swaps the data every aggregation reads. */
+    setRows(next) { rows = next || []; applyExtent(); },
     setMarkers(dates) { markerDates = (dates || []).filter(Boolean); drawMarkers(); },
     setTransform(t) {
       transform = (t && t.maxX > 0) ? t : null;
