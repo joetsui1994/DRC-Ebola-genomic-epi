@@ -30,3 +30,9 @@ Nyirangongo,Nyiragongo,health_zone_metadata,Spelling variant in DHIS2 risk metad
 Pendjua,Penjwa,health_zone_metadata,Spelling variant in DHIS2 risk metadata
 Citenge,Tshitenge,health_zone_metadata,Spelling variant in DHIS2 risk metadata
 Yalifafu,Yalifafo,health_zone_metadata,Spelling variant in DHIS2 risk metadata
+Mongwalu,Mongbwalu,egc_tree,Spelling variant of Mongbwalu in the n35 EGC tree
+Nyankunnde,Nyakunde,egc_tree,Double-n typo of Nyakunde in the n35 EGC tree
+Mungwalu,Mongbwalu,egc_tree,Spelling variant of Mongbwalu in the n139 tree
+Sota,Nyakunde,egc_tree,Locality in the Nyakunde health zone (per data owner)
+Kalamu 2,Kalamu II,dhis,Arabic-numeral variant of canonical Kinshasa sub-zone (geojson uses roman numerals)
+Mont Ngafula 1,Mont Ngafula I,dhis,Arabic-numeral variant of canonical Kinshasa sub-zone (geojson uses roman numerals)

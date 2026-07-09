@@ -2,7 +2,7 @@
 // small, app-facing interface. Locks the tree to fit-to-window with explicit
 // paddings so its time axis aligns with the time-series panel.
 
-const TREE_URL = `${import.meta.env.BASE_URL}data/Ituri_2026-05-28_HKY_EGC_rate1.9E-3.HIPSTR.enriched.ptree`;
+const TREE_URL = `${import.meta.env.BASE_URL}data/ituri-tree.ptree`;
 
 export const TREE_PAD_LEFT = 20;
 export const TREE_PAD_RIGHT = 20;
@@ -71,6 +71,9 @@ export async function createTreePanel(containerId, meta = null) {
       // (reads height_95%_HPD). The wider full-range whiskers (nodeBarsRange) are left off.
       // Init-setting (applySettings doesn't push nodeBars to the renderer).
       nodeBarsEnabled: 'on',
+      // Bar height in screen pixels (PearTree default is 6; slider range 2–30). Kept slim so the
+      // HPD bars read as fine whiskers rather than thick blocks over the branches.
+      nodeBarsWidth: '3',
       // Distinct selection highlight — yellow to match the map's selected marker,
       // with a thicker opaque border and a bigger grow so it stands out from the
       // mauve tip / teal node colours. (These selection keys take as embed

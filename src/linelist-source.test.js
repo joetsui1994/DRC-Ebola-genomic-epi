@@ -4,11 +4,11 @@ import { LINELIST_SOURCES, resolveLinelistSource } from './linelist-source.js';
 const sp = (qs) => new URLSearchParams(qs);
 
 describe('resolveLinelistSource', () => {
-  it('defaults to lab when the param is absent', () => {
+  it('defaults to dhis when the param is absent', () => {
     const r = resolveLinelistSource(sp(''));
-    expect(r.key).toBe('lab');
-    expect(r.file).toBe('linelist_data.csv');
-    expect(r.label).toBe('Lab');
+    expect(r.key).toBe('dhis');
+    expect(r.file).toBe('linelist_data.dhis.csv');
+    expect(r.label).toBe('DHIS');
   });
 
   it('resolves an explicit lab param', () => {
@@ -22,8 +22,8 @@ describe('resolveLinelistSource', () => {
     expect(r.label).toBe('DHIS');
   });
 
-  it('falls back to lab for an unknown value', () => {
-    expect(resolveLinelistSource(sp('linelist=bogus')).key).toBe('lab');
+  it('falls back to dhis for an unknown value', () => {
+    expect(resolveLinelistSource(sp('linelist=bogus')).key).toBe('dhis');
   });
 
   it('exposes both sources for building the selector', () => {

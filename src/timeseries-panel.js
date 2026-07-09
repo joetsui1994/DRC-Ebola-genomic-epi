@@ -89,7 +89,7 @@ function timeTicks(pxWidth, t0, t1) {
  * @param {{minDate:string,maxDate:string}} domain  tree time domain (root → most-recent)
  * @param {{onCtChange?:(t:?number)=>void}} [opts]  notified when the Ct filter changes
  */
-export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = () => {}, tips = [], onExtentChange = () => {}, onWindowChange = () => {}, onSettling = () => {} } = {}) {
+export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = () => {}, tips = [], onExtentChange = () => {}, onWindowChange = () => {}, onSettling = () => {}, sampleToggle = null, onSampleToggle = () => {} } = {}) {
   const host = document.getElementById(containerId);
   host.replaceChildren();
 
@@ -117,15 +117,31 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
   const btnArea = document.createElement('button'); btnArea.textContent = 'Area';
   toggle.append(btnZone, btnArea);
 
+  // Left-column stack: the zone⇄area toggle, and (DHIS only) a "Sample collected only" filter
+  // below it. The sample filter is owned here but affects every panel, so it just emits onSampleToggle.
+  const left = document.createElement('div');
+  left.className = 'dist-controls-left';
+  left.append(toggle);
+  if (sampleToggle?.show) {
+    const sample = document.createElement('label');
+    sample.className = 'dist-sample-toggle';
+    sample.title = 'Show only records with a sample collected';
+    const cb = document.createElement('input');
+    cb.type = 'checkbox'; cb.checked = !!sampleToggle.checked;
+    cb.addEventListener('change', () => onSampleToggle(cb.checked));
+    sample.append(cb, document.createTextNode('Sample collected only'));
+    left.append(sample);
+  }
+
   const legend = document.createElement('div');
   legend.className = 'dist-legend';
   legend.innerHTML = STATUS.map(s => `<span><i style="background:${STATUS_COLOR[s]}"></i>${s}</span>`).join('')
     + `<span><i class="seq-dot" style="background:${SEQ_COLOR}"></i>Sequences</span>`
     + `<span><i class="seq-dot" style="background:${INPROG_COLOR}"></i>In sequencing</span>`;
 
-  const controls = document.createElement('div');   // top-left row: toggle + legend
+  const controls = document.createElement('div');   // top-left row: [toggle stack] + legend
   controls.className = 'dist-controls';
-  controls.append(toggle, legend);
+  controls.append(left, legend);
 
   const holder = document.createElement('div');
   holder.className = 'dist-svg';
@@ -772,6 +788,9 @@ export function createTimeseriesPanel(containerId, rows, domain, { onCtChange = 
       ctInput.value = ctThreshold == null ? '' : String(ctThreshold);
       applyExtent();
     },
+    /** Replace the underlying line-list rows (sample-collected toggle) and re-render. The `rows`
+     *  binding is the factory parameter, so reassigning it swaps the data every aggregation reads. */
+    setRows(next) { rows = next || []; applyExtent(); },
     setMarkers(dates) { markerDates = (dates || []).filter(Boolean); drawMarkers(); },
     setTransform(t) {
       transform = (t && t.maxX > 0) ? t : null;

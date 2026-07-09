@@ -8,6 +8,7 @@ import { makeSplitter } from './splitter.js';
 import { createPrioritisationPanel } from './prioritise-panel.js';
 import { tallyZones } from './zone-tally.js';
 import { LINELIST_SOURCES, resolveLinelistSource } from './linelist-source.js';
+import { makeViewRows, applySampleView } from './sample-toggle.js';
 
 // Parse the health-zone alias crosswalk (observed_name → canonical_nom) into a
 // normaliser. Health-zone names in the line-list / mobility / tree are mapped onto
@@ -33,7 +34,7 @@ function parseLinelist(text, canon) {
   const idx = (name) => head.indexOf(name);
   const iId = idx('sample_id'), iZone = idx('health_zone'), iArea = idx('health_area'),
         iStatus = idx('status'), iDate = idx('date'), iCt = idx('ct'), iRid = idx('row_id'),
-        iSeqing = idx('being_sequenced');
+        iSeqing = idx('being_sequenced'), iSample = idx('sample_collected');
   const out = [];
   for (let i = 1; i < lines.length; i++) {
     const c = lines[i].split(',');
@@ -49,6 +50,9 @@ function parseLinelist(text, canon) {
       // In the process of being sequenced (committed but not yet in the phylogeny). Absent
       // column → false everywhere, so all surfaces degrade to showing nothing.
       being_sequenced: iSeqing >= 0 ? /^(1|true|yes|y)$/i.test((c[iSeqing] || '').trim()) : false,
+      // Whether a sample was collected (DHIS). Absent column (e.g. the Lab file) → true so the
+      // "Sample collected only" filter is a no-op for sources that don't carry the mark.
+      sample_collected: iSample >= 0 ? /^(1|true|yes|y)$/i.test((c[iSample] || '').trim()) : true,
     });
   }
   return out;
@@ -112,8 +116,17 @@ const [tips, meta, linelistText, aliasText] = await Promise.all([
 ]);
 
 const canon = makeCanon(aliasText);
-const linelist = parseLinelist(linelistText, canon);
-// Expose the raw line-list rows (public-mode candidates) to the prioritisation engine.
+const fullLinelist = parseLinelist(linelistText, canon);
+
+// "Sample collected only" filter — DHIS-only, default ON. The control lives in the
+// sample-distribution panel (built below); the full parsed array stays in memory and the toggle
+// filters the *view* pushed to every consumer (map, prioritisation, time-series).
+const isDhis = linelistSource.key === 'dhis';
+const sampleState = { checked: true };   // consulted only when isDhis (see makeViewRows)
+const viewRows = makeViewRows(fullLinelist, { isDhis, toggle: sampleState });
+
+const linelist = viewRows();   // initial view honours the default-ON toggle for DHIS
+// Expose the current line-list rows (public-mode candidates) to the prioritisation engine.
 window.__PRIO_LINELIST__ = linelist;
 
 // Per-zone status counts + positive-Ct lists for the choropleth (full dataset; the brush
@@ -137,6 +150,7 @@ const map = createMapPanel('map-body', tips, { onCtChange: (t) => tsPanel?.setCt
 // Health-zone risk choropleth + mobility arrows (standalone layers, under the
 // markers). Mobility loads after the risk layer because it reuses the zone
 // centroids built there.
+let prioPanel = null;   // late-bound below; used by the sample-collected toggle
 fetch(`${BASE}data/health-zones.geojson`)
   .then(r => r.json())
   .then(zones => {
@@ -158,6 +172,7 @@ fetch(`${BASE}data/health-zones.geojson`)
         else ts.setAllocation(null);
       },
     });
+    prioPanel = prio;
     map.attachPrioKnobs?.(prio);   // on-map knobs panel
     return fetch(`${BASE}data/flowminder__inflow__static.matrix.csv`)
       .then(r => r.text())
@@ -173,8 +188,20 @@ const ts  = createTimeseriesPanel('timeseries-body', linelist, { minDate: meta.r
   // while a relayout (tip labels / node-bars / legend) recalibrates the beyond width-fraction, so
   // its brief re-converge flicker is masked (the chart hides itself).
   onSettling: (on) => document.getElementById('canvas-container')?.classList.toggle('settling-hide', on),
+  // Sample-collected filter (DHIS only), rendered below the Zone/Area group. On change, re-filter
+  // and push the new view to every consumer — no page reload.
+  sampleToggle: { show: isDhis, checked: sampleState.checked },
+  onSampleToggle: (checked) => {
+    sampleState.checked = checked;
+    applySampleView(viewRows(), {
+      map, ts,
+      setPrioRows: (rows) => { window.__PRIO_LINELIST__ = rows; },
+      getPrio: () => prioPanel,
+    });
+  },
 });
 tsPanel = ts;   // late-bind for the map → distribution Ct sync
+
 const tree = await createTreePanel('tree-body', meta);
 treePanel = tree;
 
