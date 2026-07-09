@@ -33,7 +33,7 @@ function parseLinelist(text, canon) {
   const idx = (name) => head.indexOf(name);
   const iId = idx('sample_id'), iZone = idx('health_zone'), iArea = idx('health_area'),
         iStatus = idx('status'), iDate = idx('date'), iCt = idx('ct'), iRid = idx('row_id'),
-        iSeqing = idx('being_sequenced');
+        iSeqing = idx('being_sequenced'), iSample = idx('sample_collected');
   const out = [];
   for (let i = 1; i < lines.length; i++) {
     const c = lines[i].split(',');
@@ -49,6 +49,9 @@ function parseLinelist(text, canon) {
       // In the process of being sequenced (committed but not yet in the phylogeny). Absent
       // column → false everywhere, so all surfaces degrade to showing nothing.
       being_sequenced: iSeqing >= 0 ? /^(1|true|yes|y)$/i.test((c[iSeqing] || '').trim()) : false,
+      // Whether a sample was collected (DHIS). Absent column (e.g. the Lab file) → true so the
+      // "Sample collected only" filter is a no-op for sources that don't carry the mark.
+      sample_collected: iSample >= 0 ? /^(1|true|yes|y)$/i.test((c[iSample] || '').trim()) : true,
     });
   }
   return out;
