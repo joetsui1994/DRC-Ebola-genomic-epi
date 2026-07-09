@@ -10,9 +10,9 @@ const tree = readFileSync(join(ROOT, 'public/data/ituri-tree.ptree'), 'utf8');
 
 const MS_PER_YEAR = 365.25 * 86400000;
 
-describe('enriched n139 tree artifacts', () => {
-  it('has 139 fully-geocoded tips with full dates', () => {
-    expect(tips).toHaveLength(139);
+describe('enriched n134 tree artifacts', () => {
+  it('has 134 fully-geocoded tips with full dates', () => {
+    expect(tips).toHaveLength(134);
     for (const t of tips) {
       expect(t.health_zone).toBeTruthy();
       expect(typeof t.lat).toBe('number');
@@ -27,8 +27,8 @@ describe('enriched n139 tree artifacts', () => {
     expect(sota.health_zone).toBe('Nyakunde');
   });
   it('meta carries dates + provenance with root before most-recent', () => {
-    expect(meta).toMatchObject({ mostRecentDate: '2026-06-23', rootDate: '2026-02-27', tipCount: 139 });
-    expect(meta.sourceTree).toBe('Ituri_2026-07-06_DRC_n139.ebds.hipstr.tree');
+    expect(meta).toMatchObject({ mostRecentDate: '2026-06-23', rootDate: '2026-03-14', tipCount: 134 });
+    expect(meta.sourceTree).toBe('BDBV_2026-07-09.DRC_n134.Skygrid.ptree');
     expect(meta.updated).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     expect(meta.rootDate < meta.mostRecentDate).toBe(true);
   });
@@ -43,7 +43,7 @@ describe('enriched n139 tree artifacts', () => {
     const spreadDays = (Math.max(...refs) - Math.min(...refs)) / 86400000;
     expect(spreadDays).toBeLessThan(2);
   });
-  it('injected exactly 139 accession annotations into the tree', () => {
-    expect((tree.match(/accession="/g) || []).length).toBe(139);
+  it('injected exactly 134 accession annotations into the tree', () => {
+    expect((tree.match(/accession="/g) || []).length).toBe(134);
   });
 });
