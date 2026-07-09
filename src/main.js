@@ -118,13 +118,12 @@ const [tips, meta, linelistText, aliasText] = await Promise.all([
 const canon = makeCanon(aliasText);
 const fullLinelist = parseLinelist(linelistText, canon);
 
-// Header "Sample collected only" toggle — DHIS-only, default ON. The full parsed array stays in
-// memory; the toggle filters the *view* pushed to every consumer (map, prioritisation, time-series).
+// "Sample collected only" filter — DHIS-only, default ON. The control lives in the
+// sample-distribution panel (built below); the full parsed array stays in memory and the toggle
+// filters the *view* pushed to every consumer (map, prioritisation, time-series).
 const isDhis = linelistSource.key === 'dhis';
-const sampleToggle = document.getElementById('sample-collected-toggle');
-const sampleToggleWrap = document.getElementById('sample-toggle-wrap');
-if (sampleToggleWrap) sampleToggleWrap.style.display = isDhis ? '' : 'none';
-const viewRows = makeViewRows(fullLinelist, { isDhis, toggle: sampleToggle });
+const sampleState = { checked: true };   // consulted only when isDhis (see makeViewRows)
+const viewRows = makeViewRows(fullLinelist, { isDhis, toggle: sampleState });
 
 const linelist = viewRows();   // initial view honours the default-ON toggle for DHIS
 // Expose the current line-list rows (public-mode candidates) to the prioritisation engine.
@@ -189,17 +188,19 @@ const ts  = createTimeseriesPanel('timeseries-body', linelist, { minDate: meta.r
   // while a relayout (tip labels / node-bars / legend) recalibrates the beyond width-fraction, so
   // its brief re-converge flicker is masked (the chart hides itself).
   onSettling: (on) => document.getElementById('canvas-container')?.classList.toggle('settling-hide', on),
+  // Sample-collected filter (DHIS only), rendered below the Zone/Area group. On change, re-filter
+  // and push the new view to every consumer — no page reload.
+  sampleToggle: { show: isDhis, checked: sampleState.checked },
+  onSampleToggle: (checked) => {
+    sampleState.checked = checked;
+    applySampleView(viewRows(), {
+      map, ts,
+      setPrioRows: (rows) => { window.__PRIO_LINELIST__ = rows; },
+      getPrio: () => prioPanel,
+    });
+  },
 });
 tsPanel = ts;   // late-bind for the map → distribution Ct sync
-
-// Live sample-collected toggle: re-filter and push the new view to every consumer — no reload.
-sampleToggle?.addEventListener('change', () => {
-  applySampleView(viewRows(), {
-    map, ts,
-    setPrioRows: (rows) => { window.__PRIO_LINELIST__ = rows; },
-    getPrio: () => prioPanel,
-  });
-});
 
 const tree = await createTreePanel('tree-body', meta);
 treePanel = tree;
