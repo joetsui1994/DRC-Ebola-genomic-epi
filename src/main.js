@@ -8,7 +8,7 @@ import { makeSplitter } from './splitter.js';
 import { createPrioritisationPanel } from './prioritise-panel.js';
 import { tallyZones } from './zone-tally.js';
 import { LINELIST_SOURCES, resolveLinelistSource } from './linelist-source.js';
-import { filterSampleCollected } from './linelist-filter.js';
+import { makeViewRows, applySampleView } from './sample-toggle.js';
 
 // Parse the health-zone alias crosswalk (observed_name → canonical_nom) into a
 // normaliser. Health-zone names in the line-list / mobility / tree are mapped onto
@@ -124,7 +124,7 @@ const isDhis = linelistSource.key === 'dhis';
 const sampleToggle = document.getElementById('sample-collected-toggle');
 const sampleToggleWrap = document.getElementById('sample-toggle-wrap');
 if (sampleToggleWrap) sampleToggleWrap.style.display = isDhis ? '' : 'none';
-const viewRows = () => filterSampleCollected(fullLinelist, isDhis && !!sampleToggle?.checked);
+const viewRows = makeViewRows(fullLinelist, { isDhis, toggle: sampleToggle });
 
 const linelist = viewRows();   // initial view honours the default-ON toggle for DHIS
 // Expose the current line-list rows (public-mode candidates) to the prioritisation engine.
@@ -194,11 +194,11 @@ tsPanel = ts;   // late-bind for the map → distribution Ct sync
 
 // Live sample-collected toggle: re-filter and push the new view to every consumer — no reload.
 sampleToggle?.addEventListener('change', () => {
-  const rows = viewRows();
-  map.setLinelist(rows);
-  ts.setRows(rows);
-  window.__PRIO_LINELIST__ = rows;
-  prioPanel?.refresh();
+  applySampleView(viewRows(), {
+    map, ts,
+    setPrioRows: (rows) => { window.__PRIO_LINELIST__ = rows; },
+    getPrio: () => prioPanel,
+  });
 });
 
 const tree = await createTreePanel('tree-body', meta);
