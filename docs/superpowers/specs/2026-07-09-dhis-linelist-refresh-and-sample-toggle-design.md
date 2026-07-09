@@ -144,4 +144,15 @@ in memory; filter on toggle rather than re-fetching.
   future `latest.json`-driven `npm run data:linelist` could be added later.
 - No changes to the Lab line list or its file.
 - No health-area canonicalization or map layer.
-- No Ct/date data-cleaning beyond blank→`NA`.
+- No Ct data-cleaning beyond blank→`NA`.
+
+## Amendment (2026-07-09): drop unrealistic onset dates
+
+`date_of_symptom_onset` in the export contains data-entry errors with years
+other than 2026 (e.g. 1984, 2020, 2023, 2025). Because the allocation-matrix
+origin is the earliest *eligible* candidate date, a single 2023 outlier stretched
+the matrix to ~1,120 daily columns (~6% populated). The conversion now **drops
+any row whose onset date is not in 2026** (NA/blank dates are kept). This removed
+8 rows (10,663 → 10,655) and moved the matrix origin from 2023-06-13 to
+2026-04-20 (~79 columns). The timeseries panel was unaffected (it clamps to
+`meta.rootDate`).
