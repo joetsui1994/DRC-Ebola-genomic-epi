@@ -146,13 +146,17 @@ in memory; filter on toggle rather than re-fetching.
 - No health-area canonicalization or map layer.
 - No Ct data-cleaning beyond blank→`NA`.
 
-## Amendment (2026-07-09): drop unrealistic onset dates
+## Amendment (2026-07-14): keep only onset dates from April 2026 onwards
 
-`date_of_symptom_onset` in the export contains data-entry errors with years
-other than 2026 (e.g. 1984, 2020, 2023, 2025). Because the allocation-matrix
+`date_of_symptom_onset` in the export contains pre-outbreak data-entry errors
+(1984/2020/2023/2025 and stray Jan–Mar 2026). Because the allocation-matrix
 origin is the earliest *eligible* candidate date, a single 2023 outlier stretched
 the matrix to ~1,120 daily columns (~6% populated). The conversion now **drops
-any row whose onset date is not in 2026** (NA/blank dates are kept). This removed
-8 rows (10,663 → 10,655) and moved the matrix origin from 2023-06-13 to
-2026-04-20 (~79 columns). The timeseries panel was unaffected (it clamps to
-`meta.rootDate`).
+any row whose onset date is before 2026-04-01** (NA/blank dates are kept —
+undated cases still count in the map tallies, they are just absent from date
+views). This removed 29 rows (10,663 → 10,634). The matrix origin is 2026-04-20
+(the earliest eligible April sample; the cutoff drops the pre-April rows, which
+were non-eligible and already clipped from the timeseries by `meta.rootDate`).
+
+Superseded the earlier "drop non-2026 years" rule (2026-07-09), which left the
+stray Jan–Mar 2026 rows in place.
