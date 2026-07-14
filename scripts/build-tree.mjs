@@ -1,8 +1,9 @@
 // Enrich the source phylogenetic tree for the dashboard and regenerate its
 // companion files. Reads the raw tree from data-raw/ + geojson/aliases from
 // public/data/, writes the app-ready tree + tips + meta into public/data/. The
-// current source is the HIPSTR n139 build (parsed via hipstr-parse.mjs). See the
-// design spec + the 2026-07-06 HIPSTR spec change.
+// current source is the HIPSTR n134 build (parsed via hipstr-parse.mjs — NEXUS with a
+// Translate block, the standard input format). See the design spec + the 2026-07-06 HIPSTR
+// spec change.
 //
 // Usage:
 //   node scripts/build-tree.mjs                 # stamp `updated` = today
@@ -14,10 +15,10 @@ import {
   CORRECTIONS, makeCanon, parseZones, resolveTip,
   rootHeightFromText, computeMeta,
 } from './tree-lib.mjs';
-import { skygridToInline } from './skygrid-parse.mjs';
+import { hipstrToInline } from './hipstr-parse.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const SOURCE_TREE = 'BDBV_2026-07-09.DRC_n134.Skygrid.ptree';
+const SOURCE_TREE = 'Ituri2026.DRC_trimmed_n134_GTR_SG.HIPSTR.tree';
 const RAW = join(ROOT, 'data-raw', SOURCE_TREE);
 const GEOJSON = join(ROOT, 'public/data/health-zones.geojson');
 const ALIASES = join(ROOT, 'public/data/aliases.csv');
@@ -36,7 +37,7 @@ const zones = parseZones(readFileSync(GEOJSON, 'utf8'));
 const rawText = readFileSync(RAW, 'utf8');
 
 const resolve = (fields) => resolveTip(fields, { corrections: CORRECTIONS, canon, zones });
-const { text, records } = skygridToInline(rawText, { resolve });
+const { text, records } = hipstrToInline(rawText, { resolve });
 const meta = computeMeta(records, rootHeightFromText(rawText), { sourceTree: SOURCE_TREE, updated });
 
 const tips = records.map((r) => ({

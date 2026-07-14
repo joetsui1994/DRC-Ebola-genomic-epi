@@ -28,7 +28,7 @@ describe('enriched n134 tree artifacts', () => {
   });
   it('meta carries dates + provenance with root before most-recent', () => {
     expect(meta).toMatchObject({ mostRecentDate: '2026-06-23', rootDate: '2026-03-14', tipCount: 134 });
-    expect(meta.sourceTree).toBe('BDBV_2026-07-09.DRC_n134.Skygrid.ptree');
+    expect(meta.sourceTree).toBe('Ituri2026.DRC_trimmed_n134_GTR_SG.HIPSTR.tree');
     expect(meta.updated).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     expect(meta.rootDate < meta.mostRecentDate).toBe(true);
   });

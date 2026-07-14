@@ -18,17 +18,20 @@ export function parseTranslate(text) {
 }
 
 // Pipe-delimited label. The date is the LAST field (YYYY-MM or YYYY-MM-DD); the
-// location is the field immediately before it; accession is field 1 with any
-// `.N` version suffix stripped. Robust to 5- or 6-field labels.
+// location is the last field that is NOT a date (some labels carry TWO trailing
+// date fields, e.g. `...|Rwampara|2026-05|2026-05-20`); accession is field 1 with
+// any `.N` version suffix stripped. Robust to 5-, 6-, and 7-field labels.
 export function parseLabel(label) {
   const p = label.split('|');
   if (p.length < 4) throw new Error(`too few fields in label: "${label}"`);
   const date = p[p.length - 1].trim();
   if (!DATE_RE.test(date)) throw new Error(`label date not YYYY-MM(-DD): "${label}"`);
-  const location = p[p.length - 2].trim();
+  let li = p.length - 2;
+  while (li > 1 && DATE_RE.test(p[li].trim())) li--;   // skip any extra trailing date field(s)
+  const location = p[li].trim();
   const accession = (p[1] || '').trim().replace(/\.\d+$/, '');
   const fieldId = (p[0] || '').trim();
-  if (!accession || !location) throw new Error(`incomplete label: "${label}"`);
+  if (!accession || !location || DATE_RE.test(location)) throw new Error(`incomplete label: "${label}"`);
   return { fieldId, accession, location, date };
 }
 

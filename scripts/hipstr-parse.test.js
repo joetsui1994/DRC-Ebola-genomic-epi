@@ -30,6 +30,11 @@ describe('parseLabel', () => {
       fieldId: '26FHV0069', accession: 'PP_0075YWS', location: 'Rwampara', date: '2026-05-20',
     });
   });
+  it('parses a 7-field label with two trailing dates, taking the last non-date field as location', () => {
+    expect(parseLabel('26FHV0069|PP_0075YWS.1|DRC|Ituri|Rwampara|2026-05|2026-05-20')).toEqual({
+      fieldId: '26FHV0069', accession: 'PP_0075YWS', location: 'Rwampara', date: '2026-05-20',
+    });
+  });
   it('throws on a label whose last field is not a YYYY-MM(-DD) date', () => {
     expect(() => parseLabel('a|PP_x|DRC|Bunia|notadate')).toThrow(/date/);
   });
